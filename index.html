@@ -18,6 +18,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #numerology-screen.active { display: flex; }
 #blood-screen.active { display: flex; }
 #zodiac-screen.active { display: flex; }
+#tarot-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -145,6 +146,94 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-z:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(99,102,241,0.25); }
 .quiz-card-z .quiz-card-btn { background: linear-gradient(135deg, #6366f1, #4338ca); }
 .quiz-card-z .quiz-card-features li::before { color: #6366f1; }
+.quiz-card-t::before { background: linear-gradient(90deg, #e11d48, #9f1239); }
+.quiz-card-t { box-shadow: 0 4px 30px rgba(225,29,72,0.1); }
+.quiz-card-t:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(225,29,72,0.25); }
+.quiz-card-t .quiz-card-btn { background: linear-gradient(135deg, #e11d48, #9f1239); }
+.quiz-card-t .quiz-card-features li::before { color: #e11d48; }
+
+/* ============================================
+   TAROT QUIZ
+   ============================================ */
+#tarot-screen {
+  background: linear-gradient(135deg, #0d0010 0%, #1c0028 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-t .container { background: white; border-radius: 24px; padding: 40px; max-width: 640px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+.quiz-t .screen { display: none; }
+.quiz-t .screen.active { display: block; }
+.quiz-t .badge { display: inline-block; background: #ffe4e6; color: #9f1239; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-t h1 { font-size: 2rem; color: #0d0010; margin-bottom: 8px; }
+.quiz-t h1 span { color: #e11d48; }
+.quiz-t .subtitle { color: #666; line-height: 1.7; margin-top: 10px; margin-bottom: 28px; }
+.quiz-t .btn { background: linear-gradient(135deg, #e11d48, #9f1239); color: white; border: none; padding: 16px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px; }
+.quiz-t .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(225,29,72,0.4); }
+.quiz-t .btn-outline { background: white; color: #9f1239; border: 2px solid #e11d48; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 12px; }
+.quiz-t .btn-outline:hover { background: #fff1f2; }
+.quiz-t .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-t .spinner { width: 60px; height: 60px; border: 5px solid #ffe4e6; border-top-color: #e11d48; border-radius: 50%; animation: tSpin 0.8s linear infinite; margin: 0 auto 24px; }
+@keyframes tSpin { to { transform: rotate(360deg); } }
+.quiz-t .loading-screen p { color: #666; }
+.quiz-t .result-card { background: #fff1f2; border-radius: 16px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #e11d48; text-align: left; }
+.quiz-t .result-card h3 { font-size: 1rem; color: #9f1239; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.quiz-t .result-card p { font-size: 0.95rem; color: #333; line-height: 1.7; }
+
+/* テーマ選択ボタン */
+.tarot-theme-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0 28px; }
+.tarot-theme-btn { padding: 18px 8px; border-radius: 16px; border: 2px solid #fecdd3; background: #fff1f2; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
+.tarot-theme-btn:hover { background: #e11d48; border-color: #e11d48; }
+.tarot-theme-btn:hover * { color: white !important; }
+.tarot-theme-icon { font-size: 2rem; display: block; margin-bottom: 6px; }
+.tarot-theme-label { font-size: 0.9rem; font-weight: bold; color: #9f1239; }
+
+/* 3枚カードスプレッド */
+.tarot-spread { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0; }
+.tarot-card-wrap { text-align: center; }
+.tarot-pos-label { font-size: 0.78rem; font-weight: bold; color: #888; margin-bottom: 8px; letter-spacing: 1px; }
+
+/* カード本体 (3D flip) */
+.tarot-card { width: 100%; height: 170px; cursor: pointer; perspective: 800px; }
+.tarot-card-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+}
+.tarot-card.flipped .tarot-card-inner { transform: rotateY(180deg); }
+.tarot-card-front, .tarot-card-back {
+  position: absolute; width: 100%; height: 100%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;
+}
+.tarot-card-back {
+  background: linear-gradient(135deg, #1a0020, #4a0060);
+  border: 2px solid #7c3aed44;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.2);
+}
+.tarot-card-back::after { content: '🔮'; font-size: 2.8rem; opacity: 0.5; }
+.tarot-card-front {
+  background: linear-gradient(160deg, #fff1f2, white);
+  border: 2px solid #fecdd3;
+  transform: rotateY(180deg);
+  box-shadow: 0 6px 24px rgba(225,29,72,0.15);
+}
+.tc-emoji { font-size: 2.2rem; margin-bottom: 6px; }
+.tc-name { font-size: 0.82rem; font-weight: 900; color: #9f1239; text-align: center; margin-bottom: 4px; line-height: 1.2; }
+.tc-kw { font-size: 0.7rem; color: #e11d48; font-weight: bold; text-align: center; line-height: 1.3; }
+
+.tarot-hint { text-align: center; color: #aaa; font-size: 0.85rem; margin-bottom: 8px; }
+.tarot-progress { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+.tarot-dot { width: 10px; height: 10px; border-radius: 50%; background: #fecdd3; transition: background 0.3s; }
+.tarot-dot.done { background: #e11d48; }
+
+/* 結果カードの詳細 */
+.tarot-detail-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 12px; }
+.tarot-detail-item { background: #fff1f2; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #fecdd3; }
+.tdi-pos { font-size: 0.72rem; color: #888; margin-bottom: 4px; font-weight: bold; }
+.tdi-emoji { font-size: 1.5rem; margin-bottom: 4px; }
+.tdi-name { font-size: 0.8rem; font-weight: 900; color: #9f1239; margin-bottom: 4px; }
+.tdi-kw { font-size: 0.72rem; color: #e11d48; font-weight: bold; }
 
 /* ============================================
    ZODIAC QUIZ
@@ -593,6 +682,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- タロット -->
+    <div class="quiz-card quiz-card-t" onclick="openQuiz('tarot')">
+      <div class="quiz-card-icon">🃏</div>
+      <h2>タロット占い</h2>
+      <p class="card-desc">22枚の大アルカナで運命を読む</p>
+      <ul class="quiz-card-features">
+        <li>3枚のカードをめくって占う</li>
+        <li>過去・現在・未来がわかる</li>
+        <li>恋愛・仕事・全体から選択</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
     <!-- 西洋占星術 -->
     <div class="quiz-card quiz-card-z" onclick="openQuiz('zodiac')">
       <div class="quiz-card-icon">⭐</div>
@@ -635,6 +737,111 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
   </div>
 
   <div class="home-footer">© TypeLab — All free to use</div>
+</div>
+
+
+<!-- ===================================================
+     TAROT QUIZ
+     =================================================== -->
+<div id="tarot-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-t">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="t-screen-title">
+        <div style="text-align:center">
+          <div class="badge">✨ 大アルカナ22枚</div>
+          <h1>タロット<span>占い</span></h1>
+          <p class="subtitle">3枚のカードが過去・現在・未来を映し出す<br>タップしてカードをめくってください</p>
+          <p style="font-weight:bold;color:#333;margin-bottom:12px">何を占いますか？</p>
+          <div class="tarot-theme-grid">
+            <button class="tarot-theme-btn" onclick="tStart('恋愛')">
+              <span class="tarot-theme-icon">❤️</span>
+              <span class="tarot-theme-label">恋愛</span>
+            </button>
+            <button class="tarot-theme-btn" onclick="tStart('仕事')">
+              <span class="tarot-theme-icon">💼</span>
+              <span class="tarot-theme-label">仕事</span>
+            </button>
+            <button class="tarot-theme-btn" onclick="tStart('全体運')">
+              <span class="tarot-theme-icon">🌟</span>
+              <span class="tarot-theme-label">全体運</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- カードめくり -->
+      <div class="screen" id="t-screen-cards">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="font-size:0.9rem;color:#888;margin-bottom:4px">テーマ：<span id="t-theme-label" style="font-weight:bold;color:#e11d48"></span></div>
+          <div class="tarot-progress">
+            <div class="tarot-dot" id="t-dot-0"></div>
+            <div class="tarot-dot" id="t-dot-1"></div>
+            <div class="tarot-dot" id="t-dot-2"></div>
+          </div>
+        </div>
+        <div class="tarot-hint" id="t-hint">カードをタップしてめくってください</div>
+        <div class="tarot-spread">
+          <div class="tarot-card-wrap">
+            <div class="tarot-pos-label">過　去</div>
+            <div class="tarot-card" id="t-card-0" onclick="tFlip(0)">
+              <div class="tarot-card-inner">
+                <div class="tarot-card-back"></div>
+                <div class="tarot-card-front" id="t-front-0"></div>
+              </div>
+            </div>
+          </div>
+          <div class="tarot-card-wrap">
+            <div class="tarot-pos-label">現　在</div>
+            <div class="tarot-card" id="t-card-1" onclick="tFlip(1)">
+              <div class="tarot-card-inner">
+                <div class="tarot-card-back"></div>
+                <div class="tarot-card-front" id="t-front-1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="tarot-card-wrap">
+            <div class="tarot-pos-label">未　来</div>
+            <div class="tarot-card" id="t-card-2" onclick="tFlip(2)">
+              <div class="tarot-card-inner">
+                <div class="tarot-card-back"></div>
+                <div class="tarot-card-front" id="t-front-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="t-reveal-msg" style="display:none;text-align:center;margin-top:12px">
+          <button class="btn" onclick="tShowResult()">結果を見る →</button>
+        </div>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="t-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>カードのメッセージを読み解いています...</p>
+          <p style="color:#aaa;font-size:0.85rem;margin-top:8px">星々があなたに語りかけています</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="t-screen-result">
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="font-size:0.9rem;color:#888;margin-bottom:8px">テーマ：<span id="t-result-theme" style="font-weight:bold;color:#e11d48"></span></div>
+          <div class="tarot-detail-grid" id="t-result-cards"></div>
+        </div>
+        <div class="result-card"><h3>🔮 総合メッセージ</h3><p id="t-result-message"></p></div>
+        <div class="result-card"><h3>🌅 過去のカードが示すもの</h3><p id="t-result-past"></p></div>
+        <div class="result-card"><h3>⚡ 現在のカードが示すもの</h3><p id="t-result-present"></p></div>
+        <div class="result-card"><h3>✨ 未来のカードが示すもの</h3><p id="t-result-future"></p></div>
+        <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">💡 カードからのアドバイス</h3><p id="t-result-advice"></p></div>
+        <button class="btn-outline" onclick="tRetry()">もう一度占う</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 
@@ -1237,6 +1444,210 @@ function sShowResult(year,month,day,gender) {
   sShowScreen('result');
 }
 function sRetry() { sShowScreen('input'); }
+
+// ============================================
+// TAROT QUIZ
+// ============================================
+const tCards = [
+  { name:"愚者",       emoji:"🌟", kw:"新しい始まり・自由",
+    up:"新しい冒険が始まる暗示。恐れずに一歩を踏み出して。直感を信じて進むことが大切。",
+    rev:"無計画・見切り発車に注意。立ち止まって状況を整理する時間が必要かも。" },
+  { name:"魔術師",     emoji:"🎩", kw:"意志・才能・実現力",
+    up:"あなたの中に全ての力が揃っている。強い意志を持って行動すれば目標は達成できる。",
+    rev:"力を持て余している。集中力が散漫になっているので、一点集中を心がけて。" },
+  { name:"女教皇",     emoji:"📖", kw:"直感・神秘・内なる声",
+    up:"直感を大切に。答えはすでにあなたの内にある。静かに自分と向き合う時間を作って。",
+    rev:"直感を無視している。外の声より内なる声に耳を傾けることで道が開ける。" },
+  { name:"女帝",       emoji:"🌸", kw:"豊かさ・創造・愛情",
+    up:"豊かさと喜びが溢れる時期。創造力と愛情を注ぐことで花が開く。",
+    rev:"自分を大切にできていない。まず自分を満たすことで周囲にも与えられる。" },
+  { name:"皇帝",       emoji:"👑", kw:"権威・安定・構造",
+    up:"強いリーダーシップを発揮する時。計画を立てて着実に実行することで大きな成果に。",
+    rev:"支配的になりすぎている。柔軟性を持ち、人の意見も取り入れることが大切。" },
+  { name:"法王",       emoji:"🔱", kw:"伝統・教え・精神的成長",
+    up:"信頼できる師や先輩からの教えが鍵。伝統や慣習の中に大切なヒントがある。",
+    rev:"固定観念に縛られている。既存のルールを見直し、自分なりの答えを探して。" },
+  { name:"恋人たち",   emoji:"❤️", kw:"選択・愛・調和",
+    up:"大切な選択の時。心に従えば道は開ける。人との絆が大きな力になる。",
+    rev:"迷いや葛藤がある。自分の本当の気持ちと向き合うことで答えが見えてくる。" },
+  { name:"戦車",       emoji:"🏆", kw:"勝利・意志・推進力",
+    up:"強い意志で前進する時。障害を乗り越えて勝利をつかむエネルギーが高まっている。",
+    rev:"焦りが空回りを生んでいる。スピードを落として方向性を確認して。" },
+  { name:"力",         emoji:"🦁", kw:"勇気・忍耐・内なる強さ",
+    up:"内なる強さを信じて。柔らかさと強さを組み合わせることで困難を乗り越えられる。",
+    rev:"自信を失っている。あなたには十分な力がある。もっと自分を信じて。" },
+  { name:"隠者",       emoji:"🕯️", kw:"内省・孤独・真実探求",
+    up:"一人の時間を大切に。内省することで重要な真実に気づける時期。",
+    rev:"孤立しすぎている。信頼できる人に心を開くことで新たな光が差し込む。" },
+  { name:"運命の輪",   emoji:"⚙️", kw:"転換・チャンス・流れ",
+    up:"運命の大きな転換点。流れに乗れば思わぬ幸運が訪れる。変化を恐れずに。",
+    rev:"変化への抵抗が運気の流れを止めている。手放すことで新しい流れが始まる。" },
+  { name:"正義",       emoji:"⚖️", kw:"公正・真実・因果",
+    up:"正直に行動することが最善の結果を生む。公平な判断を下す時が来ている。",
+    rev:"不公正な状況がある。事実を冷静に見つめ直すことが解決への第一歩。" },
+  { name:"吊られた男", emoji:"🌀", kw:"待機・視点転換・犠牲",
+    up:"今は行動より待つ時。視点を変えることで今まで見えなかった答えが見つかる。",
+    rev:"停滞から抜け出す時が来た。次のステージへ進むための決断をして。" },
+  { name:"死神",       emoji:"🦋", kw:"終わりと始まり・変容",
+    up:"古いものが終わり新しいものが始まる。変化を受け入れることで次のステージへ。",
+    rev:"変化への恐れが成長を妨げている。終わりを受け入れることが新たな始まりに。" },
+  { name:"節制",       emoji:"🌊", kw:"調和・バランス・癒し",
+    up:"バランスを保つことが大切な時期。焦らず着実に進むことで穏やかな成功に。",
+    rev:"極端な行動が問題を引き起こしている。中庸を心がけて。" },
+  { name:"悪魔",       emoji:"🔥", kw:"執着・束縛・物欲",
+    up:"執着や依存に気づいて。自分を縛るものから解放されることで本当の自由が手に入る。",
+    rev:"鎖を断ち切るチャンス。恐れを手放せば大きな解放感が訪れる。" },
+  { name:"塔",         emoji:"⚡", kw:"突破・崩壊・啓示",
+    up:"突然の変化や衝撃。しかしそれは古い構造が崩れ新しい真実が現れるサイン。",
+    rev:"変化は内側から始まっている。大きな破壊の前に自ら方向転換することが賢明。" },
+  { name:"星",         emoji:"✨", kw:"希望・癒し・インスピレーション",
+    up:"希望の光が差し込んでいる。夢と理想に向かって進む時。インスピレーションを大切に。",
+    rev:"自信喪失や絶望感があるかも。でも暗闇の後には必ず星が輝く。希望を捨てないで。" },
+  { name:"月",         emoji:"🌙", kw:"幻想・直感・潜在意識",
+    up:"物事の表面だけでなく深層を見て。直感と感情のシグナルを大切にして。",
+    rev:"混乱や錯覚に注意。事実と妄想を区別して冷静に判断する時。" },
+  { name:"太陽",       emoji:"☀️", kw:"成功・喜び・生命力",
+    up:"輝かしい成功と幸福が訪れる。自信を持って前に進んで。最高の運気が来ている！",
+    rev:"一時的な曇り。自分の良さを再確認することで光は戻ってくる。" },
+  { name:"審判",       emoji:"🎺", kw:"覚醒・再生・召喚",
+    up:"大きな気づきと覚醒の時。過去を手放し新たな使命に向かって立ち上がる時。",
+    rev:"自己評価の歪みがある。正直に自分を見つめ直すことで真の再生が始まる。" },
+  { name:"世界",       emoji:"🌍", kw:"完成・統合・達成",
+    up:"目標の完成と達成。一つのサイクルが美しく完結する。次の大きな旅への準備を。",
+    rev:"完成まであと一歩。焦らず最後まで丁寧に仕上げることで真の完成が手に入る。" },
+];
+
+// テーマ別メッセージ生成
+function tGenMessage(theme, cards) {
+  const msgs = {
+    '恋愛': [
+      `「${cards[0].name}」「${cards[1].name}」「${cards[2].name}」の3枚があなたの恋愛を語っています。過去の経験が今の関係の土台となり、現在の状況に意味があります。未来のカードは、あなたが心の声に従えば素晴らしい展開が待っていることを示しています。`,
+      `タロットは恋愛において正直な鏡です。3枚のカードが示すのは、あなたが今すでに答えを知っているということ。直感を信じて、自分の気持ちを大切にしてください。`,
+    ],
+    '仕事': [
+      `「${cards[0].name}」「${cards[1].name}」「${cards[2].name}」の組み合わせは、あなたのキャリアに大きな転換点が来ていることを示しています。過去の積み重ねが現在の力となり、未来への扉が開きつつあります。`,
+      `仕事運のカードが語るのは「準備は整っている」というメッセージ。あとは勇気を持って一歩踏み出すだけ。カードはあなたの可能性を肯定しています。`,
+    ],
+    '全体運': [
+      `3枚のカード「${cards[0].name}」「${cards[1].name}」「${cards[2].name}」があなたの今を映し出しています。宇宙はあなたに大切なメッセージを送っています。今この瞬間に集中することで、未来は自ずと開けていきます。`,
+      `タロットが示す全体運は、変化と成長の兆し。過去から学び、現在を大切にし、未来を信じることで最善の結果が引き寄せられます。`,
+    ],
+  };
+  const opts = msgs[theme] || msgs['全体運'];
+  return opts[Math.floor(Math.random() * opts.length)];
+}
+
+function tGenAdvice(cards) {
+  const advices = [
+    "カードが示す最大のメッセージ：「あなたはすでに答えを知っている」。内なる声を信じて行動してください。",
+    "3枚のカードが口を揃えて言っています：「今こそ行動の時」。迷いを手放して前に進みましょう。",
+    "カードからのアドバイス：焦らず、しかし確実に。一歩一歩が大きな変化につながっています。",
+    "タロットが伝えるのは「感謝と手放し」。執着を手放すことで新しいエネルギーが流れ込んできます。",
+    "3枚のカードが示す共通テーマ：「自分を信じること」。外の評価より内なる確信が道を開きます。",
+  ];
+  return advices[Math.floor(Math.random() * advices.length)];
+}
+
+let tDrawnCards = [];
+let tFlippedCount = 0;
+let tCurrentTheme = '';
+
+function tShowScreen(id) {
+  document.querySelectorAll('#tarot-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('t-screen-' + id).classList.add('active');
+}
+function tRetry() {
+  tFlippedCount = 0;
+  tDrawnCards = [];
+  // カードをリセット
+  for(let i=0;i<3;i++){
+    const card = document.getElementById('t-card-'+i);
+    card.classList.remove('flipped');
+    card.style.pointerEvents = 'auto';
+    document.getElementById('t-dot-'+i).classList.remove('done');
+  }
+  document.getElementById('t-reveal-msg').style.display = 'none';
+  document.getElementById('t-hint').textContent = 'カードをタップしてめくってください';
+  tShowScreen('title');
+}
+
+function tStart(theme) {
+  tCurrentTheme = theme;
+  tFlippedCount = 0;
+
+  // ランダムに3枚選ぶ
+  const shuffled = [...tCards].sort(() => Math.random() - 0.5);
+  tDrawnCards = shuffled.slice(0, 3).map(c => ({
+    ...c,
+    reversed: Math.random() > 0.6 // 40%の確率で逆位置
+  }));
+
+  // カードをリセット
+  for(let i=0;i<3;i++){
+    const card = document.getElementById('t-card-'+i);
+    card.classList.remove('flipped');
+    card.style.pointerEvents = 'auto';
+    document.getElementById('t-dot-'+i).classList.remove('done');
+    document.getElementById('t-front-'+i).innerHTML = '';
+  }
+
+  document.getElementById('t-theme-label').textContent = theme;
+  document.getElementById('t-reveal-msg').style.display = 'none';
+  document.getElementById('t-hint').textContent = 'カードをタップしてめくってください';
+  tShowScreen('cards');
+}
+
+function tFlip(idx) {
+  const card = document.getElementById('t-card-'+idx);
+  if(card.classList.contains('flipped')) return; // 既にめくり済み
+
+  const c = tDrawnCards[idx];
+  const orientation = c.reversed ? '【逆位置】' : '【正位置】';
+
+  document.getElementById('t-front-'+idx).innerHTML = `
+    <div class="tc-emoji">${c.emoji}</div>
+    <div class="tc-name">${c.name}</div>
+    <div class="tc-kw">${orientation}<br>${c.kw}</div>`;
+
+  card.classList.add('flipped');
+  card.style.pointerEvents = 'none';
+  document.getElementById('t-dot-'+idx).classList.add('done');
+
+  tFlippedCount++;
+  if(tFlippedCount === 1) document.getElementById('t-hint').textContent = '残り2枚！続けてめくってください';
+  if(tFlippedCount === 2) document.getElementById('t-hint').textContent = '最後の1枚！';
+  if(tFlippedCount === 3) {
+    document.getElementById('t-hint').textContent = '3枚すべてめくりました ✨';
+    document.getElementById('t-reveal-msg').style.display = 'block';
+  }
+}
+
+function tShowResult() {
+  tShowScreen('loading');
+  setTimeout(() => {
+    const c = tDrawnCards;
+    const positions = ['過去','現在','未来'];
+
+    document.getElementById('t-result-theme').textContent = tCurrentTheme;
+
+    // カードサマリー
+    document.getElementById('t-result-cards').innerHTML = c.map((card,i) => `
+      <div class="tarot-detail-item">
+        <div class="tdi-pos">${positions[i]}</div>
+        <div class="tdi-emoji">${card.emoji}</div>
+        <div class="tdi-name">${card.name}</div>
+        <div class="tdi-kw">${card.reversed?'逆位置':'正位置'}</div>
+      </div>`).join('');
+
+    document.getElementById('t-result-message').textContent = tGenMessage(tCurrentTheme, c);
+    document.getElementById('t-result-past').textContent = (c[0].reversed ? c[0].rev : c[0].up);
+    document.getElementById('t-result-present').textContent = (c[1].reversed ? c[1].rev : c[1].up);
+    document.getElementById('t-result-future').textContent = (c[2].reversed ? c[2].rev : c[2].up);
+    document.getElementById('t-result-advice').textContent = tGenAdvice(c);
+
+    tShowScreen('result');
+  }, 1800);
+}
 
 // ============================================
 // ZODIAC QUIZ
