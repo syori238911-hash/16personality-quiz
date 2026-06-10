@@ -15,6 +15,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #home-screen.active { display: flex; }
 #personality-screen.active { display: flex; }
 #sanmei-screen.active { display: flex; }
+#numerology-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -85,11 +86,14 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 }
 .quiz-card-p::before { background: linear-gradient(90deg, #00C9C8, #0089A7); }
 .quiz-card-s::before { background: linear-gradient(90deg, #7c3aed, #4f1d96); }
+.quiz-card-n::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
 
 .quiz-card-p { box-shadow: 0 4px 30px rgba(0,201,200,0.1); }
 .quiz-card-s { box-shadow: 0 4px 30px rgba(124,58,237,0.1); }
+.quiz-card-n { box-shadow: 0 4px 30px rgba(245,158,11,0.1); }
 .quiz-card-p:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,201,200,0.25); }
 .quiz-card-s:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(124,58,237,0.25); }
+.quiz-card-n:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(245,158,11,0.25); }
 
 .quiz-card-icon { font-size: 3.2rem; margin-bottom: 14px; }
 .quiz-card h2 { font-size: 1.25rem; color: white; font-weight: bold; margin-bottom: 10px; }
@@ -127,6 +131,58 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-btn:active { transform: scale(0.98); }
 .quiz-card-p .quiz-card-btn { background: linear-gradient(135deg, #00C9C8, #0089A7); }
 .quiz-card-s .quiz-card-btn { background: linear-gradient(135deg, #7c3aed, #4f1d96); }
+.quiz-card-n .quiz-card-btn { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.quiz-card-n .quiz-card-features li::before { color: #f59e0b; }
+
+/* ============================================
+   NUMEROLOGY QUIZ
+   ============================================ */
+#numerology-screen {
+  background: linear-gradient(135deg, #1c1000 0%, #2d1f00 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-n .container {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.quiz-n .screen { display: none; }
+.quiz-n .screen.active { display: block; }
+.quiz-n .badge { display: inline-block; background: #fef3c7; color: #b45309; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-n h1 { font-size: 2rem; color: #1c1000; margin-bottom: 8px; }
+.quiz-n h1 span { color: #f59e0b; }
+.quiz-n .subtitle { color: #666; line-height: 1.7; margin-top: 10px; margin-bottom: 28px; }
+.quiz-n .btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 16px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px; }
+.quiz-n .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245,158,11,0.4); }
+.quiz-n .btn-outline { background: white; color: #d97706; border: 2px solid #f59e0b; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 12px; }
+.quiz-n .btn-outline:hover { background: #fffbeb; }
+.quiz-n .form-group { margin-bottom: 20px; text-align: left; }
+.quiz-n .form-group label { display: block; font-size: 0.9rem; font-weight: bold; color: #1c1000; margin-bottom: 8px; }
+.quiz-n .form-group select { width: 100%; padding: 14px 16px; border: 2px solid #fde68a; border-radius: 12px; font-size: 1rem; color: #1c1000; background: #fffbeb; transition: border-color 0.2s; }
+.quiz-n .form-group select:focus { outline: none; border-color: #f59e0b; }
+.quiz-n .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.quiz-n .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-n .spinner { width: 60px; height: 60px; border: 5px solid #fde68a; border-top-color: #f59e0b; border-radius: 50%; animation: nSpin 0.8s linear infinite; margin: 0 auto 24px; }
+@keyframes nSpin { to { transform: rotate(360deg); } }
+.quiz-n .loading-screen p { color: #666; }
+.quiz-n .result-card { background: #fffbeb; border-radius: 16px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #f59e0b; text-align: left; }
+.quiz-n .result-card h3 { font-size: 1rem; color: #b45309; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.quiz-n .result-card p { font-size: 0.95rem; color: #333; line-height: 1.7; }
+.quiz-n .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.quiz-n .tag { background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.quiz-n .fortune-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.quiz-n .fortune-label { font-size: 0.85rem; color: #555; width: 60px; flex-shrink: 0; }
+.quiz-n .fortune-bar-bg { flex: 1; height: 10px; background: #fde68a; border-radius: 10px; overflow: hidden; }
+.quiz-n .fortune-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.quiz-n .fortune-pct { font-size: 0.85rem; color: #b45309; font-weight: bold; width: 38px; text-align: right; }
+.n-number-badge { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #f59e0b, #d97706); margin: 0 auto 16px; box-shadow: 0 8px 30px rgba(245,158,11,0.4); }
+.n-result-title { font-size: 1.6rem; font-weight: bold; color: #1c1000; text-align: center; margin-bottom: 6px; }
+.n-result-sub { color: #666; font-size: 0.95rem; text-align: center; margin-bottom: 24px; line-height: 1.6; }
 
 .home-footer {
   margin-top: 40px;
@@ -426,6 +482,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- 数秘術 -->
+    <div class="quiz-card quiz-card-n" onclick="openQuiz('numerology')">
+      <div class="quiz-card-icon">🔢</div>
+      <h2>数秘術診断</h2>
+      <p class="card-desc">誕生日を数字に還元する西洋占術</p>
+      <ul class="quiz-card-features">
+        <li>生年月日だけでOK</li>
+        <li>ライフパスナンバー判定</li>
+        <li>使命・才能がわかる</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
     <!-- 算命学 -->
     <div class="quiz-card quiz-card-s" onclick="openQuiz('sanmei')">
       <div class="quiz-card-icon">🔮</div>
@@ -442,6 +511,74 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
   </div>
 
   <div class="home-footer">© TypeLab — All free to use</div>
+</div>
+
+
+<!-- ===================================================
+     NUMEROLOGY QUIZ
+     =================================================== -->
+<div id="numerology-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+
+  <div class="quiz-n">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="n-screen-title">
+        <div style="text-align:center">
+          <div class="badge">✨ 生年月日から計算</div>
+          <h1>数秘術<span>診断</span></h1>
+          <p class="subtitle">生年月日を1桁になるまで足し算して導く「ライフパスナンバー」<br>あなたの人生のテーマと使命がわかります</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+            <div style="background:#fffbeb;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること①</div><div style="font-size:0.9rem;font-weight:bold;color:#1c1000">ライフパスナンバー</div></div>
+            <div style="background:#fffbeb;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること②</div><div style="font-size:0.9rem;font-weight:bold;color:#1c1000">性格・使命・才能</div></div>
+            <div style="background:#fffbeb;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること③</div><div style="font-size:0.9rem;font-weight:bold;color:#1c1000">2026年の運勢</div></div>
+            <div style="background:#fffbeb;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること④</div><div style="font-size:0.9rem;font-weight:bold;color:#1c1000">相性のいい数字</div></div>
+          </div>
+          <button class="btn" onclick="nShowInput()">診断スタート →</button>
+        </div>
+      </div>
+
+      <!-- 入力 -->
+      <div class="screen" id="n-screen-input">
+        <h2 style="font-size:1.4rem;color:#1c1000;margin-bottom:24px;text-align:center">生年月日を入力してください</h2>
+        <div class="form-group">
+          <label>生年月日</label>
+          <div class="date-row">
+            <select id="n-year"><option value="">年</option></select>
+            <select id="n-month"><option value="">月</option></select>
+            <select id="n-day"><option value="">日</option></select>
+          </div>
+        </div>
+        <button class="btn" onclick="nCalc()">ナンバーを算出する →</button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="n-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>あなたの数字を計算中...</p>
+          <p style="color:#aaa;font-size:0.85rem;margin-top:8px">数秘の神秘を解き明かします</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="n-screen-result">
+        <div style="text-align:center;margin-bottom:28px">
+          <div class="n-number-badge" id="n-number-badge"></div>
+          <div class="n-result-title" id="n-result-title"></div>
+          <div class="n-result-sub" id="n-result-sub"></div>
+        </div>
+        <div class="result-card"><h3>🌟 性格・使命・才能</h3><p id="n-result-personality"></p><div class="tag-wrap" id="n-result-tags"></div></div>
+        <div class="result-card"><h3>🔮 今年（2026年）の運勢</h3><p id="n-result-fortune-text"></p><div id="n-result-fortune-bars"></div></div>
+        <div class="result-card"><h3>💼 向いている仕事・才能の活かし方</h3><p id="n-result-career"></p></div>
+        <div class="result-card"><h3>💕 相性のいい数字・悪い数字</h3><div id="n-result-compat" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px"></div></div>
+        <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">⚠️ 今年の注意点</h3><p id="n-result-caution"></p></div>
+        <button class="btn-outline" onclick="nRetry()">もう一度診断する</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 
@@ -848,6 +985,157 @@ function sShowResult(year,month,day,gender) {
   sShowScreen('result');
 }
 function sRetry() { sShowScreen('input'); }
+
+// ============================================
+// NUMEROLOGY QUIZ
+// ============================================
+
+// ドロップダウン生成
+(function(){
+  const ny=document.getElementById('n-year'),nm=document.getElementById('n-month'),nd=document.getElementById('n-day');
+  for(let y=2008;y>=1940;y--){const o=document.createElement('option');o.value=y;o.textContent=y+'年';ny.appendChild(o);}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'月';nm.appendChild(o);}
+  for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d+'日';nd.appendChild(o);}
+})();
+
+function nShowScreen(id) {
+  document.querySelectorAll('#numerology-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('n-screen-' + id).classList.add('active');
+}
+function nShowInput() { nShowScreen('input'); }
+function nRetry() { nShowScreen('input'); }
+
+function calcLifePath(year, month, day) {
+  const digits = (year.toString() + month.toString().padStart(2,'0') + day.toString().padStart(2,'0')).split('').map(Number);
+  let sum = digits.reduce((a,b) => a+b, 0);
+  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
+    sum = sum.toString().split('').map(Number).reduce((a,b) => a+b, 0);
+  }
+  return sum;
+}
+
+const nData = {
+  1: { title:"リーダー", sub:"独立・開拓・先駆者の数字", color:"#ef4444",
+    personality:"強い意志と独立心を持つリーダータイプ。自分の道を自ら切り開いていく先駆者です。行動力があり、新しいことを始めるのが得意。自信家で、困難な状況でも前向きに突き進めます。",
+    traits:["強い意志力","独立心","行動力","創造性","リーダーシップ"],
+    career:"起業家・経営者・プロジェクトリーダー・アスリート・パイオニア的な職業",
+    fortune:"独立・新規プロジェクトに最適な年。自分の直感を信じて大胆に動こう。",
+    good:[3,5,9], bad:[8], caution:"独りよがりになりやすい年。周囲の意見にも耳を傾けて。"},
+  2: { title:"調停者", sub:"協力・調和・バランスの数字", color:"#ec4899",
+    personality:"人の気持ちに敏感で、場の調和を大切にする協調型。直感が鋭く、細かいところまでよく気がつきます。争いを嫌い、仲裁や支援が得意。縁の下の力持ちとして輝きます。",
+    traits:["高い共感力","調和感覚","繊細さ","忍耐力","協調性"],
+    career:"カウンセラー・外交官・コーディネーター・看護師・秘書",
+    fortune:"人間関係が充実する年。パートナーシップを大切にすると運気アップ。",
+    good:[4,6,8], bad:[1], caution:"自己主張を忘れずに。人のために動きすぎて消耗しないよう注意。"},
+  3: { title:"創造者", sub:"表現・喜び・コミュニケーションの数字", color:"#f59e0b",
+    personality:"豊かな表現力と明るい個性を持つ創造タイプ。コミュニケーション能力が高く、人を笑顔にする才能があります。楽観的でユーモアがあり、どこにいても場を盛り上げます。",
+    traits:["豊かな表現力","創造性","社交性","楽観主義","ユーモア"],
+    career:"アーティスト・作家・俳優・マーケター・教師・エンターテイナー",
+    fortune:"創作活動・表現の年。アイデアが次々と生まれる。SNS発信も吉。",
+    good:[1,5,9], bad:[4], caution:"集中力の維持が課題。目の前のことにしっかり向き合って。"},
+  4: { title:"建設者", sub:"安定・勤勉・実直の数字", color:"#10b981",
+    personality:"誠実で地道な努力を惜しまない堅実タイプ。計画を立てて着実に実行する力があります。信頼性が高く、周囲から頼りにされます。長期的な視点で物事を進めるのが得意。",
+    traits:["誠実さ","計画性","忍耐力","責任感","実行力"],
+    career:"エンジニア・建築家・会計士・公務員・管理職",
+    fortune:"土台を固める年。長期的な計画を立てコツコツ積み上げることで大きな成果に。",
+    good:[2,6,8], bad:[5], caution:"変化への抵抗に注意。柔軟性を持って新しいことも受け入れよう。"},
+  5: { title:"冒険者", sub:"自由・変化・探求の数字", color:"#06b6d4",
+    personality:"自由を愛し、変化と刺激を求める行動派。好奇心旺盛で何にでも挑戦する冒険家タイプ。適応能力が高く、どんな環境でも自分らしく生きられます。",
+    traits:["自由への愛","好奇心","適応力","行動力","多才さ"],
+    career:"旅行・外交・営業・フリーランス・新事業開発・ジャーナリスト",
+    fortune:"旅・新体験の年。思い切った環境の変化が大きなチャンスにつながる。",
+    good:[1,3,7], bad:[4], caution:"飽きっぽさに注意。やりかけのことを最後までやり遂げる意識を。"},
+  6: { title:"育成者", sub:"愛・責任・家族の数字", color:"#8b5cf6",
+    personality:"思いやり深く、人を育て守ることに喜びを感じる献身タイプ。家族や仲間への愛が深く、責任感が強い。美的センスも高く、環境を整えることも得意。",
+    traits:["深い愛情","責任感","美的センス","思いやり","奉仕精神"],
+    career:"教師・医療従事者・保育士・デザイナー・カウンセラー・ソーシャルワーカー",
+    fortune:"愛と奉仕の年。周囲への貢献が自分の喜びにつながる充実した時期。",
+    good:[2,4,9], bad:[3], caution:"自己犠牲になりすぎない。自分自身のケアも忘れずに。"},
+  7: { title:"探求者", sub:"知恵・直感・精神性の数字", color:"#6366f1",
+    personality:"深く物事を考え、真実を探求する知識人タイプ。直感が鋭く、分析力に優れています。独自の世界観を持ち、精神的な深みがあります。孤独を恐れず内面と向き合える強さを持ちます。",
+    traits:["深い洞察力","分析力","直感力","精神性","独創性"],
+    career:"研究者・哲学者・プログラマー・心理士・占い師・作家",
+    fortune:"学びと内省の年。自己研鑽に投資することで将来の大きな飛躍につながる。",
+    good:[3,5,9], bad:[6], caution:"孤立に注意。信頼できる人との対話が運気を高める。"},
+  8: { title:"達成者", sub:"成功・豊かさ・パワーの数字", color:"#1d4ed8",
+    personality:"強い野心と実行力を持つ成功者タイプ。ビジネスセンスが高く、目標に向かって力強く突き進みます。物質的な豊かさと精神的な豊かさの両立を目指します。",
+    traits:["野心","実行力","ビジネス感覚","リーダーシップ","決断力"],
+    career:"経営者・投資家・管理職・弁護士・政治家・プロデューサー",
+    fortune:"財運・キャリアアップの年。大きな決断をするのに最適なタイミング。",
+    good:[2,4,6], bad:[7], caution:"お金・権力への執着に注意。バランス感覚を大切に。"},
+  9: { title:"人道主義者", sub:"完成・博愛・奉仕の数字", color:"#059669",
+    personality:"広い視野と深い愛情を持ち、世のため人のために生きる理想主義タイプ。芸術的感性が高く、精神的な成熟度も高い。人類全体への愛を持ち、ボランティア精神が旺盛。",
+    traits:["博愛精神","芸術的感性","精神的な成熟","理想主義","奉仕心"],
+    career:"芸術家・NGO・医師・外交官・教育者・スピリチュアルリーダー",
+    fortune:"集大成の年。これまでの経験が実を結ぶ。社会貢献が幸運を呼ぶ。",
+    good:[1,3,6], bad:[8], caution:"完璧主義になりすぎない。現実と理想のバランスを取って。"},
+  11: { title:"直感の達人", sub:"啓示・霊感・マスターナンバー 11", color:"#7c3aed",
+    personality:"11はマスターナンバー。鋭すぎる直感と霊的な感受性を持つ特別なタイプ。ビジョンを持ち、人を鼓舞する力があります。高い理想を持つ反面、繊細さゆえの葛藤も。",
+    traits:["超直感力","霊的感受性","ビジョン力","理想主義","カリスマ性"],
+    career:"アーティスト・カウンセラー・スピリチュアルリーダー・ビジョナリー起業家",
+    fortune:"直感を信じて動く年。予期せぬインスピレーションが人生を変える転機に。",
+    good:[2,22,33], bad:[4], caution:"過敏になりすぎない。自分を守るための境界線を大切に。"},
+  22: { title:"マスタービルダー", sub:"実現・構築力・マスターナンバー 22", color:"#b45309",
+    personality:"22はマスターナンバーの中でも最強。大きな夢を現実にする卓越した構築力があります。実用的なビジョナリーとして、社会に長く残る何かを作り出せる稀有な存在。",
+    traits:["卓越した構築力","実用的思考","大きなビジョン","組織力","達成力"],
+    career:"大規模プロジェクトのリーダー・建築家・社会起業家・政治家",
+    fortune:"大きな夢を形にする最大のチャンスの年。ためらわずに行動を。",
+    good:[4,11,33], bad:[9], caution:"完璧にこだわりすぎると動けなくなる。完成より前進を優先して。"},
+  33: { title:"マスターティーチャー", sub:"慈愛・奉仕・マスターナンバー 33", color:"#0891b2",
+    personality:"33はマスターナンバーの中で最も慈愛に満ちた存在。人に教え、導き、癒す使命を持ちます。無条件の愛で人を包む力があり、周囲に深い影響を与えます。",
+    traits:["無条件の愛","教導力","癒しの才能","高い精神性","包容力"],
+    career:"ヒーラー・教育者・宗教家・医師・社会活動家",
+    fortune:"人に与えることで自分が満たされる年。感謝の循環が運気を上げる。",
+    good:[6,11,22], bad:[1], caution:"自己犠牲の精神が強くなりすぎる年。自分を満たすことも使命のひとつ。"}
+};
+
+function nCalc() {
+  const year=parseInt(document.getElementById('n-year').value);
+  const month=parseInt(document.getElementById('n-month').value);
+  const day=parseInt(document.getElementById('n-day').value);
+  if(!year||!month||!day){alert('すべての項目を入力してください');return;}
+  nShowScreen('loading');
+  setTimeout(()=>nShowResult(year,month,day), 2000);
+}
+
+function nShowResult(year, month, day) {
+  const num = calcLifePath(year, month, day);
+  const d = nData[num] || nData[9];
+
+  document.getElementById('n-number-badge').textContent = num;
+  document.getElementById('n-number-badge').style.background = `linear-gradient(135deg, ${d.color}, ${d.color}cc)`;
+  document.getElementById('n-result-title').textContent = `ライフパスナンバー ${num}「${d.title}」`;
+  document.getElementById('n-result-sub').textContent = d.sub;
+  document.getElementById('n-result-personality').textContent = d.personality;
+  document.getElementById('n-result-tags').innerHTML = d.traits.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('n-result-career').textContent = d.career;
+
+  // 運勢バー
+  const base = [75,80,65,70,85,72,68,78,82,74,88,79][num % 12] || 75;
+  const fi = [
+    {label:'全体運',score:base},
+    {label:'仕事運',score:Math.min(95,base+Math.floor(Math.random()*12)-3)},
+    {label:'恋愛運',score:Math.min(95,base+Math.floor(Math.random()*15)-5)},
+    {label:'金運', score:Math.min(95,base+Math.floor(Math.random()*10)-4)},
+    {label:'健康運',score:Math.min(95,base+Math.floor(Math.random()*8))},
+  ];
+  document.getElementById('n-result-fortune-text').textContent = d.fortune;
+  document.getElementById('n-result-fortune-bars').innerHTML = fi.map(f=>`
+    <div class="fortune-row"><div class="fortune-label">${f.label}</div><div class="fortune-bar-bg"><div class="fortune-bar-fill" style="width:${f.score}%"></div></div><div class="fortune-pct">${f.score}%</div></div>`).join('');
+
+  // 相性
+  const all = [1,2,3,4,5,6,7,8,9];
+  let ch='';
+  all.forEach(n=>{
+    if(d.good.includes(n)) ch+=`<div style="text-align:center;padding:10px;border-radius:12px;background:#d1fae5;color:#065f46;font-weight:bold;font-size:0.85rem">◎ ${n}</div>`;
+    else if(d.bad.includes(n)) ch+=`<div style="text-align:center;padding:10px;border-radius:12px;background:#fee2e2;color:#991b1b;font-weight:bold;font-size:0.85rem">✗ ${n}</div>`;
+    else ch+=`<div style="text-align:center;padding:10px;border-radius:12px;background:#f3f4f6;color:#374151;font-weight:bold;font-size:0.85rem">△ ${n}</div>`;
+  });
+  document.getElementById('n-result-compat').innerHTML = ch;
+  document.getElementById('n-result-caution').textContent = d.caution;
+
+  nShowScreen('result');
+}
 </script>
 </body>
 </html>
