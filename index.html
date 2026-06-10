@@ -3,578 +3,851 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>16パーソナリティ診断</title>
+<title>TypeLab | 本格診断ポータル</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #0D1B2A 0%, #1B2A4A 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .container {
-    background: white;
-    border-radius: 24px;
-    padding: 40px;
-    max-width: 640px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  }
+/* ============================================
+   GLOBAL
+   ============================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 
-  /* タイトル画面 */
-  .screen { display: none; }
-  .screen.active { display: block; }
+.app-screen { display: none; min-height: 100vh; }
+#home-screen.active { display: flex; }
+#personality-screen.active { display: flex; }
+#sanmei-screen.active { display: flex; }
 
-  .title-screen { text-align: center; }
-  .title-screen h1 {
-    font-size: 2rem;
-    color: #0D1B2A;
-    margin-bottom: 8px;
-  }
-  .title-screen h1 span { color: #00C9C8; }
-  .title-screen p {
-    color: #666;
-    margin-bottom: 32px;
-    line-height: 1.7;
-  }
-  .badge {
-    display: inline-block;
-    background: #E8F4F8;
-    color: #0089A7;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  .axis-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-  .axis-item {
-    background: #F0F6FA;
-    border-radius: 12px;
-    padding: 14px;
-    text-align: left;
-  }
-  .axis-item .label {
-    font-size: 0.75rem;
-    color: #888;
-    margin-bottom: 4px;
-  }
-  .axis-item .value {
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: #1A2940;
-  }
+/* ============================================
+   HOME SCREEN
+   ============================================ */
+#home-screen {
+  background: linear-gradient(135deg, #0a0e1a 0%, #0D1B2A 35%, #1a0533 65%, #0a0e1a 100%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
 
-  /* ボタン */
-  .btn {
-    background: linear-gradient(135deg, #00C9C8, #0089A7);
-    color: white;
-    border: none;
-    padding: 16px 40px;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,201,200,0.4);
-  }
-  .btn:active { transform: translateY(0); }
+.home-logo {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.home-logo-mark {
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.home-logo h1 {
+  font-size: 3.6rem;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.home-logo h1 .t { color: #00C9C8; }
+.home-logo h1 .l { color: #7c3aed; }
+.home-logo p {
+  color: rgba(255,255,255,0.5);
+  font-size: 1rem;
+  margin-bottom: 48px;
+}
 
-  /* 進捗バー */
-  .progress-wrap {
-    margin-bottom: 28px;
-  }
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-    color: #888;
-  }
-  .progress-bar {
-    background: #E8F4F8;
-    border-radius: 10px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    background: linear-gradient(90deg, #00C9C8, #0089A7);
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.4s ease;
-  }
+.quiz-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 720px;
+  width: 100%;
+}
+@media (max-width: 580px) {
+  .quiz-cards { grid-template-columns: 1fr; max-width: 400px; }
+  .home-logo h1 { font-size: 2.6rem; }
+}
 
-  /* 質問 */
-  .question-screen h2 {
-    font-size: 1.25rem;
-    color: #1A2940;
-    line-height: 1.6;
-    margin-bottom: 28px;
-    min-height: 80px;
-  }
-  .axis-tag {
-    display: inline-block;
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-  .choices {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .choice-btn {
-    background: #F8FBFC;
-    border: 2px solid #E0EAF0;
-    border-radius: 14px;
-    padding: 16px 20px;
-    font-size: 1rem;
-    color: #1A2940;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.2s;
-    line-height: 1.5;
-  }
-  .choice-btn:hover {
-    border-color: #00C9C8;
-    background: #E8F4F8;
-    transform: translateX(4px);
-  }
-  .choice-btn.selected {
-    border-color: #00C9C8;
-    background: #E8F4F8;
-  }
+.quiz-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+.quiz-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.quiz-card-p::before { background: linear-gradient(90deg, #00C9C8, #0089A7); }
+.quiz-card-s::before { background: linear-gradient(90deg, #7c3aed, #4f1d96); }
 
-  /* 5段階スケール */
-  .scale-wrap {
-    margin-top: 8px;
-  }
-  .scale-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 10px;
-  }
-  .scale-btns {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-  }
-  .scale-btn {
-    flex: 1;
-    padding: 14px 8px;
-    border: 2px solid #E0EAF0;
-    border-radius: 12px;
-    background: #F8FBFC;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #666;
-    transition: all 0.2s;
-  }
-  .scale-btn:hover {
-    border-color: #00C9C8;
-    background: #E8F4F8;
-    color: #0089A7;
-  }
-  .scale-btn.s1 { border-color: #E84A5F; }
-  .scale-btn.s2 { border-color: #F0A500; }
-  .scale-btn.s3 { border-color: #AAA; }
-  .scale-btn.s4 { border-color: #5CB85C; }
-  .scale-btn.s5 { border-color: #00C9C8; }
-  .scale-btn.selected { color: white; }
-  .scale-btn.s1.selected { background: #E84A5F; border-color: #E84A5F; }
-  .scale-btn.s2.selected { background: #F0A500; border-color: #F0A500; }
-  .scale-btn.s3.selected { background: #AAA; border-color: #AAA; }
-  .scale-btn.s4.selected { background: #5CB85C; border-color: #5CB85C; }
-  .scale-btn.s5.selected { background: #00C9C8; border-color: #00C9C8; }
+.quiz-card-p { box-shadow: 0 4px 30px rgba(0,201,200,0.1); }
+.quiz-card-s { box-shadow: 0 4px 30px rgba(124,58,237,0.1); }
+.quiz-card-p:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,201,200,0.25); }
+.quiz-card-s:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(124,58,237,0.25); }
 
-  /* ローディング */
-  .loading-screen { text-align: center; padding: 40px 0; }
-  .spinner {
-    width: 60px; height: 60px;
-    border: 5px solid #E8F4F8;
-    border-top-color: #00C9C8;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 24px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-screen p { color: #666; font-size: 1rem; }
+.quiz-card-icon { font-size: 3.2rem; margin-bottom: 14px; }
+.quiz-card h2 { font-size: 1.25rem; color: white; font-weight: bold; margin-bottom: 10px; }
+.quiz-card .card-desc { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 20px; }
 
-  /* 結果画面 */
-  .result-screen { text-align: center; }
-  .result-type-badge {
-    display: inline-block;
-    font-size: 3rem;
-    font-weight: 900;
-    color: white;
-    padding: 16px 36px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-    letter-spacing: 4px;
-  }
-  .result-name {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #1A2940;
-    margin-bottom: 8px;
-  }
-  .result-tagline {
-    color: #666;
-    margin-bottom: 28px;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  .result-axes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .axis-result {
-    background: #F0F6FA;
-    border-radius: 12px;
-    padding: 12px;
-  }
-  .axis-result .axis-name {
-    font-size: 0.75rem;
-    color: #888;
-    margin-bottom: 4px;
-  }
-  .axis-result .axis-val {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #0089A7;
-  }
-  .result-desc {
-    background: #F0F6FA;
-    border-radius: 16px;
-    padding: 20px;
-    text-align: left;
-    margin-bottom: 20px;
-    line-height: 1.7;
-    color: #333;
-    font-size: 0.95rem;
-  }
-  .strengths-wrap {
-    text-align: left;
-    margin-bottom: 24px;
-  }
-  .strengths-wrap h3 {
-    font-size: 1rem;
-    color: #1A2940;
-    margin-bottom: 12px;
-  }
-  .strength-tag {
-    display: inline-block;
-    background: #E8F4F8;
-    color: #0089A7;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    margin: 4px;
-  }
-  .career-wrap {
-    text-align: left;
-    margin-bottom: 28px;
-  }
-  .career-wrap h3 {
-    font-size: 1rem;
-    color: #1A2940;
-    margin-bottom: 12px;
-  }
-  .career-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: #F8FBFC;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: #1A2940;
-  }
-  .career-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .btn-retry {
-    background: white;
-    color: #0089A7;
-    border: 2px solid #00C9C8;
-    padding: 14px 40px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.2s;
-  }
-  .btn-retry:hover {
-    background: #E8F4F8;
-  }
+.quiz-card-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 26px;
+}
+.quiz-card-features li {
+  font-size: 0.83rem;
+  color: rgba(255,255,255,0.45);
+  padding: 5px 0 5px 18px;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.quiz-card-features li:last-child { border-bottom: none; }
+.quiz-card-features li::before { content: '✓'; position: absolute; left: 0; font-weight: bold; }
+.quiz-card-p .quiz-card-features li::before { color: #00C9C8; }
+.quiz-card-s .quiz-card-features li::before { color: #7c3aed; }
+
+.quiz-card-btn {
+  display: block;
+  padding: 13px 24px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.quiz-card-btn:active { transform: scale(0.98); }
+.quiz-card-p .quiz-card-btn { background: linear-gradient(135deg, #00C9C8, #0089A7); }
+.quiz-card-s .quiz-card-btn { background: linear-gradient(135deg, #7c3aed, #4f1d96); }
+
+.home-footer {
+  margin-top: 40px;
+  color: rgba(255,255,255,0.2);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   BACK BUTTON (shared)
+   ============================================ */
+.back-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  background: rgba(0,0,0,0.4);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(0,0,0,0.6); }
+
+/* ============================================
+   16 PERSONALITY QUIZ
+   ============================================ */
+#personality-screen {
+  background: linear-gradient(135deg, #0D1B2A 0%, #1B2A4A 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+
+.quiz-p .container {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.quiz-p .screen { display: none; }
+.quiz-p .screen.active { display: block; }
+
+.quiz-p .title-screen { text-align: center; }
+.quiz-p .title-screen h1 { font-size: 2rem; color: #0D1B2A; margin-bottom: 8px; }
+.quiz-p .title-screen h1 span { color: #00C9C8; }
+.quiz-p .title-screen > p { color: #666; margin-bottom: 32px; line-height: 1.7; margin-top: 12px; }
+.quiz-p .badge {
+  display: inline-block;
+  background: #E8F4F8;
+  color: #0089A7;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.quiz-p .axis-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+.quiz-p .axis-item { background: #F0F6FA; border-radius: 12px; padding: 14px; text-align: left; }
+.quiz-p .axis-item .label { font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+.quiz-p .axis-item .value { font-size: 0.95rem; font-weight: bold; color: #1A2940; }
+
+.quiz-p .btn {
+  background: linear-gradient(135deg, #00C9C8, #0089A7);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.quiz-p .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,201,200,0.4); }
+.quiz-p .btn:active { transform: translateY(0); }
+
+.quiz-p .progress-wrap { margin-bottom: 28px; }
+.quiz-p .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: #888; }
+.quiz-p .progress-bar { background: #E8F4F8; border-radius: 10px; height: 8px; overflow: hidden; }
+.quiz-p .progress-fill {
+  background: linear-gradient(90deg, #00C9C8, #0089A7);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.quiz-p .q-text { font-size: 1.25rem; color: #1A2940; line-height: 1.6; margin-bottom: 28px; min-height: 80px; }
+.quiz-p .axis-tag {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+.quiz-p .scale-wrap { margin-top: 8px; }
+.quiz-p .scale-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; margin-bottom: 10px; }
+.quiz-p .scale-btns { display: flex; gap: 8px; justify-content: center; }
+.quiz-p .scale-btn {
+  flex: 1;
+  padding: 14px 8px;
+  border: 2px solid #E0EAF0;
+  border-radius: 12px;
+  background: #F8FBFC;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #666;
+  transition: all 0.2s;
+}
+.quiz-p .scale-btn:hover { border-color: #00C9C8; background: #E8F4F8; color: #0089A7; }
+.quiz-p .scale-btn.s1 { border-color: #E84A5F; }
+.quiz-p .scale-btn.s2 { border-color: #F0A500; }
+.quiz-p .scale-btn.s3 { border-color: #AAA; }
+.quiz-p .scale-btn.s4 { border-color: #5CB85C; }
+.quiz-p .scale-btn.s5 { border-color: #00C9C8; }
+.quiz-p .scale-btn.selected { color: white; }
+.quiz-p .scale-btn.s1.selected { background: #E84A5F; border-color: #E84A5F; }
+.quiz-p .scale-btn.s2.selected { background: #F0A500; border-color: #F0A500; }
+.quiz-p .scale-btn.s3.selected { background: #AAA; border-color: #AAA; }
+.quiz-p .scale-btn.s4.selected { background: #5CB85C; border-color: #5CB85C; }
+.quiz-p .scale-btn.s5.selected { background: #00C9C8; border-color: #00C9C8; }
+
+.quiz-p .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-p .spinner {
+  width: 60px; height: 60px;
+  border: 5px solid #E8F4F8;
+  border-top-color: #00C9C8;
+  border-radius: 50%;
+  animation: pSpin 0.8s linear infinite;
+  margin: 0 auto 24px;
+}
+@keyframes pSpin { to { transform: rotate(360deg); } }
+.quiz-p .loading-screen p { color: #666; font-size: 1rem; }
+
+.quiz-p .result-screen { text-align: center; }
+.quiz-p .result-type-badge {
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: 900;
+  color: white;
+  padding: 16px 36px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 4px;
+}
+.quiz-p .result-name { font-size: 1.6rem; font-weight: bold; color: #1A2940; margin-bottom: 8px; }
+.quiz-p .result-tagline { color: #666; margin-bottom: 28px; font-size: 1rem; line-height: 1.6; }
+.quiz-p .result-axes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.quiz-p .axis-result { background: #F0F6FA; border-radius: 12px; padding: 12px; }
+.quiz-p .axis-result .axis-name { font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+.quiz-p .axis-result .axis-val { font-size: 1rem; font-weight: bold; color: #0089A7; }
+.quiz-p .result-desc { background: #F0F6FA; border-radius: 16px; padding: 20px; text-align: left; margin-bottom: 20px; line-height: 1.7; color: #333; font-size: 0.95rem; }
+.quiz-p .strengths-wrap { text-align: left; margin-bottom: 24px; }
+.quiz-p .strengths-wrap h3 { font-size: 1rem; color: #1A2940; margin-bottom: 12px; }
+.quiz-p .strength-tag { display: inline-block; background: #E8F4F8; color: #0089A7; padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin: 4px; }
+.quiz-p .career-wrap { text-align: left; margin-bottom: 28px; }
+.quiz-p .career-wrap h3 { font-size: 1rem; color: #1A2940; margin-bottom: 12px; }
+.quiz-p .career-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F8FBFC; border-radius: 10px; margin-bottom: 8px; font-size: 0.9rem; color: #1A2940; }
+.quiz-p .career-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.quiz-p .btn-retry { background: white; color: #0089A7; border: 2px solid #00C9C8; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; }
+.quiz-p .btn-retry:hover { background: #E8F4F8; }
+
+/* ============================================
+   SANMEI QUIZ
+   ============================================ */
+#sanmei-screen {
+  background: linear-gradient(135deg, #1a0533 0%, #2d1b4e 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+
+.quiz-s .container {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.quiz-s .screen { display: none; }
+.quiz-s .screen.active { display: block; }
+
+.quiz-s .title-screen { text-align: center; }
+.quiz-s .badge { display: inline-block; background: #f3e8ff; color: #7c3aed; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-s h1 { font-size: 2rem; color: #1a0533; margin-bottom: 8px; }
+.quiz-s h1 span { color: #7c3aed; }
+.quiz-s .subtitle { color: #666; margin-bottom: 32px; line-height: 1.7; margin-top: 10px; }
+
+.quiz-s .form-group { margin-bottom: 24px; text-align: left; }
+.quiz-s .form-group label { display: block; font-size: 0.9rem; font-weight: bold; color: #1a0533; margin-bottom: 8px; }
+.quiz-s .form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e5d4f5;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1a0533;
+  background: #faf5ff;
+  transition: border-color 0.2s;
+}
+.quiz-s .form-group select:focus { outline: none; border-color: #7c3aed; }
+.quiz-s .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+.quiz-s .btn {
+  background: linear-gradient(135deg, #7c3aed, #4f1d96);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 8px;
+}
+.quiz-s .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124,58,237,0.4); }
+.quiz-s .btn-outline { background: white; color: #7c3aed; border: 2px solid #7c3aed; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 12px; }
+.quiz-s .btn-outline:hover { background: #faf5ff; }
+
+.quiz-s .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-s .spinner {
+  width: 60px; height: 60px;
+  border: 5px solid #e5d4f5;
+  border-top-color: #7c3aed;
+  border-radius: 50%;
+  animation: sSpin 0.8s linear infinite;
+  margin: 0 auto 24px;
+}
+@keyframes sSpin { to { transform: rotate(360deg); } }
+
+.quiz-s .result-header { text-align: center; margin-bottom: 28px; }
+.quiz-s .meishiki-badge { display: inline-block; background: linear-gradient(135deg, #1a0533, #4f1d96); color: white; padding: 16px 32px; border-radius: 16px; margin-bottom: 16px; letter-spacing: 2px; }
+.quiz-s .meishiki-badge .label { font-size: 0.8rem; opacity: 0.7; margin-bottom: 6px; }
+.quiz-s .meishiki-badge .value { font-size: 1.6rem; font-weight: bold; }
+.quiz-s .eto-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.quiz-s .eto-item { background: #faf5ff; border: 2px solid #e5d4f5; border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 70px; }
+.quiz-s .eto-item .eto-label { font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+.quiz-s .eto-item .eto-val { font-size: 1.1rem; font-weight: bold; color: #4f1d96; }
+
+.quiz-s .result-card { background: #faf5ff; border-radius: 16px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #7c3aed; text-align: left; }
+.quiz-s .result-card h3 { font-size: 1rem; color: #4f1d96; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.quiz-s .result-card p { font-size: 0.95rem; color: #333; line-height: 1.7; }
+
+.quiz-s .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.quiz-s .tag { background: #ede9fe; color: #5b21b6; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+
+.quiz-s .fortune-bar-wrap { margin-top: 10px; }
+.quiz-s .fortune-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.quiz-s .fortune-label { font-size: 0.85rem; color: #555; width: 60px; flex-shrink: 0; }
+.quiz-s .fortune-bar-bg { flex: 1; height: 10px; background: #e5d4f5; border-radius: 10px; overflow: hidden; }
+.quiz-s .fortune-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #7c3aed, #a855f7); }
+.quiz-s .fortune-pct { font-size: 0.85rem; color: #7c3aed; font-weight: bold; width: 38px; text-align: right; }
+
+.quiz-s .compatibility-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.quiz-s .compat-item { text-align: center; padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+.quiz-s .compat-good { background: #d1fae5; color: #065f46; }
+.quiz-s .compat-bad { background: #fee2e2; color: #991b1b; }
+.quiz-s .compat-neutral { background: #f3f4f6; color: #374151; }
 </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- タイトル画面 -->
-  <div class="screen active" id="screen-title">
-    <div class="title-screen">
-      <div class="badge">✨ 無料 · 3分で完了</div>
-      <h1>16<span>パーソナリティ</span><br>診断</h1>
-      <p style="margin-top:12px">20の質問に答えるだけで<br>あなたの性格タイプがわかります</p>
-      <div class="axis-list">
-        <div class="axis-item">
-          <div class="label">エネルギーの向き</div>
-          <div class="value">外向型 E ↔ 内向型 I</div>
-        </div>
-        <div class="axis-item">
-          <div class="label">情報の受け取り方</div>
-          <div class="value">感覚型 S ↔ 直感型 N</div>
-        </div>
-        <div class="axis-item">
-          <div class="label">判断の仕方</div>
-          <div class="value">思考型 T ↔ 感情型 F</div>
-        </div>
-        <div class="axis-item">
-          <div class="label">生活スタイル</div>
-          <div class="value">計画型 J ↔ 探索型 P</div>
-        </div>
-      </div>
-      <button class="btn" onclick="startQuiz()">診断スタート →</button>
-    </div>
+<!-- ===================================================
+     HOME SCREEN
+     =================================================== -->
+<div id="home-screen" class="app-screen active">
+
+  <div class="home-logo">
+    <div class="home-logo-mark">Diagnosis Portal</div>
+    <h1><span class="t">Type</span><span class="l">Lab</span></h1>
+    <p>自分を深く知るための、2つの本格診断</p>
   </div>
 
-  <!-- 質問画面 -->
-  <div class="screen" id="screen-question">
-    <div class="progress-wrap">
-      <div class="progress-info">
-        <span id="q-num">質問 1 / 20</span>
-        <span id="q-pct">0%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-      </div>
+  <div class="quiz-cards">
+
+    <!-- 16パーソナリティ -->
+    <div class="quiz-card quiz-card-p" onclick="openQuiz('personality')">
+      <div class="quiz-card-icon">🧠</div>
+      <h2>16パーソナリティ診断</h2>
+      <p class="card-desc">MBTIをベースにした本格タイプ判定</p>
+      <ul class="quiz-card-features">
+        <li>20問・約3分で完了</li>
+        <li>16タイプを正確に判定</li>
+        <li>強み・適職もわかる</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
     </div>
-    <div id="axis-tag-wrap"></div>
-    <h2 id="question-text"></h2>
-    <div class="scale-wrap">
-      <div class="scale-labels">
-        <span>まったく違う</span>
-        <span>どちらでも</span>
-        <span>とてもそう</span>
-      </div>
-      <div class="scale-btns">
-        <button class="scale-btn s1" onclick="answer(1)">1</button>
-        <button class="scale-btn s2" onclick="answer(2)">2</button>
-        <button class="scale-btn s3" onclick="answer(3)">3</button>
-        <button class="scale-btn s4" onclick="answer(4)">4</button>
-        <button class="scale-btn s5" onclick="answer(5)">5</button>
-      </div>
+
+    <!-- 算命学 -->
+    <div class="quiz-card quiz-card-s" onclick="openQuiz('sanmei')">
+      <div class="quiz-card-icon">🔮</div>
+      <h2>算命学診断</h2>
+      <p class="card-desc">4000年の歴史を持つ東洋占術</p>
+      <ul class="quiz-card-features">
+        <li>生年月日だけで占える</li>
+        <li>命式・運勢・性格がわかる</li>
+        <li>相性診断つき</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
     </div>
+
   </div>
 
-  <!-- ローディング画面 -->
-  <div class="screen" id="screen-loading">
-    <div class="loading-screen">
-      <div class="spinner"></div>
-      <p>あなたのタイプを分析中...</p>
-    </div>
-  </div>
-
-  <!-- 結果画面 -->
-  <div class="screen" id="screen-result">
-    <div class="result-screen">
-      <div id="result-badge" class="result-type-badge"></div>
-      <div id="result-name" class="result-name"></div>
-      <div id="result-tagline" class="result-tagline"></div>
-      <div class="result-axes" id="result-axes"></div>
-      <div id="result-desc" class="result-desc"></div>
-      <div class="strengths-wrap">
-        <h3>💪 あなたの強み</h3>
-        <div id="result-strengths"></div>
-      </div>
-      <div class="career-wrap">
-        <h3>🎯 向いている職業・働き方</h3>
-        <div id="result-careers"></div>
-      </div>
-      <button class="btn-retry" onclick="retryQuiz()">もう一度診断する</button>
-    </div>
-  </div>
-
+  <div class="home-footer">© TypeLab — All free to use</div>
 </div>
 
+
+<!-- ===================================================
+     16 PERSONALITY QUIZ
+     =================================================== -->
+<div id="personality-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+
+  <div class="quiz-p">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="p-screen-title">
+        <div class="title-screen">
+          <div class="badge">✨ 無料 · 3分で完了</div>
+          <h1>16<span>パーソナリティ</span><br>診断</h1>
+          <p>20の質問に答えるだけで<br>あなたの性格タイプがわかります</p>
+          <div class="axis-list">
+            <div class="axis-item"><div class="label">エネルギーの向き</div><div class="value">外向型 E ↔ 内向型 I</div></div>
+            <div class="axis-item"><div class="label">情報の受け取り方</div><div class="value">感覚型 S ↔ 直感型 N</div></div>
+            <div class="axis-item"><div class="label">判断の仕方</div><div class="value">思考型 T ↔ 感情型 F</div></div>
+            <div class="axis-item"><div class="label">生活スタイル</div><div class="value">計画型 J ↔ 探索型 P</div></div>
+          </div>
+          <button class="btn" onclick="pStartQuiz()">診断スタート →</button>
+        </div>
+      </div>
+
+      <!-- 質問 -->
+      <div class="screen" id="p-screen-question">
+        <div class="progress-wrap">
+          <div class="progress-info">
+            <span id="p-q-num">質問 1 / 20</span>
+            <span id="p-q-pct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="p-progress-fill" style="width:0%"></div></div>
+        </div>
+        <div id="p-axis-tag-wrap"></div>
+        <p class="q-text" id="p-question-text"></p>
+        <div class="scale-wrap">
+          <div class="scale-labels">
+            <span>まったく違う</span><span>どちらでも</span><span>とてもそう</span>
+          </div>
+          <div class="scale-btns">
+            <button class="scale-btn s1" onclick="pAnswer(1)">1</button>
+            <button class="scale-btn s2" onclick="pAnswer(2)">2</button>
+            <button class="scale-btn s3" onclick="pAnswer(3)">3</button>
+            <button class="scale-btn s4" onclick="pAnswer(4)">4</button>
+            <button class="scale-btn s5" onclick="pAnswer(5)">5</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="p-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>あなたのタイプを分析中...</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="p-screen-result">
+        <div class="result-screen">
+          <div id="p-result-badge" class="result-type-badge"></div>
+          <div id="p-result-name" class="result-name"></div>
+          <div id="p-result-tagline" class="result-tagline"></div>
+          <div class="result-axes" id="p-result-axes"></div>
+          <div id="p-result-desc" class="result-desc"></div>
+          <div class="strengths-wrap">
+            <h3>💪 あなたの強み</h3>
+            <div id="p-result-strengths"></div>
+          </div>
+          <div class="career-wrap">
+            <h3>🎯 向いている職業・働き方</h3>
+            <div id="p-result-careers"></div>
+          </div>
+          <button class="btn-retry" onclick="pRetry()">もう一度診断する</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     SANMEI QUIZ
+     =================================================== -->
+<div id="sanmei-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+
+  <div class="quiz-s">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="s-screen-title">
+        <div class="title-screen">
+          <div class="badge">✨ 生年月日だけで占う</div>
+          <h1>算命学<span>診断</span></h1>
+          <p class="subtitle">4000年の歴史を持つ東洋占術<br>生年月日から運命・性格・相性を読み解きます</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+            <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること①</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0533">命式・性格・才能</div></div>
+            <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること②</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0533">今年の運勢</div></div>
+            <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること③</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0533">相性のいい干支</div></div>
+            <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること④</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0533">適職・才能</div></div>
+          </div>
+          <button class="btn" onclick="sShowInput()">診断スタート →</button>
+        </div>
+      </div>
+
+      <!-- 入力 -->
+      <div class="screen" id="s-screen-input">
+        <h2 style="font-size:1.4rem;color:#1a0533;margin-bottom:24px;text-align:center">生年月日を入力してください</h2>
+        <div class="form-group">
+          <label>生年月日</label>
+          <div class="date-row">
+            <select id="s-year"><option value="">年</option></select>
+            <select id="s-month"><option value="">月</option></select>
+            <select id="s-day"><option value="">日</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>性別</label>
+          <select id="s-gender">
+            <option value="">選択してください</option>
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+          </select>
+        </div>
+        <button class="btn" onclick="sStartDiagnosis()">命式を算出する →</button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="s-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p style="color:#666">生年月日から命式を計算中...</p>
+          <p style="color:#aaa;font-size:0.85rem;margin-top:8px">4000年の歴史が紐解かれます</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="s-screen-result">
+        <div class="result-header">
+          <div class="meishiki-badge">
+            <div class="label">あなたの命式</div>
+            <div class="value" id="s-result-meishiki"></div>
+          </div>
+          <div style="font-size:1.3rem;font-weight:bold;color:#1a0533;margin-bottom:4px" id="s-result-title"></div>
+          <div style="color:#666;font-size:0.9rem;margin-bottom:16px" id="s-result-subtitle"></div>
+          <div class="eto-row" id="s-result-eto-row"></div>
+        </div>
+        <div class="result-card"><h3>🌟 性格・才能</h3><p id="s-result-personality"></p><div class="tag-wrap" id="s-result-tags"></div></div>
+        <div class="result-card"><h3>🔮 今年（2026年）の運勢</h3><p id="s-result-fortune-text"></p><div class="fortune-bar-wrap" id="s-result-fortune-bars"></div></div>
+        <div class="result-card"><h3>💼 適職・才能が活きる分野</h3><p id="s-result-career"></p></div>
+        <div class="result-card"><h3>💕 相性診断</h3><p style="font-size:0.85rem;color:#666;margin-bottom:8px">あなたと相性のいい干支・悪い干支</p><div class="compatibility-grid" id="s-result-compat"></div></div>
+        <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">⚠️ 今年注意すること</h3><p id="s-result-caution"></p></div>
+        <button class="btn-outline" onclick="sRetry()">もう一度診断する</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <script>
-// 質問データ（各軸5問ずつ、計20問）
-// スコア：高いほど E/N/T/J 寄り、低いほど I/S/F/P 寄り
-const questions = [
-  // E(高) vs I(低)
-  { text: "初めて会う人とすぐに打ち解けて会話できる", axis: "EI", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
-  { text: "週末は友人と外出するより家でのんびりしたい", axis: "EI", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "I" },
-  { text: "グループの中心にいることが多い", axis: "EI", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
-  { text: "人と長時間一緒にいると疲れを感じる", axis: "EI", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "I" },
-  { text: "考えながら声に出して話すことが多い", axis: "EI", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
-  // S(高) vs N(低)
-  { text: "細かい事実やデータよりも全体の流れや可能性に興味がある", axis: "SN", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
-  { text: "実績や経験に基づいて判断することが多い", axis: "SN", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "S" },
-  { text: "「なぜそうなるのか」という根本的な問いに興味がある", axis: "SN", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
-  { text: "アイデアより実用性・現実性を重視する", axis: "SN", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "S" },
-  { text: "将来の可能性や夢について考えることが好きだ", axis: "SN", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
-  // T(高) vs F(低)
-  { text: "物事を決めるとき感情より論理・データを重視する", axis: "TF", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
-  { text: "友人が悩んでいるとき、解決策より共感することを優先する", axis: "TF", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "F" },
-  { text: "批判や厳しい意見でも、正しければ相手に伝えるべきだと思う", axis: "TF", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
-  { text: "他人の気持ちや感情の変化に敏感に気づく", axis: "TF", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "F" },
-  { text: "論争や議論は苦手ではなく、むしろ楽しめる", axis: "TF", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
-  // J(高) vs P(低)
-  { text: "旅行や予定は事前にしっかり計画を立てたい", axis: "JP", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
-  { text: "締め切りギリギリまで作業を始めないことが多い", axis: "JP", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "P" },
-  { text: "物事を終わらせてスッキリすることが好きだ", axis: "JP", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
-  { text: "急な変更や予定外の出来事に柔軟に対応できる", axis: "JP", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "P" },
-  { text: "部屋や持ち物は整理整頓されていないと落ち着かない", axis: "JP", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
+// ============================================
+// APP NAVIGATION
+// ============================================
+function openQuiz(type) {
+  document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(type + '-screen').classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goHome() {
+  document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home-screen').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ============================================
+// 16 PERSONALITY QUIZ
+// ============================================
+const pQuestions = [
+  { text: "初めて会う人とすぐに打ち解けて会話できる", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
+  { text: "週末は友人と外出するより家でのんびりしたい", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "I" },
+  { text: "グループの中心にいることが多い", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
+  { text: "人と長時間一緒にいると疲れを感じる", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "I" },
+  { text: "考えながら声に出して話すことが多い", axisLabel: "E（外向） / I（内向）", color: "#00C9C8", dir: "E" },
+  { text: "細かい事実やデータよりも全体の流れや可能性に興味がある", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
+  { text: "実績や経験に基づいて判断することが多い", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "S" },
+  { text: "「なぜそうなるのか」という根本的な問いに興味がある", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
+  { text: "アイデアより実用性・現実性を重視する", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "S" },
+  { text: "将来の可能性や夢について考えることが好きだ", axisLabel: "S（感覚） / N（直感）", color: "#7B4F9E", dir: "N" },
+  { text: "物事を決めるとき感情より論理・データを重視する", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
+  { text: "友人が悩んでいるとき、解決策より共感することを優先する", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "F" },
+  { text: "批判や厳しい意見でも、正しければ相手に伝えるべきだと思う", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
+  { text: "他人の気持ちや感情の変化に敏感に気づく", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "F" },
+  { text: "論争や議論は苦手ではなく、むしろ楽しめる", axisLabel: "T（思考） / F（感情）", color: "#E84A5F", dir: "T" },
+  { text: "旅行や予定は事前にしっかり計画を立てたい", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
+  { text: "締め切りギリギリまで作業を始めないことが多い", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "P" },
+  { text: "物事を終わらせてスッキリすることが好きだ", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
+  { text: "急な変更や予定外の出来事に柔軟に対応できる", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "P" },
+  { text: "部屋や持ち物は整理整頓されていないと落ち着かない", axisLabel: "J（計画） / P（探索）", color: "#5CB85C", dir: "J" },
 ];
 
-// タイプデータ
-const typeData = {
-  INTJ: { name: "建築家", color: "#1B2A4A", tagline: "戦略的な思考と強い意志を持つ独創的な計画者。目標に向かって着実に動く。", desc: "INTJは16タイプの中でも最も希少で知的なタイプのひとつ。長期的なビジョンを描き、そこに向かって戦略的に動く力を持っています。感情に流されず、論理と原則に基づいて行動します。", strengths: ["戦略的思考", "独立心", "決断力", "完璧主義", "長期ビジョン"], careers: ["経営コンサルタント", "研究者・科学者", "ソフトウェアエンジニア", "起業家", "戦略アナリスト"] },
-  INTP: { name: "論理学者", color: "#0089A7", tagline: "知的好奇心旺盛な理論家。あらゆる事象の「なぜ」を探求し続ける。", desc: "INTPは論理と分析を愛するタイプ。複雑な問題を深く掘り下げ、独自の理論を構築することが得意です。枠にとらわれない自由な発想と、真実を追い求める情熱が特徴。", strengths: ["論理的分析力", "創造的思考", "客観性", "独創性", "深い洞察力"], careers: ["プログラマー・エンジニア", "研究者", "哲学者・評論家", "データサイエンティスト", "ゲームデザイナー"] },
-  ENTJ: { name: "指揮官", color: "#C0392B", tagline: "生まれながらのリーダー。目標を設定し、人を束ね、成果を出す。", desc: "ENTJは決断力とリーダーシップが際立つタイプ。目標に向かって組織を動かす力があり、ビジョンを実現するために周囲を巻き込みます。起業家・経営者に最も多いタイプのひとつ。", strengths: ["リーダーシップ", "決断力", "戦略思考", "向上心", "統率力"], careers: ["経営者・起業家", "マネージャー", "弁護士", "政治家", "コンサルタント"] },
-  ENTP: { name: "討論者", color: "#E67E22", tagline: "アイデアと議論を愛する発明家タイプ。常識を疑い、新しい道を切り開く。", desc: "ENTPは知的な挑戦と議論を楽しむタイプ。既存の枠組みを壊して新しい視点を生み出す力があります。スタートアップや新規事業に向いており、変化を恐れない柔軟さが強み。", strengths: ["創造力", "議論力", "柔軟性", "発想力", "問題解決力"], careers: ["起業家", "マーケター", "弁護士", "クリエイティブディレクター", "コメディアン・作家"] },
-  INFJ: { name: "提唱者", color: "#6C3483", tagline: "深い洞察力と強い理想を持つ、最も希少な性格タイプ。", desc: "INFJは全タイプの中で最も希少（全人口の1〜2%）。人の気持ちを深く理解しながら、社会をより良くしたいという強い理想を持ちます。静かながら強い意志と使命感を持っています。", strengths: ["深い洞察力", "共感力", "理想主義", "創造性", "忍耐力"], careers: ["カウンセラー・心理士", "作家・詩人", "社会活動家", "教師・教育者", "医師・看護師"] },
-  INFP: { name: "仲介者", color: "#8E44AD", tagline: "感受性豊かな理想主義者。自分の価値観に従って静かに世界を変えようとする。", desc: "INFPは豊かな内面世界と強い価値観を持つタイプ。表面上は穏やかですが、信念に基づいた行動力を持ちます。創作活動や人の心に寄り添う仕事に向いています。", strengths: ["共感力", "創造性", "誠実さ", "適応力", "深い感受性"], careers: ["作家・ライター", "デザイナー", "カウンセラー", "社会福祉士", "アーティスト"] },
-  ENFJ: { name: "主人公", color: "#27AE60", tagline: "カリスマ性と共感力を持つ天性のリーダー。人の可能性を引き出す。", desc: "ENFJは人を動かすカリスマ性と深い共感力を兼ね備えたタイプ。周囲の人が成長するのを助けることに喜びを感じます。チームをまとめ、理想に向かって引っ張る力があります。", strengths: ["カリスマ性", "共感力", "リーダーシップ", "コミュニケーション力", "情熱"], careers: ["教師・コーチ", "人事・採用担当", "政治家・活動家", "カウンセラー", "イベントプランナー"] },
-  ENFP: { name: "広報運動家", color: "#F39C12", tagline: "自由を愛する情熱家。あらゆる可能性に目を輝かせ、人を笑顔にする。", desc: "ENFPはエネルギッシュで創造的な自由人タイプ。人との繋がりを大切にし、新しいアイデアや可能性に常にワクワクしています。直感と情熱で行動する、周囲を明るくする存在。", strengths: ["コミュニケーション力", "創造性", "情熱", "共感力", "適応力"], careers: ["マーケター", "ジャーナリスト", "俳優・エンターテイナー", "起業家", "コーチ・ファシリテーター"] },
-  ISTJ: { name: "管理者", color: "#2C3E50", tagline: "誠実さと責任感を持つ信頼の守護者。約束は必ず守る。", desc: "ISTJは信頼性・責任感・実直さが際立つタイプ。ルールと伝統を重んじ、着実に仕事をこなします。社会の安定を支える縁の下の力持ち的な存在で、どんな組織でも信頼されます。", strengths: ["責任感", "誠実さ", "几帳面さ", "忍耐力", "信頼性"], careers: ["公務員・行政官", "会計士・税理士", "法律家", "医師", "エンジニア"] },
-  ISFJ: { name: "擁護者", color: "#1ABC9C", tagline: "献身的で思いやり深い守護者。縁の下でみんなを支える。", desc: "ISFJは思いやりと献身の塊のようなタイプ。他者のために尽くすことに喜びを感じ、細部まで気を配ります。目立ちませんが、いなくなると困る「縁の下の力持ち」です。", strengths: ["思いやり", "忍耐力", "観察力", "責任感", "サポート力"], careers: ["看護師・介護士", "教師", "事務・秘書", "カウンセラー", "ソーシャルワーカー"] },
-  ESTJ: { name: "幹部", color: "#D35400", tagline: "秩序と管理を愛する組織の守り手。ルールを作り、チームを率いる。", desc: "ESTJは組織を動かす管理能力と決断力が特徴のタイプ。明確なルールと効率を好み、チームをまとめる力があります。責任感が強く、社会や組織の中核を担う存在。", strengths: ["組織力", "リーダーシップ", "決断力", "忠実さ", "実行力"], careers: ["マネージャー・管理職", "軍人・警察官", "法律家", "経営者", "プロジェクトマネージャー"] },
-  ESFJ: { name: "領事", color: "#16A085", tagline: "社交的で思いやり深い人気者。みんなの調和を大切にする。", desc: "ESFJはコミュニティの中心にいることが多い社交的なタイプ。周囲の人が幸せかどうかをいつも気にかけ、場の雰囲気を盛り上げます。人から頼られることに喜びを感じます。", strengths: ["社交性", "思いやり", "組織力", "忠実さ", "協調性"], careers: ["営業・接客", "イベントプランナー", "教師・保育士", "医療職", "人事担当"] },
-  ISTP: { name: "巨匠", color: "#7F8C8D", tagline: "冷静で器用な問題解決者。手を動かしながら答えを見つける。", desc: "ISTPは実践的で論理的な行動派タイプ。機械・道具・システムを操る器用さと、冷静な問題解決能力が特徴です。危機的状況でも冷静に最善手を打てる頼れる存在。", strengths: ["問題解決力", "器用さ", "冷静さ", "論理的思考", "適応力"], careers: ["エンジニア・技術者", "外科医", "警察官・消防士", "パイロット", "プログラマー"] },
-  ISFP: { name: "冒険家", color: "#2ECC71", tagline: "穏やかで感性豊かな自由人。今この瞬間を大切に生きる。", desc: "ISFPは穏やかで芸術的センスを持つタイプ。自分の価値観に従って静かに行動し、美しいものや自然を愛します。ルールより自由を好む、マイペースな生き方が特徴。", strengths: ["感受性", "芸術的センス", "共感力", "柔軟性", "優しさ"], careers: ["アーティスト・デザイナー", "ミュージシャン", "シェフ", "自然・環境関連", "ファッション関係"] },
-  ESTP: { name: "起業家", color: "#E74C3C", tagline: "行動力とリスク耐性を持つエネルギッシュな実行者。", desc: "ESTPはまさに起業家タイプ。リスクを恐れず即座に行動に移す力と、状況を素早く読む観察力が特徴。退屈を嫌い、常に刺激と新しい挑戦を求めます。", strengths: ["行動力", "問題解決力", "社交性", "観察力", "柔軟性"], careers: ["起業家・経営者", "営業・セールス", "俳優・エンターテイナー", "スポーツ選手", "トレーダー"] },
-  ESFP: { name: "エンターテイナー", color: "#F1C40F", tagline: "周囲を笑顔にする天性のパフォーマー。人生を楽しむことの達人。", desc: "ESFPは場を盛り上げる天才タイプ。明るく社交的で、人と一緒にいることが大好き。今この瞬間を全力で楽しみ、周囲に活力を与えます。自然体でいることが最大の魅力。", strengths: ["コミュニケーション力", "楽観性", "行動力", "適応力", "エネルギー"], careers: ["芸能人・タレント", "イベントプランナー", "営業・接客", "教師・保育士", "旅行ガイド"] },
+const pTypeData = {
+  INTJ:{name:"建築家",color:"#1B2A4A",tagline:"戦略的な思考と強い意志を持つ独創的な計画者。目標に向かって着実に動く。",desc:"INTJは16タイプの中でも最も希少で知的なタイプのひとつ。長期的なビジョンを描き、そこに向かって戦略的に動く力を持っています。感情に流されず、論理と原則に基づいて行動します。",strengths:["戦略的思考","独立心","決断力","完璧主義","長期ビジョン"],careers:["経営コンサルタント","研究者・科学者","ソフトウェアエンジニア","起業家","戦略アナリスト"]},
+  INTP:{name:"論理学者",color:"#0089A7",tagline:"知的好奇心旺盛な理論家。あらゆる事象の「なぜ」を探求し続ける。",desc:"INTPは論理と分析を愛するタイプ。複雑な問題を深く掘り下げ、独自の理論を構築することが得意です。枠にとらわれない自由な発想と、真実を追い求める情熱が特徴。",strengths:["論理的分析力","創造的思考","客観性","独創性","深い洞察力"],careers:["プログラマー・エンジニア","研究者","哲学者・評論家","データサイエンティスト","ゲームデザイナー"]},
+  ENTJ:{name:"指揮官",color:"#C0392B",tagline:"生まれながらのリーダー。目標を設定し、人を束ね、成果を出す。",desc:"ENTJは決断力とリーダーシップが際立つタイプ。目標に向かって組織を動かす力があり、ビジョンを実現するために周囲を巻き込みます。起業家・経営者に最も多いタイプのひとつ。",strengths:["リーダーシップ","決断力","戦略思考","向上心","統率力"],careers:["経営者・起業家","マネージャー","弁護士","政治家","コンサルタント"]},
+  ENTP:{name:"討論者",color:"#E67E22",tagline:"アイデアと議論を愛する発明家タイプ。常識を疑い、新しい道を切り開く。",desc:"ENTPは知的な挑戦と議論を楽しむタイプ。既存の枠組みを壊して新しい視点を生み出す力があります。スタートアップや新規事業に向いており、変化を恐れない柔軟さが強み。",strengths:["創造力","議論力","柔軟性","発想力","問題解決力"],careers:["起業家","マーケター","弁護士","クリエイティブディレクター","コメディアン・作家"]},
+  INFJ:{name:"提唱者",color:"#6C3483",tagline:"深い洞察力と強い理想を持つ、最も希少な性格タイプ。",desc:"INFJは全タイプの中で最も希少（全人口の1〜2%）。人の気持ちを深く理解しながら、社会をより良くしたいという強い理想を持ちます。静かながら強い意志と使命感を持っています。",strengths:["深い洞察力","共感力","理想主義","創造性","忍耐力"],careers:["カウンセラー・心理士","作家・詩人","社会活動家","教師・教育者","医師・看護師"]},
+  INFP:{name:"仲介者",color:"#8E44AD",tagline:"感受性豊かな理想主義者。自分の価値観に従って静かに世界を変えようとする。",desc:"INFPは豊かな内面世界と強い価値観を持つタイプ。表面上は穏やかですが、信念に基づいた行動力を持ちます。創作活動や人の心に寄り添う仕事に向いています。",strengths:["共感力","創造性","誠実さ","適応力","深い感受性"],careers:["作家・ライター","デザイナー","カウンセラー","社会福祉士","アーティスト"]},
+  ENFJ:{name:"主人公",color:"#27AE60",tagline:"カリスマ性と共感力を持つ天性のリーダー。人の可能性を引き出す。",desc:"ENFJは人を動かすカリスマ性と深い共感力を兼ね備えたタイプ。周囲の人が成長するのを助けることに喜びを感じます。チームをまとめ、理想に向かって引っ張る力があります。",strengths:["カリスマ性","共感力","リーダーシップ","コミュニケーション力","情熱"],careers:["教師・コーチ","人事・採用担当","政治家・活動家","カウンセラー","イベントプランナー"]},
+  ENFP:{name:"広報運動家",color:"#F39C12",tagline:"自由を愛する情熱家。あらゆる可能性に目を輝かせ、人を笑顔にする。",desc:"ENFPはエネルギッシュで創造的な自由人タイプ。人との繋がりを大切にし、新しいアイデアや可能性に常にワクワクしています。直感と情熱で行動する、周囲を明るくする存在。",strengths:["コミュニケーション力","創造性","情熱","共感力","適応力"],careers:["マーケター","ジャーナリスト","俳優・エンターテイナー","起業家","コーチ・ファシリテーター"]},
+  ISTJ:{name:"管理者",color:"#2C3E50",tagline:"誠実さと責任感を持つ信頼の守護者。約束は必ず守る。",desc:"ISTJは信頼性・責任感・実直さが際立つタイプ。ルールと伝統を重んじ、着実に仕事をこなします。社会の安定を支える縁の下の力持ち的な存在で、どんな組織でも信頼されます。",strengths:["責任感","誠実さ","几帳面さ","忍耐力","信頼性"],careers:["公務員・行政官","会計士・税理士","法律家","医師","エンジニア"]},
+  ISFJ:{name:"擁護者",color:"#1ABC9C",tagline:"献身的で思いやり深い守護者。縁の下でみんなを支える。",desc:"ISFJは思いやりと献身の塊のようなタイプ。他者のために尽くすことに喜びを感じ、細部まで気を配ります。目立ちませんが、いなくなると困る「縁の下の力持ち」です。",strengths:["思いやり","忍耐力","観察力","責任感","サポート力"],careers:["看護師・介護士","教師","事務・秘書","カウンセラー","ソーシャルワーカー"]},
+  ESTJ:{name:"幹部",color:"#D35400",tagline:"秩序と管理を愛する組織の守り手。ルールを作り、チームを率いる。",desc:"ESTJは組織を動かす管理能力と決断力が特徴のタイプ。明確なルールと効率を好み、チームをまとめる力があります。責任感が強く、社会や組織の中核を担う存在。",strengths:["組織力","リーダーシップ","決断力","忠実さ","実行力"],careers:["マネージャー・管理職","軍人・警察官","法律家","経営者","プロジェクトマネージャー"]},
+  ESFJ:{name:"領事",color:"#16A085",tagline:"社交的で思いやり深い人気者。みんなの調和を大切にする。",desc:"ESFJはコミュニティの中心にいることが多い社交的なタイプ。周囲の人が幸せかどうかをいつも気にかけ、場の雰囲気を盛り上げます。人から頼られることに喜びを感じます。",strengths:["社交性","思いやり","組織力","忠実さ","協調性"],careers:["営業・接客","イベントプランナー","教師・保育士","医療職","人事担当"]},
+  ISTP:{name:"巨匠",color:"#7F8C8D",tagline:"冷静で器用な問題解決者。手を動かしながら答えを見つける。",desc:"ISTPは実践的で論理的な行動派タイプ。機械・道具・システムを操る器用さと、冷静な問題解決能力が特徴です。危機的状況でも冷静に最善手を打てる頼れる存在。",strengths:["問題解決力","器用さ","冷静さ","論理的思考","適応力"],careers:["エンジニア・技術者","外科医","警察官・消防士","パイロット","プログラマー"]},
+  ISFP:{name:"冒険家",color:"#2ECC71",tagline:"穏やかで感性豊かな自由人。今この瞬間を大切に生きる。",desc:"ISFPは穏やかで芸術的センスを持つタイプ。自分の価値観に従って静かに行動し、美しいものや自然を愛します。ルールより自由を好む、マイペースな生き方が特徴。",strengths:["感受性","芸術的センス","共感力","柔軟性","優しさ"],careers:["アーティスト・デザイナー","ミュージシャン","シェフ","自然・環境関連","ファッション関係"]},
+  ESTP:{name:"起業家",color:"#E74C3C",tagline:"行動力とリスク耐性を持つエネルギッシュな実行者。",desc:"ESTPはまさに起業家タイプ。リスクを恐れず即座に行動に移す力と、状況を素早く読む観察力が特徴。退屈を嫌い、常に刺激と新しい挑戦を求めます。",strengths:["行動力","問題解決力","社交性","観察力","柔軟性"],careers:["起業家・経営者","営業・セールス","俳優・エンターテイナー","スポーツ選手","トレーダー"]},
+  ESFP:{name:"エンターテイナー",color:"#F1C40F",tagline:"周囲を笑顔にする天性のパフォーマー。人生を楽しむことの達人。",desc:"ESFPは場を盛り上げる天才タイプ。明るく社交的で、人と一緒にいることが大好き。今この瞬間を全力で楽しみ、周囲に活力を与えます。自然体でいることが最大の魅力。",strengths:["コミュニケーション力","楽観性","行動力","適応力","エネルギー"],careers:["芸能人・タレント","イベントプランナー","営業・接客","教師・保育士","旅行ガイド"]},
 };
 
-let currentQ = 0;
-let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+let pCurrentQ = 0;
+let pScores = {};
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
+function pShowScreen(id) {
+  document.querySelectorAll('#personality-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('p-screen-' + id).classList.add('active');
 }
-
-function startQuiz() {
-  currentQ = 0;
-  scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-  showScreen('question');
-  renderQuestion();
+function pStartQuiz() {
+  pCurrentQ = 0;
+  pScores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+  pShowScreen('question');
+  pRenderQuestion();
 }
-
-function renderQuestion() {
-  const q = questions[currentQ];
-  const total = questions.length;
-  const pct = Math.round((currentQ / total) * 100);
-
-  document.getElementById('q-num').textContent = `質問 ${currentQ + 1} / ${total}`;
-  document.getElementById('q-pct').textContent = `${pct}%`;
-  document.getElementById('progress-fill').style.width = `${pct}%`;
-
-  const tagWrap = document.getElementById('axis-tag-wrap');
-  tagWrap.innerHTML = `<span class="axis-tag" style="background:${q.color}22;color:${q.color}">${q.axisLabel}</span>`;
-
-  document.getElementById('question-text').textContent = q.text;
-
-  document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+function pRenderQuestion() {
+  const q = pQuestions[pCurrentQ];
+  const total = pQuestions.length;
+  const pct = Math.round((pCurrentQ / total) * 100);
+  document.getElementById('p-q-num').textContent = `質問 ${pCurrentQ + 1} / ${total}`;
+  document.getElementById('p-q-pct').textContent = `${pct}%`;
+  document.getElementById('p-progress-fill').style.width = `${pct}%`;
+  document.getElementById('p-axis-tag-wrap').innerHTML =
+    `<span class="axis-tag" style="background:${q.color}22;color:${q.color}">${q.axisLabel}</span>`;
+  document.getElementById('p-question-text').textContent = q.text;
+  document.querySelectorAll('#personality-screen .scale-btn').forEach(b => b.classList.remove('selected'));
 }
-
-function answer(val) {
-  document.querySelectorAll('.scale-btn').forEach((b, i) => {
+function pAnswer(val) {
+  document.querySelectorAll('#personality-screen .scale-btn').forEach((b, i) => {
     b.classList.remove('selected');
     if (i + 1 === val) b.classList.add('selected');
   });
-
-  const q = questions[currentQ];
-
-  // スコア加算（5段階：1=反対, 3=中立, 5=賛成）
-  if (q.dir === 'E') { scores.E += val; scores.I += (6 - val); }
-  else if (q.dir === 'I') { scores.I += val; scores.E += (6 - val); }
-  else if (q.dir === 'S') { scores.S += val; scores.N += (6 - val); }
-  else if (q.dir === 'N') { scores.N += val; scores.S += (6 - val); }
-  else if (q.dir === 'T') { scores.T += val; scores.F += (6 - val); }
-  else if (q.dir === 'F') { scores.F += val; scores.T += (6 - val); }
-  else if (q.dir === 'J') { scores.J += val; scores.P += (6 - val); }
-  else if (q.dir === 'P') { scores.P += val; scores.J += (6 - val); }
-
+  const q = pQuestions[pCurrentQ];
+  if (q.dir==='E'){pScores.E+=val;pScores.I+=(6-val);}
+  else if(q.dir==='I'){pScores.I+=val;pScores.E+=(6-val);}
+  else if(q.dir==='S'){pScores.S+=val;pScores.N+=(6-val);}
+  else if(q.dir==='N'){pScores.N+=val;pScores.S+=(6-val);}
+  else if(q.dir==='T'){pScores.T+=val;pScores.F+=(6-val);}
+  else if(q.dir==='F'){pScores.F+=val;pScores.T+=(6-val);}
+  else if(q.dir==='J'){pScores.J+=val;pScores.P+=(6-val);}
+  else if(q.dir==='P'){pScores.P+=val;pScores.J+=(6-val);}
   setTimeout(() => {
-    currentQ++;
-    if (currentQ >= questions.length) {
-      showScreen('loading');
-      setTimeout(showResult, 1800);
-    } else {
-      renderQuestion();
-    }
+    pCurrentQ++;
+    if (pCurrentQ >= pQuestions.length) {
+      pShowScreen('loading');
+      setTimeout(pShowResult, 1800);
+    } else { pRenderQuestion(); }
   }, 300);
 }
-
-function showResult() {
-  const EI = scores.E >= scores.I ? 'E' : 'I';
-  const SN = scores.N >= scores.S ? 'N' : 'S';
-  const TF = scores.T >= scores.F ? 'T' : 'F';
-  const JP = scores.J >= scores.P ? 'J' : 'P';
+function pShowResult() {
+  const EI = pScores.E >= pScores.I ? 'E' : 'I';
+  const SN = pScores.N >= pScores.S ? 'N' : 'S';
+  const TF = pScores.T >= pScores.F ? 'T' : 'F';
+  const JP = pScores.J >= pScores.P ? 'J' : 'P';
   const type = EI + SN + TF + JP;
-  const data = typeData[type];
+  const data = pTypeData[type];
+  document.getElementById('p-result-badge').textContent = type;
+  document.getElementById('p-result-badge').style.background = data.color;
+  document.getElementById('p-result-name').textContent = `「${data.name}」型`;
+  document.getElementById('p-result-tagline').textContent = data.tagline;
+  document.getElementById('p-result-desc').textContent = data.desc;
+  const tEI=pScores.E+pScores.I, tSN=pScores.S+pScores.N, tTF=pScores.T+pScores.F, tJP=pScores.J+pScores.P;
+  document.getElementById('p-result-axes').innerHTML = `
+    <div class="axis-result"><div class="axis-name">E（外向） / I（内向）</div><div class="axis-val">${EI} (${EI==='E'?Math.round(pScores.E/tEI*100):Math.round(pScores.I/tEI*100)}%)</div></div>
+    <div class="axis-result"><div class="axis-name">S（感覚） / N（直感）</div><div class="axis-val">${SN} (${SN==='S'?Math.round(pScores.S/tSN*100):Math.round(pScores.N/tSN*100)}%)</div></div>
+    <div class="axis-result"><div class="axis-name">T（思考） / F（感情）</div><div class="axis-val">${TF} (${TF==='T'?Math.round(pScores.T/tTF*100):Math.round(pScores.F/tTF*100)}%)</div></div>
+    <div class="axis-result"><div class="axis-name">J（計画） / P（探索）</div><div class="axis-val">${JP} (${JP==='J'?Math.round(pScores.J/tJP*100):Math.round(pScores.P/tJP*100)}%)</div></div>`;
+  const c2=["#00C9C8","#0089A7","#7B4F9E","#E84A5F","#5CB85C"];
+  document.getElementById('p-result-strengths').innerHTML =
+    data.strengths.map((s,i)=>`<span class="strength-tag" style="background:${c2[i]}22;color:${c2[i]}">${s}</span>`).join('');
+  document.getElementById('p-result-careers').innerHTML =
+    data.careers.map((c,i)=>`<div class="career-item"><div class="career-dot" style="background:${c2[i%5]}"></div>${c}</div>`).join('');
+  pShowScreen('result');
+}
+function pRetry() { pStartQuiz(); }
 
-  document.getElementById('result-badge').textContent = type;
-  document.getElementById('result-badge').style.background = data.color;
-  document.getElementById('result-name').textContent = `「${data.name}」型`;
-  document.getElementById('result-tagline').textContent = data.tagline;
-  document.getElementById('result-desc').textContent = data.desc;
+// ============================================
+// SANMEI QUIZ
+// ============================================
+const KAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const KAN_YOMI = ['こう','おつ','へい','てい','ぼ','き','こう','しん','じん','き'];
+const SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SHI_YOMI = ['ね','うし','とら','う','たつ','み','うま','ひつじ','さる','とり','いぬ','い'];
 
-  // 軸スコア
-  const totalEI = scores.E + scores.I;
-  const totalSN = scores.S + scores.N;
-  const totalTF = scores.T + scores.F;
-  const totalJP = scores.J + scores.P;
-  document.getElementById('result-axes').innerHTML = `
-    <div class="axis-result"><div class="axis-name">E（外向） / I（内向）</div><div class="axis-val">${EI} (${EI==='E'?Math.round(scores.E/totalEI*100):Math.round(scores.I/totalEI*100)}%)</div></div>
-    <div class="axis-result"><div class="axis-name">S（感覚） / N（直感）</div><div class="axis-val">${SN} (${SN==='S'?Math.round(scores.S/totalSN*100):Math.round(scores.N/totalSN*100)}%)</div></div>
-    <div class="axis-result"><div class="axis-name">T（思考） / F（感情）</div><div class="axis-val">${TF} (${TF==='T'?Math.round(scores.T/totalTF*100):Math.round(scores.F/totalTF*100)}%)</div></div>
-    <div class="axis-result"><div class="axis-name">J（計画） / P（探索）</div><div class="axis-val">${JP} (${JP==='J'?Math.round(scores.J/totalJP*100):Math.round(scores.P/totalJP*100)}%)</div></div>
-  `;
-
-  // 強み
-  const colors2 = ["#00C9C8","#0089A7","#7B4F9E","#E84A5F","#5CB85C"];
-  document.getElementById('result-strengths').innerHTML =
-    data.strengths.map((s,i) => `<span class="strength-tag" style="background:${colors2[i]}22;color:${colors2[i]}">${s}</span>`).join('');
-
-  // 職業
-  document.getElementById('result-careers').innerHTML =
-    data.careers.map((c,i) => `<div class="career-item"><div class="career-dot" style="background:${colors2[i%5]}"></div>${c}</div>`).join('');
-
-  showScreen('result');
+function getKanshi(year) {
+  const k=(year-4)%10, s=(year-4)%12;
+  return {kan:KAN[(k+10)%10],shi:SHI[(s+12)%12],kanIdx:(k+10)%10,shiIdx:(s+12)%12};
+}
+function getDayKanshi(year,month,day) {
+  const base=new Date(1900,0,1), target=new Date(year,month-1,day);
+  const diff=Math.floor((target-base)/(1000*60*60*24));
+  const ki=((diff%10)+10)%10, si=((diff%12)+12)%12;
+  return {kan:KAN[ki],shi:SHI[si],kanIdx:ki,shiIdx:si};
+}
+function getMonthKanshi(year,month) {
+  const bm=(year-1900)*12+(month-1);
+  const ki=((bm*2+2)%10+10)%10, si=((month+1)%12);
+  return {kan:KAN[ki],shi:SHI[si],kanIdx:ki,shiIdx:si};
+}
+function getGogyou(ki) {
+  if(ki<=1)return '木'; if(ki<=3)return '火'; if(ki<=5)return '土'; if(ki<=7)return '金'; return '水';
 }
 
-function retryQuiz() {
-  startQuiz();
+const sPData = [
+  {traits:['リーダーシップ旺盛','強い意志力','成長を求め続ける','直線的な行動力'],desc:'大樹のように天高く伸びようとする強いエネルギーを持ちます。目標に向かって一直線に進む行動力と、周囲を引っ張るリーダーシップが特徴。困難にも折れない強さがあります。',career:'経営者・政治家・スポーツ選手・プロジェクトリーダー・開拓者的な職業全般'},
+  {traits:['柔軟な適応力','粘り強さ','人間関係が得意','美的センス'],desc:'草花のように環境に合わせて柔軟に育つ力を持ちます。人の心を読む感受性が高く、穏やかながらも芯の強さがあります。協調性が高く、人から愛される存在。',career:'デザイナー・カウンセラー・保育士・外交官・アーティスト'},
+  {traits:['明るい情熱','社交性の高さ','直感力','太陽のような存在感'],desc:'太陽のように周囲を明るく照らすエネルギーを持ちます。どこにいても注目を集め、場を盛り上げる天性の明るさがあります。行動力と情熱で夢を実現する力があります。',career:'俳優・芸能人・営業職・イベントプランナー・マーケター'},
+  {traits:['繊細な感受性','深い愛情','芸術的才能','精神的な強さ'],desc:'灯火のように静かながら強い光を放ちます。感受性が豊かで、人の心の奥まで理解できる共感力があります。芸術・文化への深い関心と、独自の世界観を持ちます。',career:'作家・詩人・音楽家・心理士・宗教家・ヒーラー'},
+  {traits:['揺るぎない安定感','包容力','信頼される誠実さ','大地のような存在'],desc:'大山のように動じない安定感と包容力を持ちます。周囲から深く信頼される誠実さがあり、人の支えになることに喜びを感じます。忍耐力が高く、長期的な目標を達成する力があります。',career:'建築家・医師・公務員・農業・不動産・教師'},
+  {traits:['几帳面さと丁寧さ','計画性','人を育てる才能','地道な努力家'],desc:'肥沃な大地のように、物事を育て育む力を持ちます。几帳面で計画的に物事を進め、コツコツと積み上げる努力家です。人を育てることや、縁の下の力持ちとして輝きます。',career:'教師・農家・会計士・栄養士・秘書・育児関連'},
+  {traits:['鋭い判断力','決断の速さ','強い意志','改革を好む'],desc:'鋭い刃のような決断力と行動力を持ちます。白黒はっきりつける性格で、妥協を嫌います。困難な状況でも素早く判断し、道を切り開く力があります。',career:'外科医・弁護士・軍人・エンジニア・スポーツ選手・起業家'},
+  {traits:['洗練された美意識','完璧主義','独自の感性','磨かれた才能'],desc:'磨かれた宝石のように、独自の美意識と洗練された感性を持ちます。完璧主義で細部にこだわり、高品質なものを生み出す才能があります。人と違う独自の世界を持ちます。',career:'ジュエリーデザイナー・美容師・芸術家・評論家・編集者'},
+  {traits:['深い知恵と洞察力','大きな包容力','多才さ','流れを読む力'],desc:'大海のように深く広い知恵と包容力を持ちます。多才で好奇心旺盛、様々な分野に興味を持ちます。物事の流れを読む洞察力が高く、先を見越した行動ができます。',career:'哲学者・経済学者・外交官・コンサルタント・研究者・経営者'},
+  {traits:['深い直感力','神秘的な魅力','精神性の高さ','癒しの才能'],desc:'雨のように静かに、しかし確実に物事を育む力を持ちます。深い直感と神秘的な魅力があり、スピリチュアルな感性が高いです。癒しの才能と、人の心を浄化する力があります。',career:'霊能者・ヒーラー・医療従事者・福祉士・瞑想指導者・芸術家'},
+];
+
+// ドロップダウン生成
+(function(){
+  const ys=document.getElementById('s-year'),ms=document.getElementById('s-month'),ds=document.getElementById('s-day');
+  for(let y=2008;y>=1940;y--){const o=document.createElement('option');o.value=y;o.textContent=y+'年';ys.appendChild(o);}
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'月';ms.appendChild(o);}
+  for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d+'日';ds.appendChild(o);}
+})();
+
+function sShowScreen(id) {
+  document.querySelectorAll('#sanmei-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-screen-' + id).classList.add('active');
 }
+function sShowInput() { sShowScreen('input'); }
+function sStartDiagnosis() {
+  const year=parseInt(document.getElementById('s-year').value);
+  const month=parseInt(document.getElementById('s-month').value);
+  const day=parseInt(document.getElementById('s-day').value);
+  const gender=document.getElementById('s-gender').value;
+  if(!year||!month||!day||!gender){alert('すべての項目を入力してください');return;}
+  sShowScreen('loading');
+  setTimeout(()=>sShowResult(year,month,day,gender),2000);
+}
+function sShowResult(year,month,day,gender) {
+  const yKS=getKanshi(year),mKS=getMonthKanshi(year,month),dKS=getDayKanshi(year,month,day);
+  const cyKS=getKanshi(2026);
+  document.getElementById('s-result-meishiki').textContent=`${yKS.kan}${yKS.shi}・${mKS.kan}${mKS.shi}・${dKS.kan}${dKS.shi}`;
+  const gg=getGogyou(dKS.kanIdx);
+  document.getElementById('s-result-title').textContent=`${dKS.kan}（${KAN_YOMI[dKS.kanIdx]}）の命 / ${gg}の人`;
+  document.getElementById('s-result-subtitle').textContent=`生まれ年：${yKS.kan}${yKS.shi}年 ／ 日干：${dKS.kan}${dKS.shi}`;
+  document.getElementById('s-result-eto-row').innerHTML=`
+    <div class="eto-item"><div class="eto-label">年柱</div><div class="eto-val">${yKS.kan}${yKS.shi}</div></div>
+    <div class="eto-item"><div class="eto-label">月柱</div><div class="eto-val">${mKS.kan}${mKS.shi}</div></div>
+    <div class="eto-item"><div class="eto-label">日柱</div><div class="eto-val">${dKS.kan}${dKS.shi}</div></div>
+    <div class="eto-item"><div class="eto-label">五行</div><div class="eto-val">${gg}</div></div>`;
+  const pd=sPData[dKS.kanIdx];
+  document.getElementById('s-result-personality').textContent=pd.desc;
+  document.getElementById('s-result-tags').innerHTML=pd.traits.map(t=>`<span class="tag">${t}</span>`).join('');
+  const diff=Math.abs(dKS.kanIdx-cyKS.kanIdx);
+  const base=[85,70,60,75,90,65,80,55,70,85][dKS.kanIdx];
+  const bonus=diff%5===0?10:diff%2===0?5:-5;
+  const fs=Math.min(95,Math.max(40,base+bonus));
+  const fi=[
+    {label:'全体運',score:fs},
+    {label:'恋愛運',score:Math.min(95,fs+(gender==='female'?5:-3)+Math.floor(Math.random()*10))},
+    {label:'仕事運',score:Math.min(95,fs+Math.floor(Math.random()*15)-5)},
+    {label:'金運',score:Math.min(95,fs-5+Math.floor(Math.random()*10))},
+    {label:'健康運',score:Math.min(95,fs+Math.floor(Math.random()*8))},
+  ];
+  const ftexts=['大きな転換期を迎える年です。新しいことへの挑戦が吉。人との出会いを大切に。','実力が開花する年。これまでの努力が報われる時期です。積極的な行動が開運のカギ。','内面を磨く年。焦らず着実に進むことで、大きな成果につながります。','変化の年。環境の変化を恐れず受け入れることで運気が上昇します。','絶好調の年！自信を持って行動し、チャンスをものにしてください。'];
+  document.getElementById('s-result-fortune-text').textContent=ftexts[dKS.kanIdx%ftexts.length];
+  document.getElementById('s-result-fortune-bars').innerHTML=fi.map(f=>`
+    <div class="fortune-row"><div class="fortune-label">${f.label}</div><div class="fortune-bar-bg"><div class="fortune-bar-fill" style="width:${f.score}%"></div></div><div class="fortune-pct">${f.score}%</div></div>`).join('');
+  document.getElementById('s-result-career').textContent=pd.career;
+  const good=[(dKS.shiIdx+4)%12,(dKS.shiIdx+8)%12];
+  const bad=[(dKS.shiIdx+6)%12];
+  const neutral=[0,1,2,3,4,5,6,7,8,9,10,11].filter(i=>i!==dKS.shiIdx&&!good.includes(i)&&!bad.includes(i)).slice(0,5);
+  let ch='';
+  good.forEach(i=>{ch+=`<div class="compat-item compat-good">◎ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;});
+  bad.forEach(i=>{ch+=`<div class="compat-item compat-bad">✗ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;});
+  neutral.forEach(i=>{ch+=`<div class="compat-item compat-neutral">△ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;});
+  document.getElementById('s-result-compat').innerHTML=ch;
+  const cautions=['焦りは禁物。慎重に物事を進めることで大きなミスを防げます。','人間関係のトラブルに注意。言葉選びを大切に。','健康管理に気をつけて。無理をしすぎない年です。','お金の使いすぎに注意。衝動買いは控えめに。','新しいことを始める前に、じっくり計画を立てましょう。'];
+  document.getElementById('s-result-caution').textContent=cautions[dKS.shiIdx%cautions.length];
+  sShowScreen('result');
+}
+function sRetry() { sShowScreen('input'); }
 </script>
 </body>
 </html>
