@@ -19,6 +19,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #blood-screen.active { display: flex; }
 #zodiac-screen.active { display: flex; }
 #tarot-screen.active { display: flex; }
+#name-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -151,6 +152,63 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-t:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(225,29,72,0.25); }
 .quiz-card-t .quiz-card-btn { background: linear-gradient(135deg, #e11d48, #9f1239); }
 .quiz-card-t .quiz-card-features li::before { color: #e11d48; }
+.quiz-card-k::before { background: linear-gradient(90deg, #0d9488, #0f766e); }
+.quiz-card-k { box-shadow: 0 4px 30px rgba(13,148,136,0.1); }
+.quiz-card-k:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(13,148,136,0.25); }
+.quiz-card-k .quiz-card-btn { background: linear-gradient(135deg, #0d9488, #0f766e); }
+.quiz-card-k .quiz-card-features li::before { color: #0d9488; }
+
+/* ============================================
+   NAME FORTUNE (姓名判断)
+   ============================================ */
+#name-screen {
+  background: linear-gradient(135deg, #012a27 0%, #013d38 50%, #001f1c 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-k .container { background: white; border-radius: 24px; padding: 40px; max-width: 640px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+.quiz-k .screen { display: none; }
+.quiz-k .screen.active { display: block; }
+.quiz-k .badge { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-k h1 { font-size: 2rem; color: #012a27; margin-bottom: 8px; }
+.quiz-k h1 span { color: #0d9488; }
+.quiz-k .subtitle { color: #6b7280; margin-bottom: 32px; font-size: 0.95rem; }
+.k-back-btn { background: rgba(255,255,255,0.12); border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 0.9rem; position: fixed; top: 20px; left: 20px; padding: 8px 18px; border-radius: 20px; transition: background 0.2s; }
+.k-back-btn:hover { background: rgba(255,255,255,0.2); }
+/* Input */
+.k-name-section { margin-bottom: 28px; }
+.k-section-label { font-size: 1rem; font-weight: 700; color: #012a27; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.k-section-num { background: #0d9488; color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0; }
+.k-char-count { display: flex; gap: 8px; margin-bottom: 14px; }
+.k-char-btn { flex: 1; padding: 8px; border: 2px solid #e5e7eb; border-radius: 10px; background: white; cursor: pointer; font-size: 0.85rem; color: #6b7280; transition: all 0.2s; font-weight: 600; }
+.k-char-btn.active { border-color: #0d9488; color: #0d9488; background: #f0fdfa; }
+.k-stroke-inputs { display: flex; gap: 10px; align-items: flex-start; }
+.k-stroke-input { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+.k-stroke-input label { font-size: 0.72rem; color: #9ca3af; font-weight: 600; letter-spacing: 0.5px; }
+.k-stroke-input input { width: 100%; padding: 12px 6px; text-align: center; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1.2rem; font-weight: 800; color: #012a27; outline: none; transition: border-color 0.2s; -moz-appearance: textfield; }
+.k-stroke-input input::-webkit-inner-spin-button, .k-stroke-input input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.k-stroke-input input:focus { border-color: #0d9488; }
+.k-stroke-input.k-hidden { visibility: hidden; pointer-events: none; }
+.k-hint { background: #f0fdfa; border-radius: 10px; padding: 10px 14px; font-size: 0.78rem; color: #0f766e; margin-top: -8px; margin-bottom: 8px; line-height: 1.6; }
+.k-divider { text-align: center; color: #d1d5db; font-size: 1.2rem; margin: 8px 0 24px; }
+/* Result */
+.k-kaku-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.k-kaku-card { background: #f0fdfa; border-radius: 14px; padding: 16px 14px; text-align: center; border: 2px solid #ccfbf1; }
+.k-kaku-card.k-main { background: linear-gradient(135deg, #0d9488, #0f766e); color: white; border-color: #0d9488; grid-column: span 2; padding: 22px; }
+.k-kaku-name { font-size: 0.72rem; font-weight: 700; color: #0f766e; margin-bottom: 4px; letter-spacing: 0.5px; }
+.k-kaku-card.k-main .k-kaku-name { color: rgba(255,255,255,0.8); }
+.k-kaku-number { font-size: 2rem; font-weight: 900; color: #012a27; line-height: 1; margin-bottom: 4px; }
+.k-kaku-card.k-main .k-kaku-number { color: white; font-size: 2.8rem; }
+.k-kaku-fortune { font-size: 0.72rem; font-weight: bold; padding: 2px 10px; border-radius: 10px; display: inline-block; margin-bottom: 4px; }
+.k-kaku-desc { font-size: 0.75rem; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+.k-kaku-card.k-main .k-kaku-desc { color: rgba(255,255,255,0.85); font-size: 0.85rem; }
+.k-fortune-great { background: #d1fae5; color: #065f46; }
+.k-fortune-good { background: #dbeafe; color: #1e40af; }
+.k-fortune-mixed { background: #fef3c7; color: #92400e; }
+.k-fortune-bad { background: #fee2e2; color: #991b1b; }
+.k-advice-box { background: #f0fdfa; border-left: 4px solid #0d9488; border-radius: 0 12px 12px 0; padding: 14px 16px; margin-top: 20px; font-size: 0.88rem; color: #374151; line-height: 1.7; }
+.k-advice-box strong { color: #0d9488; display: block; margin-bottom: 4px; }
 
 /* ============================================
    TAROT QUIZ
@@ -695,6 +753,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- 姓名判断 -->
+    <div class="quiz-card quiz-card-k" onclick="openQuiz('name')">
+      <div class="quiz-card-icon">✍️</div>
+      <h2>姓名判断</h2>
+      <p class="card-desc">名前の画数が語る運命</p>
+      <ul class="quiz-card-features">
+        <li>天格・人格・地格を鑑定</li>
+        <li>外格・総格まで五格全分析</li>
+        <li>1〜81の伝統的な吉凶判定</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
     <!-- 西洋占星術 -->
     <div class="quiz-card quiz-card-z" onclick="openQuiz('zodiac')">
       <div class="quiz-card-icon">⭐</div>
@@ -838,6 +909,118 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
         <div class="result-card"><h3>✨ 未来のカードが示すもの</h3><p id="t-result-future"></p></div>
         <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">💡 カードからのアドバイス</h3><p id="t-result-advice"></p></div>
         <button class="btn-outline" onclick="tRetry()">もう一度占う</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     NAME FORTUNE (姓名判断)
+     =================================================== -->
+<div id="name-screen" class="app-screen">
+  <button class="k-back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-k">
+    <div class="container">
+
+      <!-- 入力画面 -->
+      <div class="screen active" id="k-screen-input">
+        <div class="badge">✍️ 姓名判断</div>
+        <h1>名前の<span>画数</span>で<br>運命を読む</h1>
+        <p class="subtitle">五格（天格・人格・地格・外格・総格）による本格鑑定。<br>漢字の画数を入力してください。</p>
+
+        <div class="k-hint">
+          💡 画数の調べ方：漢字を検索して「画数」で調べるか、辞書でご確認ください。<br>
+          ひらがな・カタカナの場合も、対応する漢字の画数を使います。
+        </div>
+
+        <!-- 姓 -->
+        <div class="k-name-section">
+          <div class="k-section-label">
+            <span class="k-section-num">姓</span>苗字（姓）の画数
+          </div>
+          <div class="k-char-count">
+            <button class="k-char-btn k-surname-btn" onclick="kSetChars('surname',1)">1文字</button>
+            <button class="k-char-btn k-surname-btn active" onclick="kSetChars('surname',2)">2文字</button>
+            <button class="k-char-btn k-surname-btn" onclick="kSetChars('surname',3)">3文字</button>
+          </div>
+          <div class="k-stroke-inputs">
+            <div class="k-stroke-input">
+              <label>1文字目</label>
+              <input type="number" id="k-s1" min="1" max="64" placeholder="例：7">
+            </div>
+            <div class="k-stroke-input">
+              <label>2文字目</label>
+              <input type="number" id="k-s2" min="1" max="64" placeholder="例：4">
+            </div>
+            <div class="k-stroke-input k-hidden">
+              <label>3文字目</label>
+              <input type="number" id="k-s3" min="1" max="64" placeholder="例：3">
+            </div>
+          </div>
+        </div>
+
+        <div class="k-divider">＋</div>
+
+        <!-- 名 -->
+        <div class="k-name-section">
+          <div class="k-section-label">
+            <span class="k-section-num">名</span>名前（名）の画数
+          </div>
+          <div class="k-char-count">
+            <button class="k-char-btn k-given-btn" onclick="kSetChars('given',1)">1文字</button>
+            <button class="k-char-btn k-given-btn active" onclick="kSetChars('given',2)">2文字</button>
+            <button class="k-char-btn k-given-btn" onclick="kSetChars('given',3)">3文字</button>
+          </div>
+          <div class="k-stroke-inputs">
+            <div class="k-stroke-input">
+              <label>1文字目</label>
+              <input type="number" id="k-g1" min="1" max="64" placeholder="例：8">
+            </div>
+            <div class="k-stroke-input">
+              <label>2文字目</label>
+              <input type="number" id="k-g2" min="1" max="64" placeholder="例：6">
+            </div>
+            <div class="k-stroke-input k-hidden">
+              <label>3文字目</label>
+              <input type="number" id="k-g3" min="1" max="64" placeholder="例：5">
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="background:linear-gradient(135deg,#0d9488,#0f766e);width:100%;padding:16px;font-size:1.05rem;margin-top:8px" onclick="kDiagnose()">
+          五格を鑑定する →
+        </button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="k-screen-loading">
+        <div style="text-align:center;padding:60px 20px">
+          <div style="font-size:3rem;margin-bottom:20px">✍️</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#012a27;margin-bottom:10px">鑑定中...</div>
+          <p style="color:#9ca3af;font-size:0.88rem">五格の運命を読み解いています</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="k-screen-result">
+        <div style="text-align:center;margin-bottom:24px">
+          <div class="badge">✍️ 鑑定結果</div>
+          <h2 style="font-size:1.6rem;color:#012a27;margin-top:8px">五格の鑑定結果</h2>
+        </div>
+
+        <div class="k-kaku-grid" id="k-kaku-grid"></div>
+
+        <div class="k-advice-box">
+          <strong>🌿 人格（主運）からのメッセージ</strong>
+          <span id="k-jinkaku-desc"></span>
+        </div>
+
+        <div style="margin-top:24px;display:grid;gap:10px">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#0d9488,#0f766e);width:100%;padding:14px" onclick="kShowScreen('input')">もう一度診断する</button>
+          <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
+        </div>
       </div>
 
     </div>
@@ -2051,6 +2234,198 @@ function nShowResult(year, month, day) {
   document.getElementById('n-result-caution').textContent = d.caution;
 
   nShowScreen('result');
+}
+
+// ============================================
+// NAME FORTUNE (姓名判断)
+// ============================================
+
+let kSurnameChars = 2;
+let kGivenChars = 2;
+
+function kShowScreen(id) {
+  document.querySelectorAll('#name-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('k-screen-' + id).classList.add('active');
+}
+
+function kSetChars(part, n) {
+  if (part === 'surname') {
+    kSurnameChars = n;
+    document.querySelectorAll('.k-surname-btn').forEach((btn, i) => btn.classList.toggle('active', i + 1 === n));
+    const s3 = document.getElementById('k-s3');
+    if (s3) s3.parentElement.classList.toggle('k-hidden', n < 3);
+    const s2 = document.getElementById('k-s2');
+    if (s2) s2.parentElement.classList.toggle('k-hidden', n < 2);
+  } else {
+    kGivenChars = n;
+    document.querySelectorAll('.k-given-btn').forEach((btn, i) => btn.classList.toggle('active', i + 1 === n));
+    const g3 = document.getElementById('k-g3');
+    if (g3) g3.parentElement.classList.toggle('k-hidden', n < 3);
+    const g2 = document.getElementById('k-g2');
+    if (g2) g2.parentElement.classList.toggle('k-hidden', n < 2);
+  }
+}
+
+const kNumData = {
+  1:  { label: '大吉', title: '万物の始まり',   desc: 'リーダーシップと創始の力。独立心と行動力で自らの道を切り拓く。' },
+  2:  { label: '凶',   title: '二極分断',       desc: '協調は得意だが目標を見失いやすい。強い意志と方向性が必要。' },
+  3:  { label: '大吉', title: '三位一体',       desc: '才能豊かで社交的。表現力と知恵で人を惹きつける。' },
+  4:  { label: '大凶', title: '四苦八苦',       desc: '努力が実りにくい苦労数。逆境を乗り越える精神力が試される。' },
+  5:  { label: '大吉', title: '五徳円満',       desc: '万能のバランスを持つ数。変化に強く才能多彩で活躍できる。' },
+  6:  { label: '大吉', title: '六合調和',       desc: '家庭運・人間関係に恵まれる。責任感と温かさで信頼を得る。' },
+  7:  { label: '半吉', title: '七星探究',       desc: '個性的で探究心旺盛。専門性を極めることで大きく輝く。' },
+  8:  { label: '大吉', title: '八方開運',       desc: '強い粘り強さと実行力。困難を乗り越え大きな成功を掴む。' },
+  9:  { label: '凶',   title: '九難多苦',       desc: '波乱多く孤独になりやすい。精神的な強さで乗り越えよう。' },
+  10: { label: '凶',   title: '十難空虚',       desc: '努力が空回りしやすい。方向性を定めることが重要。' },
+  11: { label: '大吉', title: '天地霊感',       desc: '高い直感力と霊性。芸術・精神世界で才能を発揮する。' },
+  12: { label: '凶',   title: '孤独幽閉',       desc: '自分の世界に閉じこもりやすい。積極的な交流を心がけて。' },
+  13: { label: '大吉', title: '智将果断',       desc: '知性と実行力を兼ね備える。頭脳で難局を打開する。' },
+  14: { label: '凶',   title: '破壊変動',       desc: '変動が激しく安定しにくい。一つのことに集中する努力が必要。' },
+  15: { label: '大吉', title: '福寿円満',       desc: '人望厚く幸運が続く。愛情にも仕事にも恵まれる吉数。' },
+  16: { label: '大吉', title: '徳望兼備',       desc: '厚い人望と信頼を得る。周囲をまとめるリーダーシップ。' },
+  17: { label: '大吉', title: '突破前進',       desc: '困難を突破する強さ。不屈の精神で成功を勝ち取る。' },
+  18: { label: '大吉', title: '積極進取',       desc: '積極性で幸運を引き寄せる。チャンスを逃さない行動力。' },
+  19: { label: '凶',   title: '波乱苦節',       desc: '才能はあるが波乱が多い。焦らず着実に進むことが大切。' },
+  20: { label: '凶',   title: '空虚迷走',       desc: '努力が報われにくい。信念を持って行動することが重要。' },
+  21: { label: '大吉', title: '明智英断',       desc: '知恵と決断力で成功する。独立して大きな事業を成す。' },
+  22: { label: '凶',   title: '中断挫折',       desc: '計画が頓挫しやすい。柔軟な対応と周囲の助けが鍵。' },
+  23: { label: '大吉', title: '旭日昇天',       desc: '輝く才能で頭角を現す。若くして成功する上昇運。' },
+  24: { label: '大吉', title: '立花繁栄',       desc: '財運・愛情に恵まれる。家庭と仕事を両立させる数。' },
+  25: { label: '半吉', title: '健将奮励',       desc: '粘り強い努力家。時間はかかるが確実に前進する。' },
+  26: { label: '凶',   title: '波乱万丈',       desc: '波乱万丈の人生。感情をコントロールし安定を意識して。' },
+  27: { label: '半吉', title: '中庸知性',       desc: '知性はあるが頑固な面も。柔軟性を持つと運が開ける。' },
+  28: { label: '凶',   title: '離散孤立',       desc: '人間関係でつまずきやすい。誠実さと謙虚さを大切に。' },
+  29: { label: '吉',   title: '知謀成功',       desc: '頭脳明晰で成功する。計画性と実行力で着実に前進。' },
+  30: { label: '半吉', title: '吉凶交錯',       desc: '大きな成功か失敗か極端。慎重さと大胆さのバランスが大切。' },
+  31: { label: '大吉', title: '春日仁慈',       desc: '明朗闊達でリーダー向き。包容力と推進力を持つ。' },
+  32: { label: '大吉', title: '侠気仁和',       desc: '人を惹きつける魅力。義理人情に厚く周囲から慕われる。' },
+  33: { label: '大吉', title: '升天飛躍',       desc: '創造力と上昇運。大きなビジョンで時代をリードする。' },
+  34: { label: '凶',   title: '変転破壊',       desc: '変化が多く安定しにくい。根気強く一つのことに取り組もう。' },
+  35: { label: '吉',   title: '温厚着実',       desc: '穏やかで着実な成功。人当たりがよく長く愛される。' },
+  36: { label: '凶',   title: '孤軍奮闘',       desc: '孤立しやすい苦労数。チームワークを意識することが大切。' },
+  37: { label: '大吉', title: '堅実成功',       desc: '信念を持って成功する。一歩一歩の努力が実を結ぶ。' },
+  38: { label: '半吉', title: '技能専門',       desc: '専門性で活路を開く。一つの分野を深く極めることが吉。' },
+  39: { label: '大吉', title: '総領才能',       desc: '大きな才能と人望。芸術や文化分野で特に才能を発揮。' },
+  40: { label: '半吉', title: '変転多様',       desc: '変化の多い人生。変化を楽しむ柔軟性が幸運を呼ぶ。' },
+  41: { label: '大吉', title: '有徳財運',       desc: '人徳と財運に恵まれる。誠実さが多くの幸運を招く。' },
+  42: { label: '凶',   title: '苦難連続',       desc: '努力が報われにくい。焦らず長期視点で取り組もう。' },
+  43: { label: '凶',   title: '散財浪費',       desc: '浪費しやすい。計画的なお金の管理が重要。' },
+  44: { label: '大凶', title: '大破壊',         desc: '大きな障害がある。慎重に行動し周囲のサポートを借りよう。' },
+  45: { label: '大吉', title: '大器晩成',       desc: '晩年に大きく花開く。長い目で見ると最高の数。' },
+  46: { label: '凶',   title: '空虚落空',       desc: '空回りしやすい。現実的な目標設定が大切。' },
+  47: { label: '吉',   title: '着実前進',       desc: '着実な前進と成功。地道な努力が大きな実りとなる。' },
+  48: { label: '大吉', title: '有能才幹',       desc: '才能を活かし大成する。多方面で能力を発揮できる。' },
+  49: { label: '凶',   title: '凶変波乱',       desc: '運気の浮き沈みが激しい。安定した基盤づくりが重要。' },
+  50: { label: '凶',   title: '半途挫折',       desc: '途中で挫折しやすい。最後まで諦めない強さを持とう。' },
+  51: { label: '半吉', title: '変化才能',       desc: '波はあるが才能がある。才能を磨けば成功が近づく。' },
+  52: { label: '大吉', title: '盛運繁栄',       desc: '努力が実り盛運に向かう。後半生に特に運が開ける。' },
+  53: { label: '凶',   title: '内憂外患',       desc: '内部から崩れやすい。健康管理と精神の安定が大切。' },
+  54: { label: '凶',   title: '苦難連鎖',       desc: '障害が多い。困難を学びと捉えポジティブに進もう。' },
+  55: { label: '半吉', title: '波乱才腕',       desc: '才能はあるが波乱多め。安定した環境が才能を伸ばす。' },
+  56: { label: '凶',   title: '変動不安',       desc: '変動が多い。安定した環境づくりと信頼関係が重要。' },
+  57: { label: '吉',   title: '奮闘勝利',       desc: '困難を乗り越え成功する。粘り強さが勝利を呼ぶ。' },
+  58: { label: '吉',   title: '後栄発展',       desc: '後半に運が開ける。晩年に向けて右肩上がりの運命。' },
+  59: { label: '凶',   title: '苦節連続',       desc: '苦労が続く。精神的な強さと仲間の力で乗り越えよう。' },
+  60: { label: '凶',   title: '暗黒迷走',       desc: '迷いが多い。目標を明確にし一歩一歩進もう。' },
+  61: { label: '大吉', title: '白圭誠実',       desc: '誠実さで信頼を得る。人から頼られる存在になる。' },
+  62: { label: '凶',   title: '衰退落魄',       desc: '衰退しやすい。チャレンジ精神と変化への積極性が大切。' },
+  63: { label: '吉',   title: '安泰成功',       desc: '穏やかな安定と成功。波の少ない幸せな人生。' },
+  64: { label: '凶',   title: '変動不安定',     desc: '安定しにくい。地道な努力の積み重ねが安定への道。' },
+  65: { label: '大吉', title: '吉祥繁栄',       desc: '吉祥の数。さまざまな幸運に恵まれる。' },
+  66: { label: '凶',   title: '退歩低迷',       desc: '後退しやすい。前向きな姿勢と努力で流れを変えよう。' },
+  67: { label: '大吉', title: '着実成功',       desc: '着実な成功が見込める。信頼と実力で地位を築く。' },
+  68: { label: '大吉', title: '知仁勇備',       desc: '知恵と情に恵まれる。多くの人に愛される人格者。' },
+  69: { label: '凶',   title: '晩年憂慮',       desc: '後半の人生に注意が必要。健康と人間関係を大切に。' },
+  70: { label: '凶',   title: '空亡虚無',       desc: '虚無感を感じやすい。精神的な充実を意識しよう。' },
+  71: { label: '半吉', title: '末吉転換',       desc: '後半に期待が持てる。継続と忍耐が鍵。' },
+  72: { label: '凶',   title: '苦難多難',       desc: '苦難が多い。一つひとつ乗り越えることで強くなる。' },
+  73: { label: '半吉', title: '可能性秘蔵',     desc: '波はあるが大きな可能性を秘める。諦めないことが大切。' },
+  74: { label: '凶',   title: '障害連続',       desc: '障害が多い。柔軟な発想と周囲との協力が突破口になる。' },
+  75: { label: '半吉', title: '穏健安定',       desc: '穏やかな運気。着実に積み上げることで幸福が来る。' },
+  76: { label: '凶',   title: '変動激浪',       desc: '変動が激しい。精神的な安定と地盤固めが重要。' },
+  77: { label: '半吉', title: '孤高成就',       desc: '孤独だが信念を貫けば成功する。独自の道を歩む数。' },
+  78: { label: '半吉', title: '着実遅成',       desc: '着実だが遅い成功。焦らず長い目で人生を見よう。' },
+  79: { label: '凶',   title: '晩年苦難',       desc: '晩年に注意が必要。若いうちから備えることが大切。' },
+  80: { label: '凶',   title: '衰退終末',       desc: '衰退の兆し。挑戦と変革で新しい道を切り開こう。' },
+  81: { label: '大吉', title: '還元完成',       desc: '81は最高の完成数。1に還元する宇宙的な大吉数。' },
+};
+
+function kGetNumInfo(n) {
+  if (n < 1) n = 1;
+  if (n > 81) n = ((n - 1) % 81) + 1;
+  return kNumData[n] || { label: '半吉', title: '平運', desc: '普通の運気。努力と工夫が吉凶を分ける。' };
+}
+
+function kFortuneClass(label) {
+  if (label === '大吉') return 'k-fortune-great';
+  if (label === '吉')   return 'k-fortune-good';
+  if (label === '半吉') return 'k-fortune-mixed';
+  return 'k-fortune-bad';
+}
+
+function kDiagnose() {
+  const sVals = [], gVals = [];
+  for (let i = 1; i <= kSurnameChars; i++) {
+    const v = parseInt(document.getElementById('k-s' + i).value);
+    if (!v || v < 1) { alert('姓の画数をすべて入力してください'); return; }
+    sVals.push(v);
+  }
+  for (let i = 1; i <= kGivenChars; i++) {
+    const v = parseInt(document.getElementById('k-g' + i).value);
+    if (!v || v < 1) { alert('名の画数をすべて入力してください'); return; }
+    gVals.push(v);
+  }
+
+  const sTotal = sVals.reduce((a, b) => a + b, 0);
+  const gTotal = gVals.reduce((a, b) => a + b, 0);
+
+  // 五格計算
+  const tenkaku = sTotal;                                     // 天格：姓の合計
+  const chikaku = gTotal;                                     // 地格：名の合計
+  const jinkaku = sVals[sVals.length - 1] + gVals[0];        // 人格：姓末尾 + 名先頭
+  let   gaikaku = sVals[0] + gVals[gVals.length - 1];        // 外格：姓先頭 + 名末尾
+  if (kSurnameChars === 1 || kGivenChars === 1) gaikaku += 1; // 一字の場合+1
+  const sokaku = sTotal + gTotal;                             // 総格：全体
+
+  kShowScreen('loading');
+  setTimeout(() => kShowResult(tenkaku, jinkaku, chikaku, gaikaku, sokaku), 1800);
+}
+
+function kShowResult(ten, jin, chi, gai, so) {
+  const tenI = kGetNumInfo(ten);
+  const jinI = kGetNumInfo(jin);
+  const chiI = kGetNumInfo(chi);
+  const gaiI = kGetNumInfo(gai);
+  const soI  = kGetNumInfo(so);
+
+  const sub4 = [
+    { name: '天格', sub: '先祖・家系の運',  num: ten, info: tenI },
+    { name: '人格', sub: '主運・性格の核',  num: jin, info: jinI },
+    { name: '地格', sub: '幼少期・基礎運',  num: chi, info: chiI },
+    { name: '外格', sub: '社会・対人運',    num: gai, info: gaiI },
+  ];
+
+  let html = `
+    <div class="k-kaku-card k-main">
+      <div class="k-kaku-name">総格 — 人生全体の運命数</div>
+      <div class="k-kaku-number">${so}</div>
+      <div><span class="k-kaku-fortune ${kFortuneClass(soI.label)}">${soI.label}</span></div>
+      <div class="k-kaku-desc">${soI.title} — ${soI.desc}</div>
+    </div>
+  `;
+  sub4.forEach(k => {
+    html += `
+      <div class="k-kaku-card">
+        <div class="k-kaku-name">${k.name}<br><span style="font-weight:400;color:#9ca3af;font-size:0.68rem">${k.sub}</span></div>
+        <div class="k-kaku-number" style="font-size:1.7rem;color:#012a27">${k.num}</div>
+        <div><span class="k-kaku-fortune ${kFortuneClass(k.info.label)}">${k.info.label}</span></div>
+        <div class="k-kaku-desc">${k.info.title}</div>
+      </div>`;
+  });
+
+  document.getElementById('k-kaku-grid').innerHTML = html;
+  document.getElementById('k-jinkaku-desc').textContent = `人格${jin}数：${jinI.desc}`;
+  kShowScreen('result');
 }
 </script>
 </body>
