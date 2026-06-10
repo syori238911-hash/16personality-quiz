@@ -20,6 +20,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #zodiac-screen.active { display: flex; }
 #tarot-screen.active { display: flex; }
 #name-screen.active { display: flex; }
+#shiju-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -209,6 +210,77 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .k-fortune-bad { background: #fee2e2; color: #991b1b; }
 .k-advice-box { background: #f0fdfa; border-left: 4px solid #0d9488; border-radius: 0 12px 12px 0; padding: 14px 16px; margin-top: 20px; font-size: 0.88rem; color: #374151; line-height: 1.7; }
 .k-advice-box strong { color: #0d9488; display: block; margin-bottom: 4px; }
+
+/* Home card - 四柱推命 */
+.quiz-card-y::before { background: linear-gradient(90deg, #b45309, #78350f); }
+.quiz-card-y { box-shadow: 0 4px 30px rgba(180,83,9,0.15); }
+.quiz-card-y:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(180,83,9,0.3); }
+.quiz-card-y .quiz-card-btn { background: linear-gradient(135deg, #b45309, #78350f); }
+.quiz-card-y .quiz-card-features li::before { color: #b45309; }
+
+/* ============================================
+   四柱推命 QUIZ
+   ============================================ */
+#shiju-screen {
+  background: linear-gradient(160deg, #0c0a00 0%, #1c1400 40%, #0a0a1a 100%);
+  align-items: flex-start; justify-content: center; padding: 72px 20px 60px;
+}
+.quiz-y .container { background: #fefce8; border-radius: 24px; padding: 36px; max-width: 680px; width: 100%; box-shadow: 0 20px 80px rgba(0,0,0,0.8); }
+.quiz-y .screen { display: none; }
+.quiz-y .screen.active { display: block; }
+.quiz-y .badge { display: inline-block; background: #fef3c7; color: #92400e; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 14px; }
+.quiz-y h1 { font-size: 2rem; color: #1c1400; margin-bottom: 8px; font-weight: 900; }
+.quiz-y h1 span { color: #b45309; }
+.quiz-y .subtitle { color: #78716c; margin-bottom: 28px; font-size: 0.92rem; line-height: 1.6; }
+.y-back-btn { background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 0.9rem; position: fixed; top: 20px; left: 20px; padding: 8px 18px; border-radius: 20px; transition: background 0.2s; }
+.y-back-btn:hover { background: rgba(255,255,255,0.2); }
+/* Input */
+.y-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media(max-width:500px){ .y-input-row { grid-template-columns: 1fr; } }
+.y-field { display: flex; flex-direction: column; gap: 6px; }
+.y-field label { font-size: 0.8rem; font-weight: 700; color: #78350f; letter-spacing: 0.5px; }
+.y-field select, .y-field input {
+  padding: 11px 14px; border: 2px solid #fde68a; border-radius: 12px;
+  background: white; font-size: 0.95rem; color: #1c1400; outline: none;
+  transition: border-color 0.2s; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b45309' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.y-field select:focus, .y-field input:focus { border-color: #b45309; }
+.y-hint { background: #fffbeb; border-left: 3px solid #fbbf24; border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 0.78rem; color: #92400e; margin-bottom: 20px; line-height: 1.6; }
+/* 命式 chart */
+.y-meishiki { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 24px 0; border: 2px solid #b45309; border-radius: 16px; overflow: hidden; }
+.y-pillar { display: flex; flex-direction: column; text-align: center; border-right: 1px solid #fde68a; }
+.y-pillar:last-child { border-right: none; }
+.y-pillar-label { background: #b45309; color: white; font-size: 0.72rem; font-weight: 700; padding: 8px 4px; letter-spacing: 1px; }
+.y-pillar-kan { font-size: 2rem; font-weight: 900; padding: 14px 8px 8px; line-height: 1; background: #fffbeb; }
+.y-pillar-shi { font-size: 2rem; font-weight: 900; padding: 8px 8px 14px; line-height: 1; background: #fef9c3; border-top: 1px dashed #fde68a; }
+.y-kan-elem { font-size: 0.65rem; font-weight: 700; display: block; margin-top: 2px; }
+.y-day-pillar .y-pillar-label { background: #78350f; }
+.y-day-pillar .y-pillar-kan { background: #fff7e0; }
+/* 五行バー */
+.y-gogyo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
+.y-gogyo-item { text-align: center; }
+.y-gogyo-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; }
+.y-gogyo-bar { height: 60px; display: flex; align-items: flex-end; justify-content: center; }
+.y-gogyo-fill { width: 28px; border-radius: 4px 4px 0 0; transition: height 0.8s ease; min-height: 4px; }
+.y-gogyo-count { font-size: 0.7rem; color: #78716c; margin-top: 4px; }
+/* Result cards */
+.y-result-section { margin-bottom: 20px; }
+.y-result-section h3 { font-size: 1rem; font-weight: 800; color: #78350f; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #fde68a; display: flex; align-items: center; gap: 6px; }
+.y-traits { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.y-trait { background: #fef3c7; color: #92400e; font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+.y-daiyun { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.y-daiyun-item { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 6px; text-align: center; }
+.y-daiyun-age { font-size: 0.7rem; color: #92400e; font-weight: 700; margin-bottom: 4px; }
+.y-daiyun-kanshi { font-size: 1.1rem; font-weight: 900; color: #1c1400; }
+.y-daiyun-item.current { background: #fef3c7; border-color: #b45309; }
+.y-element-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 8px; margin-left: 6px; }
+.elem-木 { background: #dcfce7; color: #166534; }
+.elem-火 { background: #fee2e2; color: #991b1b; }
+.elem-土 { background: #fef3c7; color: #92400e; }
+.elem-金 { background: #e0e7ff; color: #3730a3; }
+.elem-水 { background: #dbeafe; color: #1e40af; }
 
 /* ============================================
    TAROT QUIZ
@@ -766,6 +838,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- 四柱推命 -->
+    <div class="quiz-card quiz-card-y" onclick="openQuiz('shiju')">
+      <div class="quiz-card-icon">🀄</div>
+      <h2>四柱推命</h2>
+      <p class="card-desc">東洋命術の最高峰・本格鑑定</p>
+      <ul class="quiz-card-features">
+        <li>年柱・月柱・日柱・時柱を算出</li>
+        <li>五行バランスで性格を分析</li>
+        <li>大運（10年サイクル）を表示</li>
+      </ul>
+      <button class="quiz-card-btn">命式を鑑定する →</button>
+    </div>
+
     <!-- 西洋占星術 -->
     <div class="quiz-card quiz-card-z" onclick="openQuiz('zodiac')">
       <div class="quiz-card-icon">⭐</div>
@@ -1019,6 +1104,157 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 
         <div style="margin-top:24px;display:grid;gap:10px">
           <button class="btn-primary" style="background:linear-gradient(135deg,#0d9488,#0f766e);width:100%;padding:14px" onclick="kShowScreen('input')">もう一度診断する</button>
+          <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     四柱推命 QUIZ
+     =================================================== -->
+<div id="shiju-screen" class="app-screen">
+  <button class="y-back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-y">
+    <div class="container">
+
+      <!-- 入力 -->
+      <div class="screen active" id="y-screen-input">
+        <div class="badge">🀄 本格四柱推命</div>
+        <h1>あなたの<span>命式</span>を<br>鑑定します</h1>
+        <p class="subtitle">生年月日と生まれた時間を入力してください。<br>年柱・月柱・日柱・時柱から五行バランスと運命を読み解きます。</p>
+        <div class="y-hint">
+          ⏰ 生まれた時間が不明な場合は「不明」を選択してください。時柱は省略されます。<br>
+          📅 旧暦・新暦の違いが1〜2月生まれの方に影響する場合があります。
+        </div>
+        <div class="y-input-row">
+          <div class="y-field">
+            <label>生まれた年</label>
+            <select id="y-year"></select>
+          </div>
+          <div class="y-field">
+            <label>生まれた月</label>
+            <select id="y-month">
+              <option value="1">1月</option><option value="2">2月</option>
+              <option value="3">3月</option><option value="4">4月</option>
+              <option value="5">5月</option><option value="6">6月</option>
+              <option value="7">7月</option><option value="8">8月</option>
+              <option value="9">9月</option><option value="10">10月</option>
+              <option value="11">11月</option><option value="12">12月</option>
+            </select>
+          </div>
+        </div>
+        <div class="y-input-row">
+          <div class="y-field">
+            <label>生まれた日</label>
+            <select id="y-day"></select>
+          </div>
+          <div class="y-field">
+            <label>生まれた時間帯（任意）</label>
+            <select id="y-hour">
+              <option value="-1">不明（省略）</option>
+              <option value="23">子の刻 23:00〜01:00</option>
+              <option value="1">丑の刻 01:00〜03:00</option>
+              <option value="3">寅の刻 03:00〜05:00</option>
+              <option value="5">卯の刻 05:00〜07:00</option>
+              <option value="7">辰の刻 07:00〜09:00</option>
+              <option value="9">巳の刻 09:00〜11:00</option>
+              <option value="11">午の刻 11:00〜13:00</option>
+              <option value="13">未の刻 13:00〜15:00</option>
+              <option value="15">申の刻 15:00〜17:00</option>
+              <option value="17">酉の刻 17:00〜19:00</option>
+              <option value="19">戌の刻 19:00〜21:00</option>
+              <option value="21">亥の刻 21:00〜23:00</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#b45309,#78350f);width:100%;padding:16px;font-size:1.05rem;margin-top:8px" onclick="yDiagnose()">
+          命式を鑑定する →
+        </button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="y-screen-loading">
+        <div style="text-align:center;padding:60px 20px">
+          <div style="font-size:3.5rem;margin-bottom:20px;animation:spin 3s linear infinite">☯️</div>
+          <div style="font-size:1.15rem;font-weight:800;color:#1c1400;margin-bottom:10px">命式を算出中…</div>
+          <p style="color:#a8a29e;font-size:0.88rem">天干地支・五行バランスを解析しています</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="y-screen-result">
+        <div style="text-align:center;margin-bottom:20px">
+          <div class="badge">🀄 命式鑑定結果</div>
+          <h2 style="font-size:1.5rem;font-weight:900;color:#1c1400;margin-top:8px" id="y-result-title"></h2>
+          <p style="color:#78716c;font-size:0.85rem;margin-top:4px" id="y-result-subtitle"></p>
+        </div>
+
+        <!-- 命式表 -->
+        <div class="y-meishiki" id="y-meishiki"></div>
+
+        <!-- 五行バランス -->
+        <div class="y-result-section">
+          <h3>🌿 五行バランス</h3>
+          <div class="y-gogyo-grid" id="y-gogyo-grid"></div>
+          <p style="font-size:0.82rem;color:#78716c;text-align:center" id="y-gogyo-desc"></p>
+        </div>
+
+        <!-- 日主・性格 -->
+        <div class="y-result-section" id="y-nisshu-section">
+          <h3>☀️ 日主 <span id="y-nisshu-badge"></span></h3>
+          <p style="font-size:0.9rem;color:#374151;line-height:1.7;margin-bottom:10px" id="y-personality"></p>
+          <div class="y-traits" id="y-traits"></div>
+        </div>
+
+        <!-- 強み・弱み -->
+        <div class="y-result-section">
+          <h3>⚡ 強みと課題</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#f0fdf4;border-radius:12px;padding:14px">
+              <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:6px">✅ 強み</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="y-strength"></p>
+            </div>
+            <div style="background:#fff7ed;border-radius:12px;padding:14px">
+              <div style="font-size:0.75rem;font-weight:700;color:#c2410c;margin-bottom:6px">🔥 課題</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="y-weakness"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 恋愛・仕事 -->
+        <div class="y-result-section">
+          <h3>💫 恋愛・仕事運</h3>
+          <div style="display:grid;gap:10px">
+            <div style="background:#fdf4ff;border-radius:12px;padding:14px">
+              <div style="font-size:0.75rem;font-weight:700;color:#7e22ce;margin-bottom:5px">❤️ 恋愛</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="y-love"></p>
+            </div>
+            <div style="background:#eff6ff;border-radius:12px;padding:14px">
+              <div style="font-size:0.75rem;font-weight:700;color:#1d4ed8;margin-bottom:5px">💼 仕事</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="y-work"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 大運 -->
+        <div class="y-result-section">
+          <h3>📅 大運（10年ごとの運気）</h3>
+          <div class="y-daiyun" id="y-daiyun"></div>
+          <p style="font-size:0.78rem;color:#a8a29e;margin-top:8px;text-align:center">※現在の大運は強調表示されます</p>
+        </div>
+
+        <!-- アドバイス -->
+        <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:16px;padding:20px;border:2px solid #fde68a;margin-bottom:20px">
+          <div style="font-size:0.85rem;font-weight:800;color:#92400e;margin-bottom:8px">🌅 命式からのメッセージ</div>
+          <p style="font-size:0.88rem;color:#374151;line-height:1.7" id="y-message"></p>
+        </div>
+
+        <div style="display:grid;gap:10px">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#b45309,#78350f);width:100%;padding:14px" onclick="yShowScreen('input')">もう一度鑑定する</button>
           <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
         </div>
       </div>
@@ -2235,6 +2471,381 @@ function nShowResult(year, month, day) {
 
   nShowScreen('result');
 }
+
+// ============================================
+// 四柱推命 (SHIJU-SUIMEI)
+// ============================================
+
+// ── 基礎データ ──────────────────────────────
+const Y_KAN  = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const Y_SHI  = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const Y_ANIMAL = ['ねずみ','うし','とら','うさぎ','たつ','へび','うま','ひつじ','さる','とり','いぬ','いのしし'];
+const Y_KAN_ELEM  = ['木','木','火','火','土','土','金','金','水','水'];
+const Y_SHI_ELEM  = ['水','土','木','木','土','火','火','土','金','金','土','水'];
+const Y_KAN_YIN   = ['+','-','+','-','+','-','+','-','+','-']; // 陽/陰
+const Y_ELEM_COLOR = { '木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#6366f1','水':'#0369a1' };
+const Y_ELEM_BG    = { '木':'#dcfce7','火':'#fee2e2','土':'#fef9c3','金':'#e0e7ff','水':'#dbeafe' };
+
+function yKanshi(idx) {
+  idx = ((idx % 60) + 60) % 60;
+  return Y_KAN[idx % 10] + Y_SHI[idx % 12];
+}
+function yKanIdx(idx60)  { return idx60 % 10; }
+function yShiIdx(idx60)  { return idx60 % 12; }
+
+// ── 年柱 ─────────────────────────────────────
+// 1984 = 甲子 (index 0)
+function yYearIdx(year) { return ((year - 4) % 60 + 60) % 60; }
+
+// ── 月柱 ─────────────────────────────────────
+// 節入り日（簡略版）：各月の節入り日は概ね4〜8日
+// 月支（寅=2始まり）: 寅月=2,卯=3,...丑=1
+const Y_MONTH_BRANCH = [11,0,1,2,3,4,5,6,7,8,9,10]; // Jan=子(0の位置=丑=1？
+// 実際の月支マッピング（旧暦月→地支）
+// 1月=丑(1), 2月=寅(2), 3月=卯(3)...12月=子(0) ← 節気基準ではなく暦月で簡略
+const Y_MONTH_BRANCH_MAP = [1,2,3,4,5,6,7,8,9,10,11,0]; // month1→丑, month12→子
+
+function yMonthIdx(year, month, day) {
+  // 節気基準: 各月は概ね4〜7日に切り替わる（簡略: 6日以降を当月、5日以前を前月）
+  const solarTermDay = 6;
+  let m = month;
+  if (day < solarTermDay) { m = month - 1; if (m < 1) m = 12; }
+  const branchIdx = Y_MONTH_BRANCH_MAP[m - 1];
+  // 月干：年干によって変わる
+  const yearKanIdx = yYearIdx(year) % 10;
+  const startStem = [2, 4, 6, 8, 0][yearKanIdx % 5]; // 甲己→丙, 乙庚→戊, 丙辛→庚, 丁壬→壬, 戊癸→甲
+  // 寅月(branch=2)を0番目として、月ごとに天干を+1
+  const branchOffset = (branchIdx - 2 + 12) % 12;
+  const stemIdx = (startStem + branchOffset) % 10;
+  // 60干支インデックス
+  return ((stemIdx * 6 + Math.floor(stemIdx / 2)) + branchIdx) % 60;
+  // より正確: find idx where idx%10===stemIdx && idx%12===branchIdx
+}
+function yMonthIdx2(year, month, day) {
+  const solarTermDay = 6;
+  let m = month;
+  if (day < solarTermDay) { m--; if (m < 1) m = 12; }
+  const branchIdx = Y_MONTH_BRANCH_MAP[m - 1];
+  const yearKanIdx = yYearIdx(year) % 10;
+  const startStem = [2,4,6,8,0][yearKanIdx % 5];
+  const branchOffset = (branchIdx - 2 + 12) % 12;
+  const stemIdx = (startStem + branchOffset) % 10;
+  // stemIdx%10 と branchIdx%12 が合致するidx60を探す
+  for (let i = 0; i < 60; i++) {
+    if (i % 10 === stemIdx && i % 12 === branchIdx) return i;
+  }
+  return 0;
+}
+
+// ── 日柱 ─────────────────────────────────────
+// 基準: 1900/1/31 = 甲子 (idx=0)
+function yDayIdx(year, month, day) {
+  const target = new Date(year, month - 1, day);
+  const base   = new Date(1900, 0, 31);
+  const diff   = Math.round((target - base) / 86400000);
+  return ((diff % 60) + 60) % 60;
+}
+
+// ── 時柱 ─────────────────────────────────────
+// 時支: 子=0(23〜), 丑=1(1〜), 寅=2(3〜)...
+function yHourBranch(hour) {
+  if (hour < 0) return -1;
+  return Math.floor(((hour + 1) % 24) / 2);
+}
+function yHourIdx(dayIdx, hour) {
+  const branchIdx = yHourBranch(hour);
+  if (branchIdx < 0) return -1;
+  const dayKanIdx = dayIdx % 10;
+  const startStem = [0,2,4,6,8][dayKanIdx % 5];
+  const stemIdx = (startStem + branchIdx) % 10;
+  for (let i = 0; i < 60; i++) {
+    if (i % 10 === stemIdx && i % 12 === branchIdx) return i;
+  }
+  return 0;
+}
+
+// ── 五行カウント ──────────────────────────────
+function yCountElem(pillars) {
+  const cnt = { '木':0,'火':0,'土':0,'金':0,'水':0 };
+  pillars.forEach(p => {
+    if (p < 0) return;
+    cnt[Y_KAN_ELEM[p % 10]]++;
+    cnt[Y_SHI_ELEM[p % 12]]++;
+  });
+  return cnt;
+}
+
+// ── 日主データ ────────────────────────────────
+const Y_NISSHU_DATA = {
+  '甲': {
+    title:'甲木（きのえ）',
+    personality:'一本の大木のように、まっすぐで誠実。高い理想と強い意志を持ち、どんな困難でも真正面から向かっていくタイプです。自分の信念を曲げることが少なく、周囲から頼られる存在になります。',
+    traits:['リーダーシップ','正直・誠実','向上心が強い','理想主義','粘り強い'],
+    strength:'困難をへこたれず突き進む実行力と、人々を率いる天性のリーダーシップ。長期的な目標に向かって粘り強く努力できます。',
+    weakness:'頑固になりすぎて柔軟性を失うことがある。プライドが高く、人の意見を聞かなくなる場面も。',
+    love:'一途で誠実な恋愛をします。深く愛した相手には徹底的に尽くしますが、束縛してしまうことも。',
+    work:'リーダー・経営者・パイロット・政治家など、先頭に立つ仕事で輝きます。独立して成功する可能性が高い。',
+  },
+  '乙': {
+    title:'乙木（きのと）',
+    personality:'しなやかな草や花のように、柔軟で社交的。周囲に合わせながら着実に成長していくタイプです。人当たりがよく、どんな環境にも適応できる高い対人能力を持ちます。',
+    traits:['社交的','柔軟・適応力','細やかな気配り','粘り強さ','芸術的センス'],
+    strength:'どんな状況にも対応できる柔軟性と、人を惹きつける自然な魅力。協調性が高くチームをまとめる力があります。',
+    weakness:'流されやすく、自分の軸を見失うことがある。優柔不断になりやすい面も。',
+    love:'相手の気持ちに寄り添う優しい恋愛スタイル。ただし、自己主張が苦手で不満を溜めやすい。',
+    work:'デザイナー・コンサルタント・営業・カウンセラーなど、対人スキルを活かせる仕事が向いています。',
+  },
+  '丙': {
+    title:'丙火（ひのえ）',
+    personality:'太陽のように明るく、周囲を照らす存在。エネルギッシュで情熱的、自然と人々が集まってくるカリスマ性があります。行動力と決断力に優れたリーダーです。',
+    traits:['明るく情熱的','カリスマ性','行動力','正義感','オープンマインド'],
+    strength:'人々を惹きつける圧倒的な存在感と、行動でまわりを引っ張るカリスマ力。どんな場でも中心的な存在になれます。',
+    weakness:'カッとなりやすく、衝動的な行動が裏目に出ることがある。自己中心的になる場面も。',
+    love:'恋愛にも情熱的。アプローチは大胆で、周囲を照らすような愛情表現をします。ただし飽きっぽい面も。',
+    work:'起業家・芸能人・営業トップ・スポーツ選手など、注目を集める舞台で力を発揮します。',
+  },
+  '丁': {
+    title:'丁火（ひのと）',
+    personality:'ろうそくの炎のように、内なる光を持つ繊細で深みのある人。高い感受性と直感力を持ち、人の心の機微を読む能力に長けています。一対一の深い関係を大切にします。',
+    traits:['繊細・感受性豊か','深い思いやり','直感力','芸術的才能','忍耐強い'],
+    strength:'人の感情を深く理解する共感能力と、コツコツと積み上げる継続力。芸術・創造分野での才能が際立ちます。',
+    weakness:'繊細すぎて傷つきやすく、精神的に消耗しやすい。悩みを一人で抱え込む傾向がある。',
+    love:'一人の相手を深く愛する一途なタイプ。感情表現は控えめですが、内心では熱く想っています。',
+    work:'カウンセラー・教育者・作家・芸術家・医療職など、人の内面に寄り添う仕事で才能を発揮します。',
+  },
+  '戊': {
+    title:'戊土（つちのえ）',
+    personality:'雄大な山のような、どっしりとした安定感と包容力を持つ人。誠実で信頼が厚く、周囲の人を受け入れる大きな懐があります。長期的な視点で物事を考えられます。',
+    traits:['安定・堅実','高い包容力','誠実・信頼感','長期的視点','度量が大きい'],
+    strength:'揺るぎない安定感と、どんな人でも受け入れる包容力。長期的な計画を着実に実行できる力があります。',
+    weakness:'頑固で変化を嫌う傾向がある。慎重すぎてチャンスを逃すことも。',
+    love:'安心感を与えるパートナーとして信頼されます。ゆっくりと関係を深めるタイプで、長続きする恋愛をします。',
+    work:'管理職・経営者・不動産・農業・建設など、安定と信頼が求められる分野で力を発揮します。',
+  },
+  '己': {
+    title:'己土（つちのと）',
+    personality:'肥沃な大地のように、細やかで気配りのできる実務家。几帳面で周到な計画性を持ち、周囲のニーズを敏感に察知して対応します。縁の下の力持ちとして信頼されます。',
+    traits:['細やかな気配り','几帳面・計画的','実務能力高い','面倒見がいい','粘り強い'],
+    strength:'細部まで気を配る丁寧さと、確実に仕事を仕上げる実行力。人をサポートする能力が高く、チームに欠かせない存在になります。',
+    weakness:'心配性で過剰に細かくなりすぎることがある。他人に頼れず、一人で背負い込む傾向も。',
+    love:'相手の細かいところまで気にかける献身的な恋愛スタイル。過干渉にならないよう注意が必要。',
+    work:'事務・経理・医療・福祉・教育など、細かいケアと正確さが求められる職業で才能を発揮します。',
+  },
+  '庚': {
+    title:'庚金（かのえ）',
+    personality:'鋼のように硬く、強い正義感と意志を持つ人。決断力があり、一度決めたことは必ず実行するまでやり抜く克己心があります。白黒はっきりした明確な価値観を持ちます。',
+    traits:['強い正義感','決断力','克己心','率直・明快','揺るぎない意志'],
+    strength:'困難な状況でも揺らがない強い意志と、物事をスパッと決める決断力。正義のためなら恐れずに立ち向かえます。',
+    weakness:'融通が利かず、白黒思考になりやすい。直言しすぎて人間関係に摩擦を生むことも。',
+    love:'真剣に向き合うタイプ。一度惹かれた相手には真っ直ぐにアプローチしますが、感情表現が不器用な面も。',
+    work:'法律家・警察官・軍人・経営者・スポーツなど、強い意志と正義感を活かせる分野で輝きます。',
+  },
+  '辛': {
+    title:'辛金（かのと）',
+    personality:'宝石のように洗練された、鋭い感性と審美眼を持つ人。繊細でエレガント、美しいものへのこだわりが強く、独自の美意識と感性で世界を見ています。',
+    traits:['洗練された美意識','鋭い感性','完璧主義','プライドが高い','分析力'],
+    strength:'他の人が見落とす細部まで気づく鋭い観察力と、美的センス。一つのことを徹底的に磨き上げる完璧主義が強みです。',
+    weakness:'完璧主義ゆえのプレッシャーに苦しむことがある。プライドが高く、失敗を認めにくい傾向も。',
+    love:'理想が高く、パートナーにも洗練さを求めます。深く信頼した相手には誰よりも誠実に尽くします。',
+    work:'ファッション・アート・宝石・音楽・研究職など、感性と精度が求められる分野で才能が開花します。',
+  },
+  '壬': {
+    title:'壬水（みずのえ）',
+    personality:'大海のように、広大な知性と懐の深さを持つ人。好奇心旺盛で知識を吸収することが大好きで、スケールの大きな発想と高い適応力を持っています。',
+    traits:['広い知性・好奇心','高い適応力','スケールが大きい','自由を愛する','直感力'],
+    strength:'どんな状況にも流れるように適応できる柔軟性と、一を聞いて十を知る高い知性。新しい環境や挑戦を楽しめます。',
+    weakness:'飽きっぽく、一つのことを長く続けるのが苦手。自由すぎて制約のある環境で窮屈さを感じやすい。',
+    love:'自由と変化を好むため、束縛のない関係を求めます。知的に刺激し合えるパートナーと長続きします。',
+    work:'海外・IT・研究・旅行業・哲学・フリーランスなど、自由度が高く知性を活かせる分野が合っています。',
+  },
+  '癸': {
+    title:'癸水（みずのと）',
+    personality:'霧雨のように、優しく静かに周囲を潤す存在。深い洞察力と豊かな感受性を持ち、物事の本質を見抜く力があります。内面世界が豊かで、芸術的な才能を持つ人も多いです。',
+    traits:['深い洞察力','豊かな感受性','直感力','思いやり','謙虚'],
+    strength:'表面には見えない深いところまで理解できる洞察力と、人の心に寄り添う共感能力。精神的な深みを持ちます。',
+    weakness:'内向的になりすぎて自分の世界に閉じこもることがある。感受性が強すぎて精神的に消耗しやすい。',
+    love:'心の繋がりをとても大切にします。表現は控えめですが、深い愛情を持って相手に寄り添います。',
+    work:'心理士・芸術家・研究者・ヒーラー・作家など、感性と洞察力を活かせる分野で深い才能を発揮します。',
+  },
+};
+
+// ── 大運計算（簡略版）─────────────────────────
+// 節気までの日数から起運年齢を算出（簡略: 誕生月の節気を概算）
+// 正確な計算には節気データが必要なため、簡略版（3〜8日で6とする）
+function yDaiyun(year, month, day, gender) {
+  // 大運の干支は月柱の干支から順に進む（陽年男/陰年女→順行、陰年男/陽年女→逆行）
+  const yearIdx = yYearIdx(year);
+  const yearKanYin = Y_KAN_YIN[yearIdx % 10]; // '+' or '-'
+  const isForward = (yearKanYin === '+' && gender === 'M') || (yearKanYin === '-' && gender === 'F');
+
+  const monthIdx = yMonthIdx2(year, month, day);
+
+  // 起運年齢: 誕生日から次/前の節気まで（概算: 5歳）
+  const startAge = 5;
+
+  const result = [];
+  for (let i = 1; i <= 8; i++) {
+    const offset = isForward ? i : -i;
+    const idx = ((monthIdx + offset) % 60 + 60) % 60;
+    result.push({ age: startAge + (i - 1) * 10, idx });
+  }
+  return result;
+}
+
+// ── 五行バランス → 性格傾向 ────────────────────
+function yGogyoDesc(cnt) {
+  const max = Object.entries(cnt).sort((a,b) => b[1]-a[1])[0][0];
+  const min = Object.entries(cnt).sort((a,b) => a[1]-b[1])[0][0];
+  const msgs = {
+    '木': { over:'独立心・成長欲が強く、競争を好む。計画性に富むが頑固になりやすい。', lack:'決断が遅くなりやすい。継続力を意識して。' },
+    '火': { over:'情熱的で行動力があり、周囲を惹きつける。ただし感情的になりやすい。', lack:'情熱や活力が不足しがち。小さな挑戦から始めてみよう。' },
+    '土': { over:'安定と信頼を重視する堅実派。信用を集めるが、変化が苦手なこともある。', lack:'地に足がつかない場面も。生活の基盤を安定させることが大切。' },
+    '金': { over:'論理的で正義感が強い。正確さを重視するが、完璧主義に陥りやすい。', lack:'直感や大胆さを意識して取り入れると可能性が広がる。' },
+    '水': { over:'知的好奇心が旺盛で柔軟。多才だが集中力が分散しがちな面も。', lack:'感情や直感を大切にし、人とのつながりを深めよう。' },
+  };
+  return `五行の中で「${max}」が最も強く、「${min}」が弱い命式です。${msgs[max].over}`;
+}
+
+// ── メッセージ生成 ────────────────────────────
+function yGenMessage(nisshu, elemCnt) {
+  const max = Object.entries(elemCnt).sort((a,b) => b[1]-a[1])[0][0];
+  const templates = [
+    `あなたの命式は「${nisshu}」を日主とし、${max}の気が強く流れています。これはあなたが${Y_NISSHU_DATA[nisshu].traits[0]}という特質を持ち、人生において独自の輝きを放つことを示しています。`,
+    `自分の本質である「${nisshu}」の性質を深く理解し、活かしていくことで、あなたの運命はより豊かに開いていきます。強みを伸ばしながら、課題とも真摯に向き合っていきましょう。`,
+    `四柱が示す命式は「設計図」です。この設計図に従って生きることで、あなたが生まれ持った可能性を最大限に花開かせることができます。`,
+  ];
+  return templates[Math.floor(Math.random() * templates.length)];
+}
+
+// ── UI ────────────────────────────────────────
+function yShowScreen(id) {
+  document.querySelectorAll('#shiju-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('y-screen-' + id).classList.add('active');
+}
+
+function yInitDropdowns() {
+  const yearSel = document.getElementById('y-year');
+  if (yearSel && yearSel.options.length === 0) {
+    for (let y = 1930; y <= 2010; y++) {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y + '年';
+      if (y === 1990) opt.selected = true;
+      yearSel.appendChild(opt);
+    }
+  }
+  const daySel = document.getElementById('y-day');
+  if (daySel && daySel.options.length === 0) {
+    for (let d = 1; d <= 31; d++) {
+      const opt = document.createElement('option');
+      opt.value = d; opt.textContent = d + '日';
+      daySel.appendChild(opt);
+    }
+  }
+}
+
+function yDiagnose() {
+  yInitDropdowns();
+  const year  = parseInt(document.getElementById('y-year').value);
+  const month = parseInt(document.getElementById('y-month').value);
+  const day   = parseInt(document.getElementById('y-day').value);
+  const hour  = parseInt(document.getElementById('y-hour').value);
+
+  yShowScreen('loading');
+  setTimeout(() => yCalcAndShow(year, month, day, hour), 2000);
+}
+
+function yCalcAndShow(year, month, day, hour) {
+  const yearIdx  = yYearIdx(year);
+  const monthIdx = yMonthIdx2(year, month, day);
+  const dayIdx   = yDayIdx(year, month, day);
+  const hourIdx  = (hour >= 0) ? yHourIdx(dayIdx, hour) : -1;
+
+  const pillars = [yearIdx, monthIdx, dayIdx, hourIdx];
+  const elemCnt = yCountElem(pillars.filter(p => p >= 0));
+  const nisshu  = Y_KAN[dayIdx % 10];
+  const nisshuData = Y_NISSHU_DATA[nisshu];
+
+  // ── 命式HTML ──
+  const pillarNames = ['年柱','月柱','日柱','時柱'];
+  let meishikiHtml = '';
+  pillarNames.forEach((name, i) => {
+    const idx = pillars[i];
+    if (idx < 0) return;
+    const kan = Y_KAN[idx % 10];
+    const shi = Y_SHI[idx % 12];
+    const kanElem = Y_KAN_ELEM[idx % 10];
+    const shiElem = Y_SHI_ELEM[idx % 12];
+    const isDay = i === 2;
+    meishikiHtml += `
+      <div class="y-pillar ${isDay ? 'y-day-pillar' : ''}">
+        <div class="y-pillar-label">${name}${i===0?' ('+Y_ANIMAL[idx%12]+')':''}</div>
+        <div class="y-pillar-kan">${kan}<span class="y-kan-elem" style="color:${Y_ELEM_COLOR[kanElem]}">${kanElem}</span></div>
+        <div class="y-pillar-shi">${shi}<span class="y-kan-elem" style="color:${Y_ELEM_COLOR[shiElem]}">${shiElem}</span></div>
+      </div>`;
+  });
+  document.getElementById('y-meishiki').innerHTML = meishikiHtml;
+
+  // ── 五行バー ──
+  const maxCnt = Math.max(...Object.values(elemCnt), 1);
+  const elems = ['木','火','土','金','水'];
+  let gogyoHtml = '';
+  elems.forEach(e => {
+    const c = elemCnt[e] || 0;
+    const h = Math.round((c / (maxCnt + 1)) * 50) + (c > 0 ? 8 : 4);
+    gogyoHtml += `
+      <div class="y-gogyo-item">
+        <div class="y-gogyo-name" style="color:${Y_ELEM_COLOR[e]}">${e}</div>
+        <div class="y-gogyo-bar">
+          <div class="y-gogyo-fill" style="height:${h}px;background:${Y_ELEM_COLOR[e]}"></div>
+        </div>
+        <div class="y-gogyo-count">${c}点</div>
+      </div>`;
+  });
+  document.getElementById('y-gogyo-grid').innerHTML = gogyoHtml;
+  document.getElementById('y-gogyo-desc').textContent = yGogyoDesc(elemCnt);
+
+  // ── 日主 ──
+  const kanElem = Y_KAN_ELEM[dayIdx % 10];
+  const yin = Y_KAN_YIN[dayIdx % 10] === '+' ? '陽' : '陰';
+  document.getElementById('y-nisshu-badge').innerHTML =
+    `<span class="y-element-badge elem-${kanElem}">${yin}${kanElem}</span>`;
+  document.getElementById('y-result-title').textContent = nisshuData.title + ' の命式';
+  document.getElementById('y-result-subtitle').textContent =
+    `${year}年${month}月${day}日生まれ ・ ${yKanshi(yearIdx)}年 ${yKanshi(monthIdx)}月 ${yKanshi(dayIdx)}日${hourIdx>=0?' '+yKanshi(hourIdx)+'時':''}`;
+  document.getElementById('y-personality').textContent = nisshuData.personality;
+  document.getElementById('y-traits').innerHTML = nisshuData.traits.map(t =>
+    `<span class="y-trait">${t}</span>`).join('');
+  document.getElementById('y-strength').textContent = nisshuData.strength;
+  document.getElementById('y-weakness').textContent = nisshuData.weakness;
+  document.getElementById('y-love').textContent = nisshuData.love;
+  document.getElementById('y-work').textContent = nisshuData.work;
+
+  // ── 大運 ──
+  const gender = 'M'; // 簡略: 性別問わず順行版で表示（男女別は今後対応）
+  const daiyunList = yDaiyun(year, month, day, gender);
+  const currentYear = new Date().getFullYear();
+  const age = currentYear - year;
+  let daiyunHtml = '';
+  daiyunList.forEach(d => {
+    const isCurrent = age >= d.age && age < d.age + 10;
+    daiyunHtml += `
+      <div class="y-daiyun-item ${isCurrent ? 'current' : ''}">
+        <div class="y-daiyun-age">${d.age}〜${d.age+9}歳${isCurrent?'<br>◀現在':''}</div>
+        <div class="y-daiyun-kanshi">${yKanshi(d.idx)}</div>
+      </div>`;
+  });
+  document.getElementById('y-daiyun').innerHTML = daiyunHtml;
+
+  // ── メッセージ ──
+  document.getElementById('y-message').textContent = yGenMessage(nisshu, elemCnt);
+
+  yShowScreen('result');
+}
+
+// 初期化
+document.addEventListener('DOMContentLoaded', () => {
+  yInitDropdowns();
+});
 
 // ============================================
 // NAME FORTUNE (姓名判断)
