@@ -17,6 +17,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #sanmei-screen.active { display: flex; }
 #numerology-screen.active { display: flex; }
 #blood-screen.active { display: flex; }
+#zodiac-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -139,6 +140,57 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-b:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(239,68,68,0.25); }
 .quiz-card-b .quiz-card-btn { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 .quiz-card-b .quiz-card-features li::before { color: #ef4444; }
+.quiz-card-z::before { background: linear-gradient(90deg, #6366f1, #4338ca); }
+.quiz-card-z { box-shadow: 0 4px 30px rgba(99,102,241,0.1); }
+.quiz-card-z:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(99,102,241,0.25); }
+.quiz-card-z .quiz-card-btn { background: linear-gradient(135deg, #6366f1, #4338ca); }
+.quiz-card-z .quiz-card-features li::before { color: #6366f1; }
+
+/* ============================================
+   ZODIAC QUIZ
+   ============================================ */
+#zodiac-screen {
+  background: linear-gradient(135deg, #000818 0%, #050d2d 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-z .container { background: white; border-radius: 24px; padding: 40px; max-width: 640px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+.quiz-z .screen { display: none; }
+.quiz-z .screen.active { display: block; }
+.quiz-z .badge { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-z h1 { font-size: 2rem; color: #000818; margin-bottom: 8px; }
+.quiz-z h1 span { color: #6366f1; }
+.quiz-z .subtitle { color: #666; line-height: 1.7; margin-top: 10px; margin-bottom: 28px; }
+.quiz-z .btn { background: linear-gradient(135deg, #6366f1, #4338ca); color: white; border: none; padding: 16px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px; }
+.quiz-z .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.4); }
+.quiz-z .btn-outline { background: white; color: #4338ca; border: 2px solid #6366f1; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 12px; }
+.quiz-z .btn-outline:hover { background: #f0f0ff; }
+.quiz-z .form-group { margin-bottom: 20px; text-align: left; }
+.quiz-z .form-group label { display: block; font-size: 0.9rem; font-weight: bold; color: #000818; margin-bottom: 8px; }
+.quiz-z .form-group select { width: 100%; padding: 14px 16px; border: 2px solid #c7d2fe; border-radius: 12px; font-size: 1rem; color: #000818; background: #f0f0ff; transition: border-color 0.2s; }
+.quiz-z .form-group select:focus { outline: none; border-color: #6366f1; }
+.quiz-z .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quiz-z .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-z .spinner { width: 60px; height: 60px; border: 5px solid #e0e7ff; border-top-color: #6366f1; border-radius: 50%; animation: zSpin 0.8s linear infinite; margin: 0 auto 24px; }
+@keyframes zSpin { to { transform: rotate(360deg); } }
+.quiz-z .loading-screen p { color: #666; }
+.quiz-z .result-card { background: #f0f0ff; border-radius: 16px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #6366f1; text-align: left; }
+.quiz-z .result-card h3 { font-size: 1rem; color: #3730a3; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.quiz-z .result-card p { font-size: 0.95rem; color: #333; line-height: 1.7; }
+.quiz-z .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.quiz-z .tag { background: #e0e7ff; color: #3730a3; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.quiz-z .fortune-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.quiz-z .fortune-label { font-size: 0.85rem; color: #555; width: 60px; flex-shrink: 0; }
+.quiz-z .fortune-bar-bg { flex: 1; height: 10px; background: #c7d2fe; border-radius: 10px; overflow: hidden; }
+.quiz-z .fortune-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #6366f1, #818cf8); }
+.quiz-z .fortune-pct { font-size: 0.85rem; color: #4338ca; font-weight: bold; width: 38px; text-align: right; }
+.z-sign-badge { text-align: center; padding: 24px 20px; border-radius: 20px; background: linear-gradient(135deg, #eef2ff, #e0e7ff); margin-bottom: 24px; border: 2px solid #c7d2fe; }
+.z-sign-symbol { font-size: 3.5rem; margin-bottom: 8px; }
+.z-sign-name { font-size: 2rem; font-weight: 900; color: #4338ca; margin-bottom: 4px; }
+.z-sign-dates { font-size: 0.9rem; color: #6366f1; margin-bottom: 8px; }
+.z-sign-meta { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+.z-meta-item { background: white; border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: #4338ca; font-weight: bold; border: 1px solid #c7d2fe; }
 
 /* ============================================
    BLOOD TYPE QUIZ
@@ -541,6 +593,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- 西洋占星術 -->
+    <div class="quiz-card quiz-card-z" onclick="openQuiz('zodiac')">
+      <div class="quiz-card-icon">⭐</div>
+      <h2>西洋占星術</h2>
+      <p class="card-desc">12星座で読み解く運命と個性</p>
+      <ul class="quiz-card-features">
+        <li>誕生日から星座を判定</li>
+        <li>性格・恋愛・仕事がわかる</li>
+        <li>2026年運勢＆相性つき</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
     <!-- 血液型 -->
     <div class="quiz-card quiz-card-b" onclick="openQuiz('blood')">
       <div class="quiz-card-icon">🩸</div>
@@ -570,6 +635,68 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
   </div>
 
   <div class="home-footer">© TypeLab — All free to use</div>
+</div>
+
+
+<!-- ===================================================
+     ZODIAC QUIZ
+     =================================================== -->
+<div id="zodiac-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-z">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="z-screen-title">
+        <div style="text-align:center">
+          <div class="badge">✨ 12星座完全解析</div>
+          <h1>西洋<span>占星術</span></h1>
+          <p class="subtitle">誕生日から太陽星座を導き出し<br>あなたの性格・運命・2026年の運勢を読み解きます</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+            <div style="background:#f0f0ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること①</div><div style="font-size:0.9rem;font-weight:bold;color:#000818">性格・強み・弱み</div></div>
+            <div style="background:#f0f0ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること②</div><div style="font-size:0.9rem;font-weight:bold;color:#000818">恋愛・仕事傾向</div></div>
+            <div style="background:#f0f0ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること③</div><div style="font-size:0.9rem;font-weight:bold;color:#000818">2026年の運勢</div></div>
+            <div style="background:#f0f0ff;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること④</div><div style="font-size:0.9rem;font-weight:bold;color:#000818">相性のいい星座</div></div>
+          </div>
+          <button class="btn" onclick="zShowInput()">診断スタート →</button>
+        </div>
+      </div>
+
+      <!-- 入力 -->
+      <div class="screen" id="z-screen-input">
+        <h2 style="font-size:1.4rem;color:#000818;margin-bottom:24px;text-align:center">誕生日を入力してください</h2>
+        <div class="form-group">
+          <label>生まれた月日</label>
+          <div class="date-row">
+            <select id="z-month"><option value="">月</option></select>
+            <select id="z-day"><option value="">日</option></select>
+          </div>
+        </div>
+        <button class="btn" onclick="zCalc()">星座を調べる →</button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="z-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>星の配置を読み解いています...</p>
+          <p style="color:#aaa;font-size:0.85rem;margin-top:8px">あなたの星座を確認中</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="z-screen-result">
+        <div class="z-sign-badge" id="z-sign-badge"></div>
+        <div class="result-card"><h3>🌟 性格・強み</h3><p id="z-result-personality"></p><div class="tag-wrap" id="z-result-tags"></div></div>
+        <div class="result-card"><h3>❤️ 恋愛・仕事傾向</h3><p id="z-result-lovework"></p></div>
+        <div class="result-card"><h3>🔮 2026年の運勢</h3><p id="z-result-fortune-text"></p><div id="z-result-fortune-bars" style="margin-top:12px"></div></div>
+        <div class="result-card"><h3>💕 相性のいい星座</h3><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px" id="z-result-compat"></div></div>
+        <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">⚠️ 弱点・注意点</h3><p id="z-result-caution"></p></div>
+        <button class="btn-outline" onclick="zShowInput()">もう一度調べる</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 
@@ -1110,6 +1237,170 @@ function sShowResult(year,month,day,gender) {
   sShowScreen('result');
 }
 function sRetry() { sShowScreen('input'); }
+
+// ============================================
+// ZODIAC QUIZ
+// ============================================
+(function(){
+  const zm=document.getElementById('z-month'),zd=document.getElementById('z-day');
+  for(let m=1;m<=12;m++){const o=document.createElement('option');o.value=m;o.textContent=m+'月';zm.appendChild(o);}
+  for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d+'日';zd.appendChild(o);}
+})();
+
+const zSigns = [
+  { name:"牡羊座", symbol:"♈", emoji:"🐏", dates:"3/21〜4/19", element:"火", planet:"火星", keyword:"情熱的な開拓者",
+    personality:"エネルギッシュで行動力抜群のパイオニア。誰よりも早く新しいことに挑戦し、困難も正面突破します。競争心が強く、負けず嫌い。純粋で直感的な情熱家。",
+    traits:["行動力","勇気","リーダーシップ","情熱","独立心"],
+    lovework:"恋愛は一目惚れタイプで情熱的に猛アタック。仕事では率先して動くリーダー気質。",
+    fortune2026:"積極的な行動が大きな実を結ぶ年。新しいプロジェクトを立ち上げるのに最高のタイミング。",
+    compat:["獅子座","射手座","双子座"], caution:"せっかちで後先考えずに動きすぎること。計画性を持つと成果が10倍に。",
+    scores:[88,85,80,90,82]},
+  { name:"牡牛座", symbol:"♉", emoji:"🐂", dates:"4/20〜5/20", element:"土", planet:"金星", keyword:"堅実な美の追求者",
+    personality:"安定と美しさを愛する堅実タイプ。粘り強く一度決めたことをやり遂げる力があります。五感が鋭く、食・芸術・音楽など感性を活かした世界が得意。頑固な一面も。",
+    traits:["忍耐力","堅実さ","美的センス","信頼性","粘り強さ"],
+    lovework:"恋愛はゆっくり時間をかけて深める派。仕事では着実に積み上げる職人気質で長期的な信頼を得る。",
+    fortune2026:"財運・安定の年。着実な積み上げが大きな実りに。不動産・貯蓄・スキルアップが吉。",
+    compat:["乙女座","山羊座","蟹座"], caution:"変化への抵抗が機会損失につながることも。柔軟性を意識して。",
+    scores:[78,72,85,88,80]},
+  { name:"双子座", symbol:"♊", emoji:"👯", dates:"5/21〜6/20", element:"風", planet:"水星", keyword:"知的な万能コミュニケーター",
+    personality:"好奇心旺盛で話術に長けた知識人タイプ。多才で飽き性、複数のことを同時進行するのが得意。情報収集が得意で、人脈も広い。二面性があり場によって顔が変わる。",
+    traits:["コミュ力","好奇心","多才さ","適応力","機転"],
+    lovework:"恋愛は楽しさ重視。刺激のない関係は続かない。仕事では企画・広報・メディアで才能発揮。",
+    fortune2026:"コミュニケーションと情報が鍵の年。SNS・執筆・交渉事が好調。新しい出会いが多い。",
+    compat:["天秤座","水瓶座","牡羊座"], caution:"飽き性で中途半端になりやすい。一つのことを深く掘り下げる習慣を。",
+    scores:[82,88,75,78,85]},
+  { name:"蟹座", symbol:"♋", emoji:"🦀", dates:"6/21〜7/22", element:"水", planet:"月", keyword:"深い愛情の守護者",
+    personality:"感受性が豊かで深い愛情を持つ家族想いのタイプ。直感が鋭く、相手の気持ちを察するのが得意。内気に見えますが、守りたいものへの情熱は誰よりも強い。",
+    traits:["深い愛情","共感力","直感力","家族愛","思いやり"],
+    lovework:"恋愛はとことん尽くすタイプ。仕事では福祉・保育・料理・不動産など「守る・育てる」分野で輝く。",
+    fortune2026:"家庭・人間関係が充実する年。居場所を大切にすることで心が満たされ、仕事にも好影響。",
+    compat:["蠍座","魚座","牡牛座"], caution:"感情的になりすぎてしまうことも。気持ちを整理する時間を持って。",
+    scores:[80,75,88,85,83]},
+  { name:"獅子座", symbol:"♌", emoji:"🦁", dates:"7/23〜8/22", element:"火", planet:"太陽", keyword:"輝くカリスマリーダー",
+    personality:"自信に満ちたカリスマ性と派手な存在感を持つ王様タイプ。人の注目を集めることが好きで、舞台の上で輝けます。プライドが高く、承認欲求も強い。裏には繊細さも。",
+    traits:["カリスマ性","自信","リーダーシップ","創造力","寛大さ"],
+    lovework:"恋愛は主役でいたいドラマチックタイプ。仕事では舞台・芸能・経営など「目立てる場所」で実力発揮。",
+    fortune2026:"才能が花開く最高の年。自分を表現することを恐れずに。クリエイティブな挑戦が大成功へ。",
+    compat:["牡羊座","射手座","双子座"], caution:"プライドが邪魔して素直になれないことも。頭を下げる勇気が関係を深める。",
+    scores:[90,87,88,82,85]},
+  { name:"乙女座", symbol:"♍", emoji:"🌾", dates:"8/23〜9/22", element:"土", planet:"水星", keyword:"完璧主義の分析家",
+    personality:"細部まで気が利く完璧主義の分析家タイプ。知性が高く、論理的に物事を整理するのが得意。謙虚で真面目、信頼性が高い。完璧を求めすぎて自分に厳しくなることも。",
+    traits:["分析力","几帳面","完璧主義","信頼性","知性"],
+    lovework:"恋愛はじっくり確かめるタイプ。仕事では医療・会計・編集・品質管理など精度が求められる分野で活躍。",
+    fortune2026:"健康・仕事に集中する年。細かい積み上げが評価される。体調管理を整えると運気上昇。",
+    compat:["牡牛座","山羊座","蟹座"], caution:"批判的になりすぎてしまうこと。「いい加減」を認める余裕が人間関係を豊かにする。",
+    scores:[75,80,82,78,88]},
+  { name:"天秤座", symbol:"♎", emoji:"⚖️", dates:"9/23〜10/22", element:"風", planet:"金星", keyword:"調和を愛するアーティスト",
+    personality:"バランス感覚と美的センスに優れた社交家タイプ。公平性を重んじ、人間関係の調和を大切にします。優柔不断な一面もありますが、人を魅了する洗練されたセンスが武器。",
+    traits:["バランス感覚","社交性","美的センス","公平性","外交力"],
+    lovework:"恋愛は理想が高いロマンチストタイプ。仕事ではデザイン・外交・弁護士・コーディネーターで才能全開。",
+    fortune2026:"パートナーシップと創造性の年。二人で取り組むプロジェクトや協力関係が大きな成果を生む。",
+    compat:["双子座","水瓶座","獅子座"], caution:"決断できずチャンスを逃すことも。「まず行動」の精神が運気を開く。",
+    scores:[83,85,80,85,79]},
+  { name:"蠍座", symbol:"♏", emoji:"🦂", dates:"10/23〜11/21", element:"水", planet:"冥王星", keyword:"神秘的な変革者",
+    personality:"深い洞察力と強烈な意志を持つ謎めいたタイプ。一度決めたら絶対に諦めない執念の持ち主。感情を表に出さないが、内側には火山のような情熱が燃えています。",
+    traits:["洞察力","強い意志","執念","神秘性","変革力"],
+    lovework:"恋愛は深く一途。嫉妬心も強い。仕事では投資・心理・医療・探偵など「本質を見抜く」分野で力を発揮。",
+    fortune2026:"大変革の年。古いものを手放すことで新しいステージへ。直感を信じた行動が人生を変える。",
+    compat:["蟹座","魚座","山羊座"], caution:"執着と嫉妬が自分を苦しめることも。手放す勇気が次のステージを開く。",
+    scores:[85,78,88,82,80]},
+  { name:"射手座", symbol:"♐", emoji:"🏹", dates:"11/22〜12/21", element:"火", planet:"木星", keyword:"自由を愛する探求者",
+    personality:"自由と冒険を愛する楽観的な哲学者タイプ。世界を広げることへの情熱が止まらない。知識欲が高く、旅・哲学・スポーツなど幅広い分野に興味を持ちます。",
+    traits:["楽観主義","自由への愛","知識欲","冒険心","正直さ"],
+    lovework:"恋愛は束縛されるのが苦手な自由人。仕事では海外・スポーツ・教育・メディアなど広い世界を舞台に活躍。",
+    fortune2026:"拡大と自由の年。海外・新しい学び・挑戦が大きなチャンスに。行動範囲を広げるほど運気上昇。",
+    compat:["牡羊座","獅子座","天秤座"], caution:"飽きっぽく責任から逃げることも。コミットメントを大切にすることが成長の鍵。",
+    scores:[87,90,78,85,83]},
+  { name:"山羊座", symbol:"♑", emoji:"🐐", dates:"12/22〜1/19", element:"土", planet:"土星", keyword:"野心的な成功者",
+    personality:"高い目標に向かって地道に努力する野心家タイプ。責任感が強く、着実にキャリアを積み上げます。外見は冷静でも内側には熱い情熱を秘めています。成功への執念が誰よりも強い。",
+    traits:["野心","忍耐力","責任感","実用主義","組織力"],
+    lovework:"恋愛は真面目で長期的な関係を望む。仕事では経営・金融・政治・建設など「積み上げる」分野で大成功。",
+    fortune2026:"キャリアと地位が上昇する大きな年。努力が実を結ぶタイミング。昇進・独立のチャンスを掴んで。",
+    compat:["牡牛座","乙女座","蠍座"], caution:"仕事に集中しすぎてプライベートが疎かに。大切な人との時間を忘れずに。",
+    scores:[82,78,90,88,75]},
+  { name:"水瓶座", symbol:"♒", emoji:"🏺", dates:"1/20〜2/18", element:"風", planet:"天王星", keyword:"革新的なビジョナリー",
+    personality:"時代の一歩先を行く革命家タイプ。独創的な発想と人道主義的な精神を持ちます。個性を大切にし、型にはまることを嫌います。ユニークすぎて理解されないことも。",
+    traits:["独創性","人道主義","革新性","自由精神","客観性"],
+    lovework:"恋愛は友人関係から始まる知的なつながりを好む。仕事ではIT・科学・社会起業・メディアなど未来を創る分野で才能爆発。",
+    fortune2026:"革命と変化の年。古い常識を捨てることで新時代の扉が開く。テクノロジー・SNS活用が開運のカギ。",
+    compat:["双子座","天秤座","牡羊座"], caution:"感情を閉じすぎて孤立することも。心を開くことで人生が豊かになる。",
+    scores:[85,88,82,80,78]},
+  { name:"魚座", symbol:"♓", emoji:"🐟", dates:"2/19〜3/20", element:"水", planet:"海王星", keyword:"夢見る芸術家",
+    personality:"豊かな感受性と直感を持つ夢想家タイプ。芸術・音楽・スピリチュアルな世界に強いつながりを感じます。他者への共感が深く、人の痛みがわかる優しい魂の持ち主。",
+    traits:["豊かな感受性","芸術的才能","共感力","直感力","スピリチュアル感"],
+    lovework:"恋愛は理想的な愛を追い求めるロマンチスト。仕事では音楽・絵画・ヒーリング・医療など感性を活かす分野で輝く。",
+    fortune2026:"インスピレーションと創造の年。夢を現実にするエネルギーが高まる。直感に従うことで幸運が訪れる。",
+    compat:["蟹座","蠍座","牡牛座"], caution:"現実逃避しやすい一面も。夢を見るだけでなく一歩を踏み出す行動力を養って。",
+    scores:[78,75,85,80,88]},
+];
+
+function getZodiacIndex(month, day) {
+  const md = month * 100 + day;
+  if(md >= 321 && md <= 419) return 0;
+  if(md >= 420 && md <= 520) return 1;
+  if(md >= 521 && md <= 620) return 2;
+  if(md >= 621 && md <= 722) return 3;
+  if(md >= 723 && md <= 822) return 4;
+  if(md >= 823 && md <= 922) return 5;
+  if(md >= 923 && md <= 1022) return 6;
+  if(md >= 1023 && md <= 1121) return 7;
+  if(md >= 1122 && md <= 1221) return 8;
+  if(md >= 1222 || md <= 119) return 9;
+  if(md >= 120 && md <= 218) return 10;
+  return 11;
+}
+
+function zShowScreen(id) {
+  document.querySelectorAll('#zodiac-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('z-screen-' + id).classList.add('active');
+}
+function zShowInput() { zShowScreen('input'); }
+function zCalc() {
+  const m=parseInt(document.getElementById('z-month').value);
+  const d=parseInt(document.getElementById('z-day').value);
+  if(!m||!d){alert('月と日を選んでください');return;}
+  zShowScreen('loading');
+  setTimeout(()=>zShowResult(m,d), 1800);
+}
+function zShowResult(month, day) {
+  const idx = getZodiacIndex(month, day);
+  const z = zSigns[idx];
+
+  document.getElementById('z-sign-badge').innerHTML = `
+    <div class="z-sign-symbol">${z.emoji}</div>
+    <div class="z-sign-name">${z.symbol} ${z.name}</div>
+    <div class="z-sign-dates">${z.dates}</div>
+    <div class="z-sign-meta">
+      <span class="z-meta-item">🔥 ${z.element}の星座</span>
+      <span class="z-meta-item">🪐 守護星：${z.planet}</span>
+      <span class="z-meta-item">✨ ${z.keyword}</span>
+    </div>`;
+
+  document.getElementById('z-result-personality').textContent = z.personality;
+  document.getElementById('z-result-tags').innerHTML = z.traits.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('z-result-lovework').textContent = z.lovework;
+  document.getElementById('z-result-fortune-text').textContent = z.fortune2026;
+
+  const labels=['全体運','恋愛運','仕事運','金運','健康運'];
+  document.getElementById('z-result-fortune-bars').innerHTML = z.scores.map((sc,i)=>`
+    <div class="fortune-row">
+      <div class="fortune-label">${labels[i]}</div>
+      <div class="fortune-bar-bg"><div class="fortune-bar-fill" style="width:${sc}%"></div></div>
+      <div class="fortune-pct">${sc}%</div>
+    </div>`).join('');
+
+  const allNames = zSigns.map(s=>s.name);
+  document.getElementById('z-result-compat').innerHTML = allNames.map(name=>{
+    const isGood = z.compat.includes(name);
+    const isSelf = name === z.name;
+    if(isSelf) return `<div style="background:#e0e7ff;border-radius:10px;padding:9px;text-align:center;font-size:0.8rem;font-weight:bold;color:#4338ca">★ ${name}</div>`;
+    if(isGood) return `<div style="background:#d1fae5;border-radius:10px;padding:9px;text-align:center;font-size:0.8rem;font-weight:bold;color:#065f46">◎ ${name}</div>`;
+    return `<div style="background:#f3f4f6;border-radius:10px;padding:9px;text-align:center;font-size:0.8rem;color:#666">△ ${name}</div>`;
+  }).join('');
+
+  document.getElementById('z-result-caution').textContent = z.caution;
+  zShowScreen('result');
+}
 
 // ============================================
 // BLOOD TYPE QUIZ
