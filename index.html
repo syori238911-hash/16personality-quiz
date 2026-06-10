@@ -21,6 +21,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #tarot-screen.active { display: flex; }
 #name-screen.active { display: flex; }
 #shiju-screen.active { display: flex; }
+#animal-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -217,6 +218,11 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-y:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(180,83,9,0.3); }
 .quiz-card-y .quiz-card-btn { background: linear-gradient(135deg, #b45309, #78350f); }
 .quiz-card-y .quiz-card-features li::before { color: #b45309; }
+.quiz-card-a::before { background: linear-gradient(90deg, #f97316, #c2410c); }
+.quiz-card-a { box-shadow: 0 4px 30px rgba(249,115,22,0.12); }
+.quiz-card-a:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(249,115,22,0.28); }
+.quiz-card-a .quiz-card-btn { background: linear-gradient(135deg, #f97316, #c2410c); }
+.quiz-card-a .quiz-card-features li::before { color: #f97316; }
 
 /* ============================================
    四柱推命 QUIZ
@@ -281,6 +287,71 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .elem-土 { background: #fef3c7; color: #92400e; }
 .elem-金 { background: #e0e7ff; color: #3730a3; }
 .elem-水 { background: #dbeafe; color: #1e40af; }
+
+/* ============================================
+   動物占い
+   ============================================ */
+#animal-screen {
+  background: linear-gradient(160deg, #150800 0%, #2a1200 50%, #0d0800 100%);
+  align-items: flex-start; justify-content: center; padding: 72px 20px 60px;
+}
+.quiz-a .container { background: #fffbf5; border-radius: 24px; padding: 36px; max-width: 660px; width: 100%; box-shadow: 0 20px 80px rgba(0,0,0,0.8); }
+.quiz-a .screen { display: none; }
+.quiz-a .screen.active { display: block; }
+.quiz-a .badge { display: inline-block; background: #ffedd5; color: #9a3412; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 14px; }
+.quiz-a h1 { font-size: 2rem; color: #1c0800; margin-bottom: 8px; font-weight: 900; }
+.quiz-a h1 span { color: #f97316; }
+.quiz-a .subtitle { color: #78716c; margin-bottom: 28px; font-size: 0.92rem; line-height: 1.6; }
+.a-back-btn { background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 0.9rem; position: fixed; top: 20px; left: 20px; padding: 8px 18px; border-radius: 20px; transition: background 0.2s; }
+.a-back-btn:hover { background: rgba(255,255,255,0.2); }
+/* 入力 */
+.a-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+@media(max-width:480px){ .a-input-grid { grid-template-columns: 1fr; } }
+.a-field { display: flex; flex-direction: column; gap: 6px; }
+.a-field label { font-size: 0.8rem; font-weight: 700; color: #9a3412; letter-spacing: 0.5px; }
+.a-field select {
+  padding: 11px 14px; border: 2px solid #fed7aa; border-radius: 12px;
+  background: white; font-size: 0.95rem; color: #1c0800; outline: none; transition: border-color 0.2s;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f97316' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.a-field select:focus { border-color: #f97316; }
+/* 動物カード */
+.a-animal-card { border-radius: 20px; padding: 28px 24px 20px; text-align: center; margin-bottom: 24px; }
+.a-animal-emoji { font-size: 5.5rem; display: block; margin-bottom: 10px; line-height: 1; }
+.a-animal-name { font-size: 2.2rem; font-weight: 900; margin-bottom: 6px; }
+.a-animal-type { font-size: 0.82rem; font-weight: 700; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+.a-color-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+.a-traits { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 10px; }
+.a-trait { font-size: 0.76rem; font-weight: 600; padding: 4px 11px; border-radius: 20px; }
+/* カードカラーテーマ */
+.a-card-赤 { background: linear-gradient(135deg, #fff1f0, #ffe4e6); }
+.a-card-赤 .a-animal-name { color: #9f1239; }
+.a-card-赤 .a-animal-type, .a-card-赤 .a-trait { background: #fee2e2; color: #991b1b; }
+.a-card-青 { background: linear-gradient(135deg, #f0f4ff, #dbeafe); }
+.a-card-青 .a-animal-name { color: #1e3a8a; }
+.a-card-青 .a-animal-type, .a-card-青 .a-trait { background: #dbeafe; color: #1e40af; }
+.a-card-黄 { background: linear-gradient(135deg, #fefce8, #fef9c3); }
+.a-card-黄 .a-animal-name { color: #713f12; }
+.a-card-黄 .a-animal-type, .a-card-黄 .a-trait { background: #fef9c3; color: #854d0e; }
+.a-card-緑 { background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+.a-card-緑 .a-animal-name { color: #14532d; }
+.a-card-緑 .a-animal-type, .a-card-緑 .a-trait { background: #dcfce7; color: #166534; }
+.a-card-紫 { background: linear-gradient(135deg, #fdf4ff, #f3e8ff); }
+.a-card-紫 .a-animal-name { color: #581c87; }
+.a-card-紫 .a-animal-type, .a-card-紫 .a-trait { background: #f3e8ff; color: #7e22ce; }
+/* 結果セクション */
+.a-section { margin-bottom: 20px; }
+.a-section h3 { font-size: 1rem; font-weight: 800; color: #c2410c; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #ffedd5; }
+.a-compat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+@media(max-width:480px){ .a-compat-grid { grid-template-columns: repeat(3, 1fr); } }
+.a-compat-item { text-align: center; padding: 10px 6px; border-radius: 12px; }
+.a-compat-emoji { font-size: 1.5rem; display: block; margin-bottom: 3px; }
+.a-compat-name { font-size: 0.7rem; font-weight: 700; }
+.a-compat-mark { font-size: 0.62rem; margin-top: 2px; }
+.a-msg-box { background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 2px solid #fed7aa; border-radius: 16px; padding: 18px; margin-bottom: 20px; }
+.a-60-badge { display: inline-block; background: #1c0800; color: #f97316; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 8px; margin-bottom: 8px; letter-spacing: 1px; }
 
 /* ============================================
    TAROT QUIZ
@@ -851,6 +922,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">命式を鑑定する →</button>
     </div>
 
+    <!-- 動物占い -->
+    <div class="quiz-card quiz-card-a" onclick="openQuiz('animal')">
+      <div class="quiz-card-icon">🐾</div>
+      <h2>動物占い</h2>
+      <p class="card-desc">あなたの本質は12の動物のどれ？</p>
+      <ul class="quiz-card-features">
+        <li>干支 × 五行で60キャラを判定</li>
+        <li>性格・恋愛・仕事を詳しく分析</li>
+        <li>相性ランキングも表示</li>
+      </ul>
+      <button class="quiz-card-btn">自分の動物を知る →</button>
+    </div>
+
     <!-- 西洋占星術 -->
     <div class="quiz-card quiz-card-z" onclick="openQuiz('zodiac')">
       <div class="quiz-card-icon">⭐</div>
@@ -1255,6 +1339,131 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 
         <div style="display:grid;gap:10px">
           <button class="btn-primary" style="background:linear-gradient(135deg,#b45309,#78350f);width:100%;padding:14px" onclick="yShowScreen('input')">もう一度鑑定する</button>
+          <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     動物占い
+     =================================================== -->
+<div id="animal-screen" class="app-screen">
+  <button class="a-back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-a">
+    <div class="container">
+
+      <!-- 入力 -->
+      <div class="screen active" id="an-screen-input">
+        <div class="badge">🐾 動物占い</div>
+        <h1>あなたの<span>動物キャラ</span>を<br>判定します</h1>
+        <p class="subtitle">生年月日から干支と五行の組み合わせを算出し、<br>12の動物×5タイプ＝<strong>60キャラクター</strong>の中からあなたの本質を見つけます。</p>
+        <div class="a-input-grid">
+          <div class="a-field">
+            <label>生まれた年</label>
+            <select id="an-year"></select>
+          </div>
+          <div class="a-field">
+            <label>生まれた月</label>
+            <select id="an-month">
+              <option value="1">1月</option><option value="2">2月</option>
+              <option value="3">3月</option><option value="4">4月</option>
+              <option value="5">5月</option><option value="6">6月</option>
+              <option value="7">7月</option><option value="8">8月</option>
+              <option value="9">9月</option><option value="10">10月</option>
+              <option value="11">11月</option><option value="12">12月</option>
+            </select>
+          </div>
+          <div class="a-field">
+            <label>生まれた日</label>
+            <select id="an-day"></select>
+          </div>
+        </div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#f97316,#c2410c);width:100%;padding:16px;font-size:1.05rem;margin-top:4px" onclick="anDiagnose()">
+          動物キャラを判定する →
+        </button>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="an-screen-loading">
+        <div style="text-align:center;padding:60px 20px">
+          <div style="font-size:4rem;margin-bottom:18px" id="an-loading-emoji">🐾</div>
+          <div style="font-size:1.15rem;font-weight:800;color:#1c0800;margin-bottom:10px">あなたの動物を探しています…</div>
+          <p style="color:#a8a29e;font-size:0.88rem">干支と五行から60キャラを照合中</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="an-screen-result">
+
+        <!-- メインカード -->
+        <div id="an-animal-card" class="a-animal-card">
+          <div id="an-emoji" class="a-animal-emoji"></div>
+          <div id="an-fullname" class="a-animal-name"></div>
+          <div id="an-type" class="a-animal-type"></div>
+          <p id="an-tagline" class="a-animal-tagline"></p>
+          <div id="an-traits" class="a-traits"></div>
+        </div>
+
+        <!-- 60キャラバッジ -->
+        <div style="text-align:center;margin-bottom:20px">
+          <span class="a-60-badge">60キャラのうちの1つ</span>
+          <p style="font-size:0.8rem;color:#78716c;margin-top:6px" id="an-color-desc"></p>
+        </div>
+
+        <!-- 性格 -->
+        <div class="a-section">
+          <h3>🧬 性格・本質</h3>
+          <p style="font-size:0.9rem;color:#374151;line-height:1.7" id="an-personality"></p>
+        </div>
+
+        <!-- 強み・弱み -->
+        <div class="a-section">
+          <h3>⚡ 強みと弱み</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#f0fdf4;border-radius:12px;padding:14px">
+              <div style="font-size:0.72rem;font-weight:700;color:#166534;margin-bottom:5px">✅ 強み</div>
+              <p style="font-size:0.82rem;color:#374151;line-height:1.6" id="an-strength"></p>
+            </div>
+            <div style="background:#fff7ed;border-radius:12px;padding:14px">
+              <div style="font-size:0.72rem;font-weight:700;color:#c2410c;margin-bottom:5px">🔥 弱み</div>
+              <p style="font-size:0.82rem;color:#374151;line-height:1.6" id="an-weakness"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 恋愛・仕事 -->
+        <div class="a-section">
+          <h3>💫 恋愛・仕事</h3>
+          <div style="display:grid;gap:10px">
+            <div style="background:#fdf4ff;border-radius:12px;padding:14px">
+              <div style="font-size:0.72rem;font-weight:700;color:#7e22ce;margin-bottom:4px">❤️ 恋愛スタイル</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="an-love"></p>
+            </div>
+            <div style="background:#eff6ff;border-radius:12px;padding:14px">
+              <div style="font-size:0.72rem;font-weight:700;color:#1d4ed8;margin-bottom:4px">💼 向いている仕事</div>
+              <p style="font-size:0.83rem;color:#374151;line-height:1.6" id="an-career"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 相性 -->
+        <div class="a-section">
+          <h3>🤝 相性ランキング</h3>
+          <div class="a-compat-grid" id="an-compat"></div>
+        </div>
+
+        <!-- メッセージ -->
+        <div class="a-msg-box">
+          <div style="font-size:0.82rem;font-weight:800;color:#c2410c;margin-bottom:8px">🌟 動物キャラからのメッセージ</div>
+          <p style="font-size:0.88rem;color:#374151;line-height:1.7" id="an-message"></p>
+        </div>
+
+        <div style="display:grid;gap:10px">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#f97316,#c2410c);width:100%;padding:14px" onclick="anShowScreen('input')">もう一度診断する</button>
           <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
         </div>
       </div>
@@ -2846,6 +3055,249 @@ function yCalcAndShow(year, month, day, hour) {
 document.addEventListener('DOMContentLoaded', () => {
   yInitDropdowns();
 });
+
+// ============================================
+// 動物占い (ANIMAL FORTUNE)
+// ============================================
+
+// 12動物（地支0=子〜11=亥 にマッピング）
+const anAnimals = [
+  { name:'イルカ', emoji:'🐬', type:'共感の天才',
+    tagline:'明るく社交的。誰とでも仲良くなれる天性のムードメーカー。',
+    traits:['社交的','ユーモア豊か','共感力高い','適応力抜群','場の空気を読む'],
+    personality:'明るく社交的で、誰とでもすぐに仲良くなれる天才です。人の気持ちを敏感に読み取る高い共感能力を持ち、どんな場でも自然と中心的な存在になります。場を和ませるユーモアと、相手を笑顔にする才能があります。',
+    strength:'誰にでも好かれる自然な社交性と高い共感能力。どんな環境にも素早く馴染める適応力が最大の武器です。',
+    weakness:'八方美人になりやすく、断れないことで消耗することも。本音を言えずに溜め込む傾向があります。',
+    love:'恋愛上手で自然にモテる。楽しい時間を大切にし、相手を笑顔にすることが得意。ただし飽きやすい面も。',
+    career:'営業・接客・芸能・広報・教育・イベントプランナーなど、人と関わる仕事で才能が輝きます。',
+    bestMatch:['フクロウ','ワシ','シカ'], challenge:['ライオン','ヒョウ'] },
+
+  { name:'クマ', emoji:'🐻', type:'包容の番人',
+    tagline:'温かく穏やか。誰からも愛される、頼りがいのある存在。',
+    traits:['包容力大','安定感抜群','世話好き','誠実','マイペース'],
+    personality:'温かく穏やかで、誰からも愛される存在です。どっしりとした安定感と大きな包容力があり、困っている人を放っておけない世話好きな一面を持ちます。自分のペースで着実に進む生き方が得意です。',
+    strength:'揺るぎない安定感と、誰でも受け入れる大きな包容力。長期的な信頼関係を築く力があります。',
+    weakness:'変化を嫌うあまり新しいチャンスを逃すことがある。のんびりしすぎて決断が遅くなることも。',
+    love:'安心感を与える恋愛スタイル。じっくりと関係を深め、長続きする愛を育てます。',
+    career:'医療・福祉・保育・料理・農業・管理職など、人や物を育て守る仕事で才能を発揮します。',
+    bestMatch:['オオカミ','ゾウ','シカ'], challenge:['サル','キツネ'] },
+
+  { name:'トラ', emoji:'🐯', type:'情熱の勇者',
+    tagline:'情熱的でエネルギー全開。瞬発力で運命を切り拓く。',
+    traits:['行動力抜群','情熱的','チャレンジャー','負けず嫌い','カリスマ性'],
+    personality:'情熱的でエネルギーに溢れ、瞬発力と行動力で突き進む勇者です。怖いもの知らずで新しい挑戦を楽しむ、生まれながらの勝負師。その情熱が周囲を巻き込んで大きな流れを作ります。',
+    strength:'圧倒的な行動力と、どんな困難も乗り越える情熱。チャレンジを恐れない度胸が最大の武器です。',
+    weakness:'熱しやすく冷めやすい。感情的になって周囲と衝突することも。',
+    love:'恋愛も全力投球。積極的にアプローチし、燃え上がる恋愛を好みます。',
+    career:'起業家・スポーツ選手・営業・消防士など、瞬発力と行動力を活かせる分野が向いています。',
+    bestMatch:['ライオン','ヒョウ','ワシ'], challenge:['フクロウ','ゾウ'] },
+
+  { name:'シカ', emoji:'🦌', type:'感性の芸術家',
+    tagline:'繊細で美しい感性を持つ、エレガントな存在。',
+    traits:['繊細','豊かな感受性','エレガント','芸術的才能','直感力'],
+    personality:'繊細で豊かな感受性を持ち、美しいものを愛する芸術家肌です。独自の感性と優雅さで周囲を魅了します。人の感情の機微を敏感に感じ取り、深い共感と優しさで周囲を包みます。',
+    strength:'他の人が見落とす美しさや繊細さに気づける感性と、人の心に深く共鳴できる共感力が武器です。',
+    weakness:'繊細すぎて傷つきやすく、批判に弱い。感受性が強すぎて精神的に消耗しやすいことも。',
+    love:'純粋で一途な恋愛をします。深い情緒的つながりを求め、表面的な関係では満足できません。',
+    career:'デザイナー・芸術家・音楽家・作家・カウンセラーなど、感性と繊細さを活かせる仕事が向いています。',
+    bestMatch:['クマ','イルカ','ゾウ'], challenge:['トラ','ヒョウ'] },
+
+  { name:'ワシ', emoji:'🦅', type:'洞察の先見者',
+    tagline:'高い視点から本質を見抜く、鋭い眼を持つ先見者。',
+    traits:['鋭い洞察力','先見の明','決断力','独立心','分析力'],
+    personality:'高い視点から物事を俯瞰できる先見の明を持つ存在です。鋭い洞察力と判断力で、人が見落とすことにいち早く気づきます。独立心が強く、自分の視点と判断を信じて行動します。',
+    strength:'群を抜いた分析力と先見性。物事の本質を見抜き、複雑な状況を整理して解決できる力があります。',
+    weakness:'完璧主義でこだわりが強く、他人のやり方を認めにくいことがある。孤独になりやすい面も。',
+    love:'理想が高く、なかなか心を開きません。一度信頼した相手には深く誠実に向き合います。',
+    career:'経営者・戦略家・分析家・科学者・弁護士・投資家など、高い視点と分析力を活かせる分野で輝きます。',
+    bestMatch:['トラ','イルカ','フクロウ'], challenge:['クマ','サル'] },
+
+  { name:'キツネ', emoji:'🦊', type:'知略の策士',
+    tagline:'賢く機転が利く、どんな状況も切り抜ける戦略家。',
+    traits:['高い知性','機転が利く','戦略的','観察力','交渉上手'],
+    personality:'賢く機転が利き、どんな状況でも上手く対応できる戦略家です。人の心を読む能力が高く、交渉や説得が得意。素早い状況判断と柔軟な思考で、どんな環境でも自分の居場所を作れます。',
+    strength:'状況を瞬時に読んで最善手を打てる高い知性と機転。人心掌握の能力が高く、交渉・外交が得意です。',
+    weakness:'計算高く見られやすく、信頼されにくいことがある。自分の利益を優先しすぎることも。',
+    love:'恋愛でも戦略的に動く傾向があります。相手の心をうまく掴みますが、本音を見せるのが苦手なことも。',
+    career:'コンサルタント・政治家・弁護士・マーケター・プロデューサーなど、頭脳と交渉力を活かせる仕事が向いています。',
+    bestMatch:['サル','ヒョウ','オオカミ'], challenge:['クマ','シカ'] },
+
+  { name:'ライオン', emoji:'🦁', type:'支配のカリスマ',
+    tagline:'誇り高く堂々とした、生まれながらの王者。',
+    traits:['カリスマ性','リーダーシップ','自信満々','正義感強い','誇り高い'],
+    personality:'誇り高く自信に満ち、生まれながらのリーダーです。堂々とした存在感で周囲を引っ張り、自然と人が集まってくるカリスマを持ちます。強い正義感と責任感で周囲を守り率いる王者の風格があります。',
+    strength:'圧倒的な存在感とカリスマ性。周囲を鼓舞しチームを勝利に導くリーダーシップが最大の強みです。',
+    weakness:'プライドが高く、失敗を認めにくいことがある。自分のやり方にこだわりすぎる面も。',
+    love:'堂々と愛情表現する情熱的な恋愛スタイル。パートナーを守り大切にしますが、束縛が強くなることも。',
+    career:'経営者・政治家・芸能人・スポーツキャプテン・医師など、リーダーシップと存在感を活かせる場で輝きます。',
+    bestMatch:['トラ','ヒョウ','サル'], challenge:['イルカ','フクロウ'] },
+
+  { name:'ヒョウ', emoji:'🐆', type:'独創のクリエイター',
+    tagline:'誰とも違う自分のスタイルを貫く、独自の美学を持つ存在。',
+    traits:['独自スタイル','クリエイティブ','自由奔放','審美眼がある','先駆者'],
+    personality:'独自のスタイルにこだわる個性派です。人と同じことを嫌い、常に新しい道を切り開くクリエイティブな先駆者。独特の美意識と感性で、誰も思いつかないような革新的なアイデアを生み出します。',
+    strength:'他にはない独自のスタイルと革新的な発想力。既成概念に縛られず、新しい価値を創造できる力があります。',
+    weakness:'個性が強すぎて周囲と摩擦を生むことがある。協調性に欠ける場面も。',
+    love:'個性的な恋愛観を持ち、型にはまらない関係を好みます。刺激と新鮮さを大切にします。',
+    career:'デザイナー・アーティスト・起業家・ファッション・クリエイティブディレクターなど、独創性を発揮できる分野が向いています。',
+    bestMatch:['キツネ','ライオン','オオカミ'], challenge:['シカ','クマ'] },
+
+  { name:'サル', emoji:'🐒', type:'個性の万能人',
+    tagline:'好奇心旺盛で器用。あらゆることに挑戦するマルチタレント。',
+    traits:['好奇心旺盛','マルチタレント','独創的','ユニーク','機転が利く'],
+    personality:'好奇心旺盛で何でも器用にこなすマルチタレントです。ユニークな発想と行動で周囲を驚かせ、いつでも話題の中心にいます。飽きっぽい面もありますが、その多才さで人生を豊かに彩ります。',
+    strength:'何でも素早くこなせる高い器用さと、独自の視点から生まれるユニークなアイデア。新しいことへの適応が速いです。',
+    weakness:'飽きっぽく一つのことを長く続けるのが苦手。気が散りやすく集中力が続かないことも。',
+    love:'楽しいことが大好きで、恋愛でもエンターテイナーぶりを発揮します。刺激を求めすぎて相手を振り回すことも。',
+    career:'エンターテイナー・IT・マーケティング・プロデューサー・フリーランサーなど、多才さを活かせる仕事が向いています。',
+    bestMatch:['キツネ','ライオン','イルカ'], challenge:['ワシ','オオカミ'] },
+
+  { name:'フクロウ', emoji:'🦉', type:'叡智の賢者',
+    tagline:'冷静で深い知性を持つ。物事の本質を見抜く賢者。',
+    traits:['冷静沈着','深い知性','論理的思考','観察眼','洞察力'],
+    personality:'冷静で深い知性を持つ賢者です。感情に流されず論理的に考え、どんな複雑な問題も整理して解決できます。深く観察し、人が気づかない細部まで見抜く鋭い眼を持ちます。',
+    strength:'感情に左右されない冷静な判断力と、複雑な状況を整理して本質に迫る論理的思考。知識の習得が速いです。',
+    weakness:'感情表現が苦手で冷たく見られやすいことがある。完璧主義で自他に厳しくなることも。',
+    love:'深く考えてから行動するため、恋愛は慎重です。一度信頼した相手には知的かつ誠実に向き合います。',
+    career:'研究者・哲学者・教授・エンジニア・コンサルタント・医師など、知性と分析力が活きる分野で輝きます。',
+    bestMatch:['イルカ','ワシ','ゾウ'], challenge:['トラ','ライオン'] },
+
+  { name:'オオカミ', emoji:'🐺', type:'孤高の求道者',
+    tagline:'自分の信念を貫く一匹狼。孤高の精神と強い意志。',
+    traits:['強い信念','独立心','孤高','誠実','カリスマ性'],
+    personality:'孤高の精神を持つ一匹狼です。群れることを嫌い、自分の信念に従って生きます。強い意志と独立心を持ちながらも、深く信頼した人には熱く誠実に向き合う、実は情に厚い存在です。',
+    strength:'何があっても揺らがない強い信念と独立心。自分の道を自分で切り開く意志の強さが最大の武器です。',
+    weakness:'孤立しやすく、人に頼ることが苦手。プライドが高く、素直に謝れないことも。',
+    love:'深く愛した人には一途で全力を注ぎます。自立心が強く束縛されることを嫌います。',
+    career:'起業家・芸術家・研究者・作家・スポーツ選手など、一人で突き詰められる分野で大成します。',
+    bestMatch:['ヒョウ','キツネ','クマ'], challenge:['サル','イルカ'] },
+
+  { name:'ゾウ', emoji:'🐘', type:'誠実の守護者',
+    tagline:'記憶力と誠実さで信頼を集める、縁の下の力持ち。',
+    traits:['誠実','記憶力抜群','信頼感','長期的視点','義理人情'],
+    personality:'記憶力と誠実さで信頼を集める縁の下の力持ちです。一度結んだ絆を大切にし、長期的な人間関係を丁寧に育てます。約束を守り、恩義を忘れない義理堅さで周囲から深く信頼されます。',
+    strength:'忘れず、裏切らず、必ず返す誠実さと義理堅さ。長期的な信頼関係を築く力が最大の武器です。',
+    weakness:'過去にこだわりすぎて前に進めないことがある。根に持ちやすく許せないことも。',
+    love:'深く誠実な恋愛をします。愛した相手を一生大切にしますが、重くなりすぎることも。',
+    career:'公務員・金融・法律・建設・教育など、長期的な信頼と誠実さが求められる分野で才能を発揮します。',
+    bestMatch:['シカ','クマ','フクロウ'], challenge:['トラ','キツネ'] },
+];
+
+// 5タイプ（天干ペアでマッピング: 甲乙=赤, 丙丁=青, 戊己=黄, 庚辛=緑, 壬癸=紫）
+const anColors = [
+  { name:'赤', label:'情熱の', dot:'#ef4444', traits:['情熱的','行動力◎','チャレンジャー'],
+    desc:'情熱と行動力が溢れ、チャレンジ精神旺盛。感情豊かで情熱的に人生を駆け抜けます。' },
+  { name:'青', label:'知性の', dot:'#3b82f6', traits:['知的','冷静沈着','論理的'],
+    desc:'冷静で論理的、知的探求心が強い。じっくり考えてから行動する理性派です。' },
+  { name:'黄', label:'明るい', dot:'#eab308', traits:['明るい','楽観的','ムードメーカー'],
+    desc:'楽観的で明るく、どんな場でも場を盛り上げる太陽のような存在。' },
+  { name:'緑', label:'安定の', dot:'#22c55e', traits:['安定感','協調性◎','チームワーク'],
+    desc:'調和を大切にし、安定した人間関係を築くのが得意な調和タイプ。' },
+  { name:'紫', label:'神秘の', dot:'#a855f7', traits:['神秘的','直感力◎','洞察力'],
+    desc:'独特の感性と鋭い直感を持つ神秘的な存在。深い洞察力と霊感がある。' },
+];
+
+const anAllEmoji = {};
+anAnimals.forEach(a => { anAllEmoji[a.name] = a.emoji; });
+
+function anShowScreen(id) {
+  document.querySelectorAll('#animal-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('an-screen-' + id).classList.add('active');
+}
+
+function anInitDropdowns() {
+  const ySel = document.getElementById('an-year');
+  if (ySel && ySel.options.length === 0) {
+    for (let y = 1930; y <= 2010; y++) {
+      const o = document.createElement('option');
+      o.value = y; o.textContent = y + '年';
+      if (y === 1995) o.selected = true;
+      ySel.appendChild(o);
+    }
+  }
+  const dSel = document.getElementById('an-day');
+  if (dSel && dSel.options.length === 0) {
+    for (let d = 1; d <= 31; d++) {
+      const o = document.createElement('option');
+      o.value = d; o.textContent = d + '日';
+      dSel.appendChild(o);
+    }
+  }
+}
+
+function anDiagnose() {
+  anInitDropdowns();
+  const year  = parseInt(document.getElementById('an-year').value);
+  const month = parseInt(document.getElementById('an-month').value);
+  const day   = parseInt(document.getElementById('an-day').value);
+
+  // ランダムなローディング絵文字でわくわく感
+  const loadEmojis = ['🐬','🦁','🐯','🐺','🦊','🐻','🦌','🐘','🦅','🐒','🐆','🦉'];
+  let li = 0;
+  const emojiEl = document.getElementById('an-loading-emoji');
+  const iv = setInterval(() => { emojiEl.textContent = loadEmojis[li++ % loadEmojis.length]; }, 160);
+  anShowScreen('loading');
+  setTimeout(() => { clearInterval(iv); anCalcAndShow(year, month, day); }, 2400);
+}
+
+function anCalcAndShow(year, month, day) {
+  // 日柱干支インデックス（四柱推命と共通の計算）
+  const idx60    = yDayIdx(year, month, day);
+  const animalIdx = idx60 % 12;
+  const colorIdx  = Math.floor((idx60 % 10) / 2);
+
+  const animal = anAnimals[animalIdx];
+  const color  = anColors[colorIdx];
+  const fullName = color.label + animal.name;
+
+  // 全キャラ情報
+  document.getElementById('an-animal-card').className = `a-animal-card a-card-${color.name}`;
+  document.getElementById('an-emoji').textContent      = animal.emoji;
+  document.getElementById('an-fullname').textContent   = fullName;
+  document.getElementById('an-type').innerHTML =
+    `<span class="a-color-dot" style="background:${color.dot}"></span>${animal.type}`;
+  document.getElementById('an-tagline').textContent    = animal.tagline;
+  document.getElementById('an-traits').innerHTML =
+    [...animal.traits, ...color.traits].map(t => `<span class="a-trait">${t}</span>`).join('');
+  document.getElementById('an-personality').textContent = animal.personality + '　' + color.desc;
+  document.getElementById('an-strength').textContent   = animal.strength;
+  document.getElementById('an-weakness').textContent   = animal.weakness;
+  document.getElementById('an-love').textContent       = animal.love;
+  document.getElementById('an-career').textContent     = animal.career;
+  document.getElementById('an-color-desc').textContent =
+    `${color.name}タイプ（${color.label}）: ${color.desc}`;
+
+  // 相性グリッド
+  let compatHtml = '';
+  animal.bestMatch.forEach(name => {
+    compatHtml += `<div class="a-compat-item" style="background:#f0fdf4;border:1px solid #bbf7d0">
+      <span class="a-compat-emoji">${anAllEmoji[name]||'🐾'}</span>
+      <div class="a-compat-name">${name}</div>
+      <div class="a-compat-mark" style="color:#16a34a">◎ 最高</div>
+    </div>`;
+  });
+  animal.challenge.forEach(name => {
+    compatHtml += `<div class="a-compat-item" style="background:#fff7ed;border:1px solid #fed7aa">
+      <span class="a-compat-emoji">${anAllEmoji[name]||'🐾'}</span>
+      <div class="a-compat-name">${name}</div>
+      <div class="a-compat-mark" style="color:#ea580c">△ 努力</div>
+    </div>`;
+  });
+  document.getElementById('an-compat').innerHTML = compatHtml;
+
+  // メッセージ
+  const messages = [
+    `あなたの本質は「${fullName}」。${animal.tagline} ${color.desc}その独自の輝きを信じて前進してください。`,
+    `「${animal.name}」の${animal.type}という本質に、「${color.name}タイプ」の${color.label}エネルギーが加わることで、あなただけのキャラクターが生まれています。`,
+    `60キャラクターの中から導き出された「${fullName}」はあなたの生まれ持った天性。強みを活かし、弱みと向き合うことで最高の自分に近づけます。`,
+  ];
+  document.getElementById('an-message').textContent =
+    messages[Math.floor(Math.random() * messages.length)];
+
+  anShowScreen('result');
+}
+
+document.addEventListener('DOMContentLoaded', () => { anInitDropdowns(); });
 
 // ============================================
 // NAME FORTUNE (姓名判断)
