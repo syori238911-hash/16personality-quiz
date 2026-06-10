@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算命学診断 | TypeLab</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #1a0533 0%, #2d1b4e 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 640px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* タイトル */
+  .title-screen { text-align: center; }
+  .badge {
+    display: inline-block;
+    background: #f3e8ff;
+    color: #7c3aed;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 2rem; color: #1a0533; margin-bottom: 8px; }
+  h1 span { color: #7c3aed; }
+  .subtitle { color: #666; margin-bottom: 32px; line-height: 1.7; }
+
+  /* 入力フォーム */
+  .form-group { margin-bottom: 24px; text-align: left; }
+  .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #1a0533;
+    margin-bottom: 8px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e5d4f5;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #1a0533;
+    background: #faf5ff;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #7c3aed;
+  }
+  .date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ボタン */
+  .btn {
+    background: linear-gradient(135deg, #7c3aed, #4f1d96);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+  }
+  .btn-outline {
+    background: white;
+    color: #7c3aed;
+    border: 2px solid #7c3aed;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .btn-outline:hover { background: #faf5ff; }
+
+  /* ローディング */
+  .loading-screen { text-align: center; padding: 40px 0; }
+  .spinner {
+    width: 60px; height: 60px;
+    border: 5px solid #e5d4f5;
+    border-top-color: #7c3aed;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* 結果 */
+  .result-header { text-align: center; margin-bottom: 28px; }
+  .meishiki-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #1a0533, #4f1d96);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .meishiki-badge .label { font-size: 0.8rem; opacity: 0.7; margin-bottom: 6px; }
+  .meishiki-badge .value { font-size: 1.6rem; font-weight: bold; }
+  .eto-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .eto-item {
+    background: #faf5ff;
+    border: 2px solid #e5d4f5;
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .eto-item .eto-label { font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+  .eto-item .eto-val { font-size: 1.1rem; font-weight: bold; color: #4f1d96; }
+
+  /* カード */
+  .result-card {
+    background: #faf5ff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 4px solid #7c3aed;
+    text-align: left;
+  }
+  .result-card h3 {
+    font-size: 1rem;
+    color: #4f1d96;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-card p {
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* タグ */
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .tag {
+    background: #ede9fe;
+    color: #5b21b6;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  /* 運勢バー */
+  .fortune-bar-wrap { margin-top: 10px; }
+  .fortune-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .fortune-label { font-size: 0.85rem; color: #555; width: 60px; flex-shrink: 0; }
+  .fortune-bar-bg {
+    flex: 1;
+    height: 10px;
+    background: #e5d4f5;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .fortune-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #7c3aed, #a855f7);
+  }
+  .fortune-pct { font-size: 0.85rem; color: #7c3aed; font-weight: bold; width: 35px; }
+
+  /* 相性 */
+  .compatibility-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .compat-item {
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  .compat-good { background: #d1fae5; color: #065f46; }
+  .compat-bad { background: #fee2e2; color: #991b1b; }
+  .compat-neutral { background: #f3f4f6; color: #374151; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- タイトル画面 -->
+  <div class="screen active" id="screen-title">
+    <div class="title-screen">
+      <div class="badge">✨ 生年月日だけで占う</div>
+      <h1>算命学<span>診断</span></h1>
+      <p class="subtitle" style="margin-top:10px">4000年の歴史を持つ東洋占術<br>生年月日から運命・性格・相性を読み解きます</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+        <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left">
+          <div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること①</div>
+          <div style="font-size:0.9rem;font-weight:bold;color:#1a0533">命式・性格・才能</div>
+        </div>
+        <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left">
+          <div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること②</div>
+          <div style="font-size:0.9rem;font-weight:bold;color:#1a0533">今年の運勢</div>
+        </div>
+        <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left">
+          <div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること③</div>
+          <div style="font-size:0.9rem;font-weight:bold;color:#1a0533">相性のいい干支</div>
+        </div>
+        <div style="background:#faf5ff;border-radius:12px;padding:14px;text-align:left">
+          <div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること④</div>
+          <div style="font-size:0.9rem;font-weight:bold;color:#1a0533">適職・才能</div>
+        </div>
+      </div>
+      <button class="btn" onclick="showInput()">診断スタート →</button>
+    </div>
+  </div>
+
+  <!-- 入力画面 -->
+  <div class="screen" id="screen-input">
+    <h2 style="font-size:1.4rem;color:#1a0533;margin-bottom:24px;text-align:center">生年月日を入力してください</h2>
+    <div class="form-group">
+      <label>生年月日</label>
+      <div class="date-row">
+        <select id="year">
+          <option value="">年</option>
+        </select>
+        <select id="month">
+          <option value="">月</option>
+        </select>
+        <select id="day">
+          <option value="">日</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>性別</label>
+      <select id="gender">
+        <option value="">選択してください</option>
+        <option value="male">男性</option>
+        <option value="female">女性</option>
+      </select>
+    </div>
+    <button class="btn" onclick="startDiagnosis()">命式を算出する →</button>
+  </div>
+
+  <!-- ローディング -->
+  <div class="screen" id="screen-loading">
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <p style="color:#666">生年月日から命式を計算中...</p>
+      <p style="color:#aaa;font-size:0.85rem;margin-top:8px">4000年の歴史が紐解かれます</p>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div class="screen" id="screen-result">
+    <div class="result-header">
+      <div class="meishiki-badge">
+        <div class="label">あなたの命式</div>
+        <div class="value" id="result-meishiki"></div>
+      </div>
+      <div style="font-size:1.3rem;font-weight:bold;color:#1a0533;margin-bottom:4px" id="result-title"></div>
+      <div style="color:#666;font-size:0.9rem;margin-bottom:16px" id="result-subtitle"></div>
+      <div class="eto-row" id="result-eto-row"></div>
+    </div>
+
+    <div class="result-card" id="card-personality">
+      <h3>🌟 性格・才能</h3>
+      <p id="result-personality"></p>
+      <div class="tag-wrap" id="result-tags"></div>
+    </div>
+
+    <div class="result-card" id="card-fortune">
+      <h3>🔮 今年（2026年）の運勢</h3>
+      <p id="result-fortune-text"></p>
+      <div class="fortune-bar-wrap" id="result-fortune-bars"></div>
+    </div>
+
+    <div class="result-card">
+      <h3>💼 適職・才能が活きる分野</h3>
+      <p id="result-career"></p>
+    </div>
+
+    <div class="result-card">
+      <h3>💕 相性診断</h3>
+      <p style="font-size:0.85rem;color:#666;margin-bottom:8px">あなたと相性のいい干支・悪い干支</p>
+      <div class="compatibility-grid" id="result-compat"></div>
+    </div>
+
+    <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb">
+      <h3 style="color:#b45309">⚠️ 今年注意すること</h3>
+      <p id="result-caution"></p>
+    </div>
+
+    <button class="btn-outline" onclick="retry()">もう一度診断する</button>
+  </div>
+
+</div>
+
+<script>
+// 年月日セレクト生成
+const yearSel = document.getElementById('year');
+const monthSel = document.getElementById('month');
+const daySel = document.getElementById('day');
+for(let y = 2008; y >= 1940; y--) {
+  const o = document.createElement('option');
+  o.value = y; o.textContent = y + '年';
+  yearSel.appendChild(o);
+}
+for(let m = 1; m <= 12; m++) {
+  const o = document.createElement('option');
+  o.value = m; o.textContent = m + '月';
+  monthSel.appendChild(o);
+}
+for(let d = 1; d <= 31; d++) {
+  const o = document.createElement('option');
+  o.value = d; o.textContent = d + '日';
+  daySel.appendChild(o);
+}
+
+// 十干
+const KAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const KAN_YOMI = ['こう','おつ','へい','てい','ぼ','き','こう','しん','じん','き'];
+const KAN_DESC = [
+  '強い生命力と成長力', '柔軟性と適応力', '情熱と行動力', '繊細さと感受性',
+  '安定性と信頼感', '几帳面さと誠実さ', '鋭い判断力と決断力', '洗練さと美的センス',
+  '深い知恵と包容力', '神秘性と直感力'
+];
+
+// 十二支
+const SHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SHI_YOMI = ['ね','うし','とら','う','たつ','み','うま','ひつじ','さる','とり','いぬ','い'];
+const SHI_DESC = [
+  '知恵と繁栄の象徴', '忍耐と誠実さ', '勇気と行動力', '平和と優しさ',
+  '神秘と変化', '直感と洞察力', '情熱と自由', '慈悲と芸術性',
+  '機転と器用さ', '美意識と完璧主義', '誠実と正義感', '智慧と福運'
+];
+
+// 干支の計算
+function getKanshi(year) {
+  const kanIdx = (year - 4) % 10;
+  const shiIdx = (year - 4) % 12;
+  return {
+    kan: KAN[(kanIdx + 10) % 10],
+    shi: SHI[(shiIdx + 12) % 12],
+    kanIdx: (kanIdx + 10) % 10,
+    shiIdx: (shiIdx + 12) % 12
+  };
+}
+
+function getDayKanshi(year, month, day) {
+  // 簡易計算（1900年1月1日 = 甲子[kanIdx=0,shiIdx=0]）
+  const base = new Date(1900, 0, 1);
+  const target = new Date(year, month - 1, day);
+  const diff = Math.floor((target - base) / (1000 * 60 * 60 * 24));
+  const kanIdx = ((diff % 10) + 10) % 10;
+  const shiIdx = ((diff % 12) + 12) % 12;
+  return { kan: KAN[kanIdx], shi: SHI[shiIdx], kanIdx, shiIdx };
+}
+
+function getMonthKanshi(year, month) {
+  // 月柱の簡易計算
+  const baseMonth = (year - 1900) * 12 + (month - 1);
+  const kanIdx = ((baseMonth * 2 + 2) % 10 + 10) % 10;
+  const shiIdx = ((month + 1) % 12);
+  return { kan: KAN[kanIdx], shi: SHI[shiIdx], kanIdx, shiIdx };
+}
+
+// 五行
+function getGogyou(kanIdx) {
+  if(kanIdx <= 1) return '木';
+  if(kanIdx <= 3) return '火';
+  if(kanIdx <= 5) return '土';
+  if(kanIdx <= 7) return '金';
+  return '水';
+}
+
+// 性格データ
+const personalityData = [
+  { // 甲
+    traits: ['リーダーシップ旺盛', '強い意志力', '成長を求め続ける', '直線的な行動力'],
+    desc: '大樹のように天高く伸びようとする強いエネルギーを持ちます。目標に向かって一直線に進む行動力と、周囲を引っ張るリーダーシップが特徴。困難にも折れない強さがあります。',
+    career: '経営者・政治家・スポーツ選手・プロジェクトリーダー・開拓者的な職業全般'
+  },
+  { // 乙
+    traits: ['柔軟な適応力', '粘り強さ', '人間関係が得意', '美的センス'],
+    desc: '草花のように環境に合わせて柔軟に育つ力を持ちます。人の心を読む感受性が高く、穏やかながらも芯の強さがあります。協調性が高く、人から愛される存在。',
+    career: 'デザイナー・カウンセラー・保育士・外交官・アーティスト'
+  },
+  { // 丙
+    traits: ['明るい情熱', '社交性の高さ', '直感力', '太陽のような存在感'],
+    desc: '太陽のように周囲を明るく照らすエネルギーを持ちます。どこにいても注目を集め、場を盛り上げる天性の明るさがあります。行動力と情熱で夢を実現する力があります。',
+    career: '俳優・芸能人・営業職・イベントプランナー・マーケター'
+  },
+  { // 丁
+    traits: ['繊細な感受性', '深い愛情', '芸術的才能', '精神的な強さ'],
+    desc: '灯火のように静かながら強い光を放ちます。感受性が豊かで、人の心の奥まで理解できる共感力があります。芸術・文化への深い関心と、独自の世界観を持ちます。',
+    career: '作家・詩人・音楽家・心理士・宗教家・ヒーラー'
+  },
+  { // 戊
+    traits: ['揺るぎない安定感', '包容力', '信頼される誠実さ', '大地のような存在'],
+    desc: '大山のように動じない安定感と包容力を持ちます。周囲から深く信頼される誠実さがあり、人の支えになることに喜びを感じます。忍耐力が高く、長期的な目標を達成する力があります。',
+    career: '建築家・医師・公務員・農業・不動産・教師'
+  },
+  { // 己
+    traits: ['几帳面さと丁寧さ', '計画性', '人を育てる才能', '地道な努力家'],
+    desc: '肥沃な大地のように、物事を育て育む力を持ちます。几帳面で計画的に物事を進め、コツコツと積み上げる努力家です。人を育てることや、縁の下の力持ちとして輝きます。',
+    career: '教師・農家・会計士・栄養士・秘書・育児関連'
+  },
+  { // 庚
+    traits: ['鋭い判断力', '決断の速さ', '強い意志', '改革を好む'],
+    desc: '鋭い刃のような決断力と行動力を持ちます。白黒はっきりつける性格で、妥協を嫌います。困難な状況でも素早く判断し、道を切り開く力があります。',
+    career: '外科医・弁護士・軍人・エンジニア・スポーツ選手・起業家'
+  },
+  { // 辛
+    traits: ['洗練された美意識', '完璧主義', '独自の感性', '磨かれた才能'],
+    desc: '磨かれた宝石のように、独自の美意識と洗練された感性を持ちます。完璧主義で細部にこだわり、高品質なものを生み出す才能があります。人と違う独自の世界を持ちます。',
+    career: 'ジュエリーデザイナー・美容師・芸術家・評論家・編集者'
+  },
+  { // 壬
+    traits: ['深い知恵と洞察力', '大きな包容力', '多才さ', '流れを読む力'],
+    desc: '大海のように深く広い知恵と包容力を持ちます。多才で好奇心旺盛、様々な分野に興味を持ちます。物事の流れを読む洞察力が高く、先を見越した行動ができます。',
+    career: '哲学者・経済学者・外交官・コンサルタント・研究者・経営者'
+  },
+  { // 癸
+    traits: ['深い直感力', '神秘的な魅力', '精神性の高さ', '癒しの才能'],
+    desc: '雨のように静かに、しかし確実に物事を育む力を持ちます。深い直感と神秘的な魅力があり、スピリチュアルな感性が高いです。癒しの才能と、人の心を浄化する力があります。',
+    career: '霊能者・ヒーラー・医療従事者・福祉士・瞑想指導者・芸術家'
+  }
+];
+
+// 運勢データ（年干支との相性）
+function getFortuneScore(dayKanIdx, yearKanIdx) {
+  const diff = Math.abs(dayKanIdx - yearKanIdx);
+  const base = [85, 70, 60, 75, 90, 65, 80, 55, 70, 85][dayKanIdx];
+  const bonus = diff % 5 === 0 ? 10 : diff % 2 === 0 ? 5 : -5;
+  return Math.min(95, Math.max(40, base + bonus));
+}
+
+// 相性データ
+function getCompatibility(shiIdx) {
+  const good = [(shiIdx + 4) % 12, (shiIdx + 8) % 12];
+  const bad = [(shiIdx + 6) % 12];
+  const neutral = [0,1,2,3,4,5,6,7,8,9,10,11].filter(i => i !== shiIdx && !good.includes(i) && !bad.includes(i)).slice(0,6);
+  return { good, bad, neutral: neutral.slice(0,5) };
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function showInput() { showScreen('input'); }
+
+function startDiagnosis() {
+  const year = parseInt(document.getElementById('year').value);
+  const month = parseInt(document.getElementById('month').value);
+  const day = parseInt(document.getElementById('day').value);
+  const gender = document.getElementById('gender').value;
+
+  if(!year || !month || !day || !gender) {
+    alert('すべての項目を入力してください');
+    return;
+  }
+
+  showScreen('loading');
+  setTimeout(() => showResult(year, month, day, gender), 2000);
+}
+
+function showResult(year, month, day, gender) {
+  const yearKS = getKanshi(year);
+  const monthKS = getMonthKanshi(year, month);
+  const dayKS = getDayKanshi(year, month, day);
+
+  // 2026年の干支（丙午）
+  const currentYearKS = getKanshi(2026);
+
+  // 命式表示
+  document.getElementById('result-meishiki').textContent =
+    `${yearKS.kan}${yearKS.shi}・${monthKS.kan}${monthKS.shi}・${dayKS.kan}${dayKS.shi}`;
+
+  // 五行
+  const gogyou = getGogyou(dayKS.kanIdx);
+  document.getElementById('result-title').textContent =
+    `${dayKS.kan}（${KAN_YOMI[dayKS.kanIdx]}）の命 / ${gogyou}の人`;
+  document.getElementById('result-subtitle').textContent =
+    `生まれ年：${yearKS.kan}${yearKS.shi}年 ／ 日干：${dayKS.kan}${dayKS.shi}`;
+
+  // 年・月・日の柱
+  document.getElementById('result-eto-row').innerHTML = `
+    <div class="eto-item">
+      <div class="eto-label">年柱</div>
+      <div class="eto-val">${yearKS.kan}${yearKS.shi}</div>
+    </div>
+    <div class="eto-item">
+      <div class="eto-label">月柱</div>
+      <div class="eto-val">${monthKS.kan}${monthKS.shi}</div>
+    </div>
+    <div class="eto-item">
+      <div class="eto-label">日柱</div>
+      <div class="eto-val">${dayKS.kan}${dayKS.shi}</div>
+    </div>
+    <div class="eto-item">
+      <div class="eto-label">五行</div>
+      <div class="eto-val">${gogyou}</div>
+    </div>
+  `;
+
+  // 性格
+  const pData = personalityData[dayKS.kanIdx];
+  document.getElementById('result-personality').textContent = pData.desc;
+  document.getElementById('result-tags').innerHTML =
+    pData.traits.map(t => `<span class="tag">${t}</span>`).join('');
+
+  // 運勢スコア
+  const fortuneScore = getFortuneScore(dayKS.kanIdx, currentYearKS.kanIdx);
+  const fortuneItems = [
+    { label: '全体運', score: fortuneScore },
+    { label: '恋愛運', score: Math.min(95, fortuneScore + (gender === 'female' ? 5 : -3) + Math.floor(Math.random()*10)) },
+    { label: '仕事運', score: Math.min(95, fortuneScore + Math.floor(Math.random()*15) - 5) },
+    { label: '金運', score: Math.min(95, fortuneScore - 5 + Math.floor(Math.random()*10)) },
+    { label: '健康運', score: Math.min(95, fortuneScore + Math.floor(Math.random()*8)) },
+  ];
+
+  const fortuneTexts = [
+    '大きな転換期を迎える年です。新しいことへの挑戦が吉。人との出会いを大切に。',
+    '実力が開花する年。これまでの努力が報われる時期です。積極的な行動が開運のカギ。',
+    '内面を磨く年。焦らず着実に進むことで、大きな成果につながります。',
+    '変化の年。環境の変化を恐れず受け入れることで運気が上昇します。',
+    '絶好調の年！自信を持って行動し、チャンスをものにしてください。',
+  ];
+  document.getElementById('result-fortune-text').textContent =
+    fortuneTexts[dayKS.kanIdx % fortuneTexts.length];
+  document.getElementById('result-fortune-bars').innerHTML =
+    fortuneItems.map(fi => `
+      <div class="fortune-row">
+        <div class="fortune-label">${fi.label}</div>
+        <div class="fortune-bar-bg">
+          <div class="fortune-bar-fill" style="width:${fi.score}%"></div>
+        </div>
+        <div class="fortune-pct">${fi.score}%</div>
+      </div>
+    `).join('');
+
+  // 適職
+  document.getElementById('result-career').textContent = pData.career;
+
+  // 相性
+  const compat = getCompatibility(dayKS.shiIdx);
+  let compatHTML = '';
+  compat.good.forEach(i => {
+    compatHTML += `<div class="compat-item compat-good">◎ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;
+  });
+  compat.bad.forEach(i => {
+    compatHTML += `<div class="compat-item compat-bad">✗ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;
+  });
+  compat.neutral.forEach(i => {
+    compatHTML += `<div class="compat-item compat-neutral">△ ${SHI[i]}（${SHI_YOMI[i]}）</div>`;
+  });
+  document.getElementById('result-compat').innerHTML = compatHTML;
+
+  // 注意
+  const cautions = [
+    '焦りは禁物。慎重に物事を進めることで大きなミスを防げます。',
+    '人間関係のトラブルに注意。言葉選びを大切に。',
+    '健康管理に気をつけて。無理をしすぎない年です。',
+    'お金の使いすぎに注意。衝動買いは控えめに。',
+    '新しいことを始める前に、じっくり計画を立てましょう。',
+  ];
+  document.getElementById('result-caution').textContent =
+    cautions[dayKS.shiIdx % cautions.length];
+
+  showScreen('result');
+}
+
+function retry() { showScreen('input'); }
+</script>
+</body>
+</html>
