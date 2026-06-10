@@ -16,6 +16,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #personality-screen.active { display: flex; }
 #sanmei-screen.active { display: flex; }
 #numerology-screen.active { display: flex; }
+#blood-screen.active { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -133,6 +134,51 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-s .quiz-card-btn { background: linear-gradient(135deg, #7c3aed, #4f1d96); }
 .quiz-card-n .quiz-card-btn { background: linear-gradient(135deg, #f59e0b, #d97706); }
 .quiz-card-n .quiz-card-features li::before { color: #f59e0b; }
+.quiz-card-b::before { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+.quiz-card-b { box-shadow: 0 4px 30px rgba(239,68,68,0.1); }
+.quiz-card-b:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(239,68,68,0.25); }
+.quiz-card-b .quiz-card-btn { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.quiz-card-b .quiz-card-features li::before { color: #ef4444; }
+
+/* ============================================
+   BLOOD TYPE QUIZ
+   ============================================ */
+#blood-screen {
+  background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-b .container { background: white; border-radius: 24px; padding: 40px; max-width: 640px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.quiz-b .screen { display: none; }
+.quiz-b .screen.active { display: block; }
+.quiz-b .badge { display: inline-block; background: #fee2e2; color: #991b1b; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-b h1 { font-size: 2rem; color: #1a0000; margin-bottom: 8px; }
+.quiz-b h1 span { color: #ef4444; }
+.quiz-b .subtitle { color: #666; line-height: 1.7; margin-top: 10px; margin-bottom: 24px; }
+.quiz-b .btn { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; border: none; padding: 16px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s, box-shadow 0.2s; margin-top: 8px; }
+.quiz-b .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+.quiz-b .btn-outline { background: white; color: #b91c1c; border: 2px solid #ef4444; padding: 14px 40px; border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 12px; }
+.quiz-b .btn-outline:hover { background: #fff5f5; }
+.quiz-b .loading-screen { text-align: center; padding: 40px 0; }
+.quiz-b .spinner { width: 60px; height: 60px; border: 5px solid #fee2e2; border-top-color: #ef4444; border-radius: 50%; animation: bSpin 0.8s linear infinite; margin: 0 auto 24px; }
+@keyframes bSpin { to { transform: rotate(360deg); } }
+.quiz-b .loading-screen p { color: #666; }
+.quiz-b .result-card { background: #fff5f5; border-radius: 16px; padding: 20px; margin-bottom: 16px; border-left: 4px solid #ef4444; text-align: left; }
+.quiz-b .result-card h3 { font-size: 1rem; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.quiz-b .result-card p { font-size: 0.95rem; color: #333; line-height: 1.7; }
+.quiz-b .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.quiz-b .tag { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+.blood-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.blood-btn { padding: 24px 16px; border-radius: 18px; border: 3px solid #fee2e2; background: #fff5f5; cursor: pointer; text-align: center; transition: all 0.22s; font-family: inherit; }
+.blood-btn:hover { background: #ef4444; border-color: #ef4444; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
+.blood-btn:hover .bb-type, .blood-btn:hover .bb-name { color: white; }
+.bb-type { font-size: 3rem; font-weight: 900; color: #ef4444; line-height: 1; margin-bottom: 8px; display: block; }
+.bb-name { font-size: 0.9rem; color: #666; font-weight: bold; display: block; }
+.b-badge-wrap { text-align: center; margin-bottom: 28px; }
+.b-type-badge { display: inline-flex; align-items: center; justify-content: center; width: 110px; height: 110px; border-radius: 50%; font-size: 3.5rem; font-weight: 900; color: white; background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 8px 30px rgba(239,68,68,0.4); margin-bottom: 14px; }
+.b-result-title { font-size: 1.6rem; font-weight: bold; color: #1a0000; margin-bottom: 6px; }
+.b-result-sub { color: #666; font-size: 0.95rem; margin-bottom: 0; line-height: 1.6; }
 
 /* ============================================
    NUMEROLOGY QUIZ
@@ -495,6 +541,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
       <button class="quiz-card-btn">診断スタート →</button>
     </div>
 
+    <!-- 血液型 -->
+    <div class="quiz-card quiz-card-b" onclick="openQuiz('blood')">
+      <div class="quiz-card-icon">🩸</div>
+      <h2>血液型診断</h2>
+      <p class="card-desc">日本人が愛する4タイプ性格診断</p>
+      <ul class="quiz-card-features">
+        <li>A・B・O・ABを選ぶだけ</li>
+        <li>性格・恋愛・仕事がわかる</li>
+        <li>相性診断つき</li>
+      </ul>
+      <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
     <!-- 算命学 -->
     <div class="quiz-card quiz-card-s" onclick="openQuiz('sanmei')">
       <div class="quiz-card-icon">🔮</div>
@@ -511,6 +570,72 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
   </div>
 
   <div class="home-footer">© TypeLab — All free to use</div>
+</div>
+
+
+<!-- ===================================================
+     BLOOD TYPE QUIZ
+     =================================================== -->
+<div id="blood-screen" class="app-screen">
+  <button class="back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-b">
+    <div class="container">
+
+      <!-- タイトル -->
+      <div class="screen active" id="b-screen-title">
+        <div style="text-align:center">
+          <div class="badge">✨ 4タイプ完全解析</div>
+          <h1>血液型<span>診断</span></h1>
+          <p class="subtitle">A・B・O・ABの4タイプで性格・恋愛・仕事・相性を徹底解析</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+            <div style="background:#fff5f5;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること①</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0000">性格・強み・弱み</div></div>
+            <div style="background:#fff5f5;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること②</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0000">仕事スタイル</div></div>
+            <div style="background:#fff5f5;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること③</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0000">恋愛傾向</div></div>
+            <div style="background:#fff5f5;border-radius:12px;padding:14px;text-align:left"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">わかること④</div><div style="font-size:0.9rem;font-weight:bold;color:#1a0000">相性のいい血液型</div></div>
+          </div>
+          <button class="btn" onclick="bShowSelect()">診断スタート →</button>
+        </div>
+      </div>
+
+      <!-- 血液型選択 -->
+      <div class="screen" id="b-screen-select">
+        <h2 style="font-size:1.4rem;color:#1a0000;margin-bottom:8px;text-align:center">あなたの血液型は？</h2>
+        <p style="text-align:center;color:#888;font-size:0.9rem;margin-bottom:4px">タップして選んでください</p>
+        <div class="blood-select-grid">
+          <button class="blood-btn" onclick="bDiagnose('A')"><span class="bb-type">A</span><span class="bb-name">几帳面・真面目</span></button>
+          <button class="blood-btn" onclick="bDiagnose('B')"><span class="bb-type">B</span><span class="bb-name">個性的・マイペース</span></button>
+          <button class="blood-btn" onclick="bDiagnose('O')"><span class="bb-type">O</span><span class="bb-name">おおらか・情熱的</span></button>
+          <button class="blood-btn" onclick="bDiagnose('AB')"><span class="bb-type">AB</span><span class="bb-name">二面性・合理的</span></button>
+        </div>
+      </div>
+
+      <!-- ローディング -->
+      <div class="screen" id="b-screen-loading">
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>あなたの血液型を分析中...</p>
+        </div>
+      </div>
+
+      <!-- 結果 -->
+      <div class="screen" id="b-screen-result">
+        <div class="b-badge-wrap">
+          <div class="b-type-badge" id="b-type-badge"></div>
+          <div class="b-result-title" id="b-result-title"></div>
+          <div class="b-result-sub" id="b-result-sub"></div>
+        </div>
+        <div class="result-card"><h3>🌟 性格・強み</h3><p id="b-result-personality"></p><div class="tag-wrap" id="b-result-tags"></div></div>
+        <div class="result-card"><h3>💼 仕事スタイル</h3><p id="b-result-work"></p></div>
+        <div class="result-card"><h3>❤️ 恋愛傾向</h3><p id="b-result-love"></p></div>
+        <div class="result-card"><h3>💕 血液型相性</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px" id="b-result-compat"></div>
+        </div>
+        <div class="result-card" style="border-left-color:#f59e0b;background:#fffbeb"><h3 style="color:#b45309">⚠️ 弱点・注意点</h3><p id="b-result-caution"></p></div>
+        <button class="btn-outline" onclick="bShowSelect()">別の血液型を見る</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 
@@ -985,6 +1110,95 @@ function sShowResult(year,month,day,gender) {
   sShowScreen('result');
 }
 function sRetry() { sShowScreen('input'); }
+
+// ============================================
+// BLOOD TYPE QUIZ
+// ============================================
+const bData = {
+  A: {
+    label:"A型", keyword:"几帳面な完璧主義者",
+    personality:"ルールを守り、責任感が強い真面目タイプ。計画を立てて丁寧にこなす几帳面さが光ります。周囲への気遣いが深く、チームの調和を大切にします。完璧を目指すあまり、自分にも他人にも厳しくなることも。",
+    traits:["几帳面","責任感が強い","計画的","気遣い上手","完璧主義"],
+    work:"マニュアルや手順を守って丁寧に仕事をこなすタイプ。チームの潤滑油として活躍。締め切りを守り、ミスが少ない。管理職・経理・事務職などで高評価を得やすい。",
+    love:"慎重で真面目な恋愛をするタイプ。好きな人には献身的。嫉妬深い一面もあり、相手の行動が気になりやすい。少しずつ距離を縮める奥手タイプ。",
+    compat:[
+      {type:"A型",mark:"◎",label:"価値観が近い最良パートナー"},
+      {type:"AB型",mark:"◎",label:"お互いを補い合える"},
+      {type:"O型",mark:"○",label:"O型のおおらかさに癒される"},
+      {type:"B型",mark:"△",label:"自由奔放さに振り回されることも"},
+    ],
+    caution:"完璧主義すぎてストレスをためやすい。「まあいいか」と手を抜く練習も大切。他人への期待値を下げると楽になれます。"
+  },
+  B: {
+    label:"B型", keyword:"自由奔放なマイペース主義者",
+    personality:"自分のペースを大切にする個性派。好奇心旺盛で興味があることには全力投球。人の目を気にせず行動できる自由人ですが、空気を読まないと思われることも。裏では繊細な一面も持ちます。",
+    traits:["マイペース","好奇心旺盛","個性的","集中力抜群","正直"],
+    work:"自分が興味を持った仕事には驚くほどの集中力を発揮。ルーティンより創造性が活きる仕事向き。アーティスト・研究者・フリーランスなど、個性を活かせる環境で大輝き。",
+    love:"恋愛に束縛を嫌う自由人。好きになったら真っ直ぐ突き進むが、飽きると冷めやすい一面も。相手を尊重しつつ自由を求める。楽しいことが大好きな恋愛スタイル。",
+    compat:[
+      {type:"O型",mark:"◎",label:"最強コンビ。互いの個性を認め合える"},
+      {type:"B型",mark:"◎",label:"マイペース同士で気楽な関係"},
+      {type:"AB型",mark:"○",label:"不思議な相性で刺激し合える"},
+      {type:"A型",mark:"△",label:"A型の几帳面さとぶつかりやすい"},
+    ],
+    caution:"飽き性で途中でやめてしまうことも。「やり抜く力」を鍛えることが成長の鍵。周りへの配慮も意識して。"
+  },
+  O: {
+    label:"O型", keyword:"おおらかなリーダー気質",
+    personality:"大らかでポジティブ、面倒見のいいリーダータイプ。直感で動き、人を巻き込む力があります。感情表現が豊かで情熱的。プライドが高い面もありますが、根は曲がったことが大嫌いな正義感の持ち主。",
+    traits:["おおらか","リーダーシップ","情熱的","正義感","直感力"],
+    work:"人を引っ張るリーダー向き。目標を決めたら一直線。営業・マネージャー・起業家として才能を発揮。細かい作業より大局を動かす仕事が向いている。",
+    love:"情熱的で一度好きになると全力。嫉妬心も強い。守りたい、リードしたいという気持ちが強く、相手を包み込むような愛情表現をする。別れるとスパッと切り替えも早い。",
+    compat:[
+      {type:"B型",mark:"◎",label:"お互い自由で最高のパートナー"},
+      {type:"O型",mark:"◎",label:"情熱と情熱がぶつかり合う"},
+      {type:"A型",mark:"○",label:"A型の気遣いが心地よい"},
+      {type:"AB型",mark:"△",label:"AB型の二面性に戸惑うことも"},
+    ],
+    caution:"プライドが傷つくと頑固になりやすい。素直に謝ることで人間関係がスムーズに。細かいところにも気を配ると信頼度アップ。"
+  },
+  AB: {
+    label:"AB型", keyword:"謎多き二面性の合理主義者",
+    personality:"合理的で独創的な二面性の持ち主。場の空気を読む力が高く、その場で全く違う顔を見せることも。冷静な分析力と、ふとした瞬間に見せる情熱的な一面が魅力。独特の世界観を持ちます。",
+    traits:["合理的","二面性","独創性","冷静な分析力","ミステリアス"],
+    work:"どんな職場でもうまく適応できる万能型。クリエイティブな発想と冷静な判断力を両立。企画・研究・コンサルタントなど知的な仕事で実力を発揮。",
+    love:"恋愛においても二面性が出やすい。冷めているようで突然情熱的になることも。相手に依存しすぎず、ある程度の距離感を保ちたいタイプ。ユニークな恋愛スタイルを持つ。",
+    compat:[
+      {type:"A型",mark:"◎",label:"A型の誠実さに安心感"},
+      {type:"B型",mark:"○",label:"個性同士で刺激し合える"},
+      {type:"AB型",mark:"○",label:"不思議な理解し合い"},
+      {type:"O型",mark:"△",label:"O型の強引さについていけないことも"},
+    ],
+    caution:"気分の波が激しく周囲を困惑させることも。感情を言葉で伝える練習が人間関係を豊かにします。"
+  }
+};
+
+function bShowScreen(id) {
+  document.querySelectorAll('#blood-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('b-screen-' + id).classList.add('active');
+}
+function bShowSelect() { bShowScreen('select'); }
+function bDiagnose(type) {
+  bShowScreen('loading');
+  setTimeout(() => bShowResult(type), 1500);
+}
+function bShowResult(type) {
+  const d = bData[type];
+  document.getElementById('b-type-badge').textContent = type;
+  document.getElementById('b-result-title').textContent = `${d.label}「${d.keyword}」`;
+  document.getElementById('b-result-sub').textContent = '';
+  document.getElementById('b-result-personality').textContent = d.personality;
+  document.getElementById('b-result-tags').innerHTML = d.traits.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('b-result-work').textContent = d.work;
+  document.getElementById('b-result-love').textContent = d.love;
+  document.getElementById('b-result-compat').innerHTML = d.compat.map(c=>`
+    <div style="background:${c.mark==='◎'?'#d1fae5':c.mark==='○'?'#e0f2fe':'#f3f4f6'};border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:1.3rem;font-weight:900;color:${c.mark==='◎'?'#065f46':c.mark==='○'?'#0369a1':'#374151'}">${c.mark} ${c.type}</div>
+      <div style="font-size:0.75rem;color:#666;margin-top:4px">${c.label}</div>
+    </div>`).join('');
+  document.getElementById('b-result-caution').textContent = d.caution;
+  bShowScreen('result');
+}
 
 // ============================================
 // NUMEROLOGY QUIZ
