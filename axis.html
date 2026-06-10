@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIS — 自分を知る4つの診断</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --surface2:#1e1e2e;
+  --text:#e2e8f0;
+  --muted:#64748b;
+  --rose:#f43f5e;
+  --rose-dark:#be123c;
+  --violet:#7c3aed;
+  --violet-dark:#4c1d95;
+  --blue:#2563eb;
+  --blue-dark:#1e40af;
+  --emerald:#10b981;
+  --emerald-dark:#059669;
+}
+body{background:var(--bg);color:var(--text);font-family:'Hiragino Sans','Yu Gothic',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── SCREEN SYSTEM ── */
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem 1rem}
+.screen.active{display:flex}
+
+/* ── HOME ── */
+#home-screen{justify-content:center;padding:3rem 1.5rem}
+.home-title{text-align:center;margin-bottom:3.5rem}
+.home-title h1{font-size:2.8rem;font-weight:900;letter-spacing:.15em;background:linear-gradient(135deg,#f43f5e,#7c3aed,#2563eb,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-title p{color:var(--muted);margin-top:.6rem;font-size:.95rem;letter-spacing:.05em}
+.quiz-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;width:100%;max-width:480px}
+.quiz-card{background:var(--surface);border-radius:1.2rem;padding:1.8rem 1.4rem;cursor:pointer;transition:.25s;border:1px solid #1e1e2e;display:flex;flex-direction:column;gap:.7rem}
+.quiz-card:hover{transform:translateY(-3px);filter:brightness(1.15)}
+.card-icon{font-size:2rem}
+.card-label{font-size:.7rem;letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.card-title{font-size:1.05rem;font-weight:800;line-height:1.3}
+.card-desc{font-size:.78rem;color:var(--muted);line-height:1.6}
+.card-love{border-top:3px solid var(--rose)}
+.card-love .card-label{color:var(--rose)}
+.card-true{border-top:3px solid var(--violet)}
+.card-true .card-label{color:var(--violet)}
+.card-rel{border-top:3px solid var(--blue)}
+.card-rel .card-label{color:var(--blue)}
+.card-think{border-top:3px solid var(--emerald)}
+.card-think .card-label{color:var(--emerald)}
+
+/* ── SHARED QUIZ CHROME ── */
+.q-wrap{width:100%;max-width:520px;margin:0 auto}
+.q-back{background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.4rem .2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.3rem}
+.q-back:hover{color:var(--text)}
+.q-header{margin-bottom:2rem;text-align:center}
+.q-header-icon{font-size:1.8rem;margin-bottom:.5rem}
+.q-header h2{font-size:1.3rem;font-weight:900;letter-spacing:.05em}
+.q-progress{display:flex;gap:4px;margin-top:1rem;justify-content:center;flex-wrap:wrap}
+.q-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2);transition:.3s}
+.q-dot.done{opacity:1}
+.q-num{font-size:.75rem;color:var(--muted);margin-top:.8rem}
+.q-text{font-size:1.15rem;font-weight:700;text-align:center;line-height:1.7;margin-bottom:2rem}
+.q-options{display:flex;flex-direction:column;gap:.85rem}
+.q-opt{background:var(--surface);border:1.5px solid var(--surface2);border-radius:.9rem;padding:1.1rem 1.4rem;cursor:pointer;font-size:.95rem;text-align:left;color:var(--text);transition:.2s;line-height:1.5}
+.q-opt:hover{border-color:var(--accent,#888);background:var(--surface2)}
+.q-opt:active{transform:scale(.98)}
+
+/* ── LOADING ── */
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1.5rem}
+.loading-ring{width:64px;height:64px;border-radius:50%;border:4px solid var(--surface2);border-top-color:var(--accent,#888);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{color:var(--muted);font-size:.95rem;letter-spacing:.1em}
+
+/* ── RESULT ── */
+.result-wrap{width:100%;max-width:520px;margin:0 auto;padding-bottom:3rem}
+.result-back{background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.4rem .2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.3rem}
+.result-back:hover{color:var(--text)}
+.result-badge{text-align:center;padding:1rem;border-radius:1.5rem;margin-bottom:1.5rem}
+.result-badge-icon{font-size:4rem;margin-bottom:.5rem}
+.result-badge-type{font-size:.75rem;letter-spacing:.15em;font-weight:700;margin-bottom:.3rem}
+.result-badge-name{font-size:1.7rem;font-weight:900}
+.result-badge-sub{font-size:.9rem;margin-top:.4rem;opacity:.8}
+.result-section{background:var(--surface);border-radius:1rem;padding:1.4rem;margin-bottom:1rem}
+.result-section h3{font-size:.8rem;letter-spacing:.12em;font-weight:700;margin-bottom:.8rem;text-transform:uppercase}
+.result-section p{font-size:.93rem;line-height:1.75;color:#cbd5e1}
+.result-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+.result-tag{padding:.3rem .8rem;border-radius:999px;font-size:.78rem;font-weight:600;background:var(--surface2)}
+.result-bars{display:flex;flex-direction:column;gap:.7rem;margin-top:.4rem}
+.result-bar-row{display:flex;align-items:center;gap:.8rem}
+.result-bar-label{font-size:.8rem;width:5rem;flex-shrink:0}
+.result-bar-bg{flex:1;height:8px;border-radius:999px;background:var(--surface2);overflow:hidden}
+.result-bar-fill{height:100%;border-radius:999px;background:var(--accent,#888);transition:width 1s ease}
+.retry-btn{display:block;width:100%;padding:1rem;border-radius:.9rem;border:none;font-size:1rem;font-weight:800;cursor:pointer;text-align:center;margin-top:1.5rem;letter-spacing:.05em;transition:.2s}
+.retry-btn:hover{filter:brightness(1.1)}
+.home-btn{display:block;width:100%;padding:.9rem;border-radius:.9rem;border:1.5px solid var(--surface2);background:transparent;font-size:.9rem;color:var(--muted);cursor:pointer;text-align:center;margin-top:.8rem;transition:.2s}
+.home-btn:hover{border-color:var(--muted);color:var(--text)}
+
+/* ── ACCENT COLORS per quiz ── */
+#love-screen{--accent:var(--rose)}
+#trueself-screen{--accent:var(--violet)}
+#relation-screen{--accent:var(--blue)}
+#thinking-screen{--accent:var(--emerald)}
+
+#love-screen .q-dot.done{background:var(--rose)}
+#trueself-screen .q-dot.done{background:var(--violet)}
+#relation-screen .q-dot.done{background:var(--blue)}
+#thinking-screen .q-dot.done{background:var(--emerald)}
+
+#love-screen .retry-btn{background:var(--rose);color:#fff}
+#trueself-screen .retry-btn{background:var(--violet);color:#fff}
+#relation-screen .retry-btn{background:var(--blue);color:#fff}
+#thinking-screen .retry-btn{background:var(--emerald);color:#fff}
+
+/* result badge tints */
+.badge-rose{background:linear-gradient(135deg,#4c0519,#881337)}
+.badge-violet{background:linear-gradient(135deg,#2e1065,#4c1d95)}
+.badge-blue{background:linear-gradient(135deg,#1e3a8a,#1e40af)}
+.badge-emerald{background:linear-gradient(135deg,#022c22,#065f46)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="home-screen" class="screen active">
+  <div class="home-title">
+    <h1>AXIS</h1>
+    <p>4つの角度から、本当の自分を知る</p>
+  </div>
+  <div class="quiz-cards">
+    <div class="quiz-card card-love" onclick="openQuiz('love')">
+      <div class="card-icon">💗</div>
+      <div class="card-label">LOVE TYPE</div>
+      <div class="card-title">恋愛タイプ診断</div>
+      <div class="card-desc">あなたの恋の傾向と隠れた本音を解析</div>
+    </div>
+    <div class="quiz-card card-true" onclick="openQuiz('trueself')">
+      <div class="card-icon">🌑</div>
+      <div class="card-label">TRUE SELF</div>
+      <div class="card-title">本当の自分診断</div>
+      <div class="card-desc">表と裏、光と影。本質的な自己を映す</div>
+    </div>
+    <div class="quiz-card card-rel" onclick="openQuiz('relation')">
+      <div class="card-icon">🕸️</div>
+      <div class="card-label">RELATION TYPE</div>
+      <div class="card-title">関係性タイプ診断</div>
+      <div class="card-desc">人との繋がり方のパターンを診断</div>
+    </div>
+    <div class="quiz-card card-think" onclick="openQuiz('thinking')">
+      <div class="card-icon">⚡</div>
+      <div class="card-label">THINKING TYPE</div>
+      <div class="card-title">思考タイプ診断</div>
+      <div class="card-desc">思考の軸と行動パターンを分析</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LOVE QUIZ ═══════════════ -->
+<div id="love-screen" class="screen">
+  <div id="love-q" class="q-wrap" style="display:none">
+    <button class="q-back" onclick="goHome()">← ホームへ</button>
+    <div class="q-header">
+      <div class="q-header-icon">💗</div>
+      <h2>恋愛タイプ診断</h2>
+      <div class="q-progress" id="love-dots"></div>
+      <div class="q-num" id="love-num"></div>
+    </div>
+    <div class="q-text" id="love-qtext"></div>
+    <div class="q-options" id="love-opts"></div>
+  </div>
+  <div id="love-loading" class="loading-wrap" style="display:none">
+    <div class="loading-ring"></div>
+    <div class="loading-txt">診断中...</div>
+  </div>
+  <div id="love-result" class="result-wrap" style="display:none">
+    <button class="result-back" onclick="goHome()">← ホームへ</button>
+    <div id="love-result-content"></div>
+    <button class="retry-btn" onclick="startQuiz('love')">もう一度診断する</button>
+    <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+  </div>
+</div>
+
+<!-- ═══════════════ TRUE SELF QUIZ ═══════════════ -->
+<div id="trueself-screen" class="screen">
+  <div id="trueself-q" class="q-wrap" style="display:none">
+    <button class="q-back" onclick="goHome()">← ホームへ</button>
+    <div class="q-header">
+      <div class="q-header-icon">🌑</div>
+      <h2>本当の自分診断</h2>
+      <div class="q-progress" id="trueself-dots"></div>
+      <div class="q-num" id="trueself-num"></div>
+    </div>
+    <div class="q-text" id="trueself-qtext"></div>
+    <div class="q-options" id="trueself-opts"></div>
+  </div>
+  <div id="trueself-loading" class="loading-wrap" style="display:none">
+    <div class="loading-ring"></div>
+    <div class="loading-txt">深層解析中...</div>
+  </div>
+  <div id="trueself-result" class="result-wrap" style="display:none">
+    <button class="result-back" onclick="goHome()">← ホームへ</button>
+    <div id="trueself-result-content"></div>
+    <button class="retry-btn" onclick="startQuiz('trueself')">もう一度診断する</button>
+    <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+  </div>
+</div>
+
+<!-- ═══════════════ RELATION QUIZ ═══════════════ -->
+<div id="relation-screen" class="screen">
+  <div id="relation-q" class="q-wrap" style="display:none">
+    <button class="q-back" onclick="goHome()">← ホームへ</button>
+    <div class="q-header">
+      <div class="q-header-icon">🕸️</div>
+      <h2>関係性タイプ診断</h2>
+      <div class="q-progress" id="relation-dots"></div>
+      <div class="q-num" id="relation-num"></div>
+    </div>
+    <div class="q-text" id="relation-qtext"></div>
+    <div class="q-options" id="relation-opts"></div>
+  </div>
+  <div id="relation-loading" class="loading-wrap" style="display:none">
+    <div class="loading-ring"></div>
+    <div class="loading-txt">パターン解析中...</div>
+  </div>
+  <div id="relation-result" class="result-wrap" style="display:none">
+    <button class="result-back" onclick="goHome()">← ホームへ</button>
+    <div id="relation-result-content"></div>
+    <button class="retry-btn" onclick="startQuiz('relation')">もう一度診断する</button>
+    <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+  </div>
+</div>
+
+<!-- ═══════════════ THINKING QUIZ ═══════════════ -->
+<div id="thinking-screen" class="screen">
+  <div id="thinking-q" class="q-wrap" style="display:none">
+    <button class="q-back" onclick="goHome()">← ホームへ</button>
+    <div class="q-header">
+      <div class="q-header-icon">⚡</div>
+      <h2>思考タイプ診断</h2>
+      <div class="q-progress" id="thinking-dots"></div>
+      <div class="q-num" id="thinking-num"></div>
+    </div>
+    <div class="q-text" id="thinking-qtext"></div>
+    <div class="q-options" id="thinking-opts"></div>
+  </div>
+  <div id="thinking-loading" class="loading-wrap" style="display:none">
+    <div class="loading-ring"></div>
+    <div class="loading-txt">思考マップ構築中...</div>
+  </div>
+  <div id="thinking-result" class="result-wrap" style="display:none">
+    <button class="result-back" onclick="goHome()">← ホームへ</button>
+    <div id="thinking-result-content"></div>
+    <button class="retry-btn" onclick="startQuiz('thinking')">もう一度診断する</button>
+    <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+  </div>
+</div>
+
+<script>
+// ═══ NAVIGATION ═══
+function openQuiz(type){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(type+'-screen').classList.add('active');
+  startQuiz(type);
+}
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('home-screen').classList.add('active');
+}
+
+// ═══ SHARED ENGINE ═══
+const qState = {};
+
+function startQuiz(type){
+  const cfg = QUIZZES[type];
+  qState[type] = { answers: [], idx: 0 };
+  showSection(type,'q');
+  renderQuestion(type);
+}
+
+function showSection(type, sec){
+  ['q','loading','result'].forEach(s=>{
+    document.getElementById(type+'-'+s).style.display = (s===sec)?'':'none';
+  });
+}
+
+function renderQuestion(type){
+  const cfg = QUIZZES[type];
+  const st  = qState[type];
+  const q   = cfg.questions[st.idx];
+  const total = cfg.questions.length;
+
+  // dots
+  const dotsEl = document.getElementById(type+'-dots');
+  dotsEl.innerHTML = '';
+  for(let i=0;i<total;i++){
+    const d=document.createElement('span');
+    d.className='q-dot'+(i<st.idx?' done':'');
+    dotsEl.appendChild(d);
+  }
+  document.getElementById(type+'-num').textContent = `Q${st.idx+1} / ${total}`;
+  document.getElementById(type+'-qtext').textContent = q.text;
+
+  const optsEl = document.getElementById(type+'-opts');
+  optsEl.innerHTML='';
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='q-opt';
+    btn.textContent=opt.text;
+    btn.onclick=()=>answerQ(type,opt.value);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answerQ(type, value){
+  const st  = qState[type];
+  const cfg = QUIZZES[type];
+  st.answers.push(value);
+  st.idx++;
+  if(st.idx >= cfg.questions.length){
+    showSection(type,'loading');
+    setTimeout(()=>showResult(type), 2000);
+  } else {
+    renderQuestion(type);
+  }
+}
+
+function showResult(type){
+  const cfg = QUIZZES[type];
+  const st  = qState[type];
+  const typeKey = cfg.calcType(st.answers);
+  const res = cfg.types[typeKey];
+  const badge = cfg.badge;
+
+  let html = `
+    <div class="result-badge ${badge}">
+      <div class="result-badge-icon">${res.icon}</div>
+      <div class="result-badge-type">${res.key}</div>
+      <div class="result-badge-name">${res.name}</div>
+      <div class="result-badge-sub">${res.sub}</div>
+    </div>
+    <div class="result-section">
+      <h3>あなたの本質</h3>
+      <p>${res.desc}</p>
+    </div>
+    <div class="result-section">
+      <h3>キーワード</h3>
+      <div class="result-tags">${res.tags.map(t=>`<span class="result-tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="result-section">
+      <h3>強み</h3>
+      <p>${res.strength}</p>
+    </div>
+    <div class="result-section">
+      <h3>注意点</h3>
+      <p>${res.caution}</p>
+    </div>
+  `;
+  if(res.compat){
+    html+=`<div class="result-section"><h3>相性がいいタイプ</h3><p>${res.compat}</p></div>`;
+  }
+
+  document.getElementById(type+'-result-content').innerHTML = html;
+  showSection(type,'result');
+}
+
+// ═══ QUIZ 1: 恋愛タイプ ═══
+const LOVE_TYPES = {
+  A:{key:'TYPE-A',icon:'🛡️',name:'一途な守護者',sub:'Devoted Guardian',
+    desc:'一度好きになると深く愛し、相手を全力で守ろうとするタイプ。感情の起伏は少ないが、愛情は誰よりも深い。嫉妬や独占欲も強いが、それは愛の裏返し。',
+    tags:['誠実','一途','保護本能','深い愛情'],
+    strength:'圧倒的な誠実さと安定感。パートナーに絶大な安心感を与えられる。',
+    caution:'執着が強くなりすぎると相手を縛ってしまうことも。適度な自由を与える意識を。',
+    compat:'自由を大切にしながらも安心感を求めるタイプ（TYPE-D）と好相性。'},
+  B:{key:'TYPE-B',icon:'🔥',name:'情熱の炎',sub:'Passionate Flame',
+    desc:'恋愛に対して真剣でストレート。気持ちを包み隠さず、勢いよく感情を表現する。短期間で深く燃え上がるが、倦怠期に弱い面も。',
+    tags:['情熱的','直情型','行動力','グイグイ系'],
+    strength:'圧倒的なアプローチ力と熱量。相手を惹きつける吸引力がある。',
+    caution:'感情が先走って空回りすることも。相手のペースに合わせる余裕が大切。',
+    compat:'穏やかで受け取り上手なタイプ（TYPE-D）や感受性豊かなタイプ（TYPE-E）と相性◎。'},
+  C:{key:'TYPE-C',icon:'🌬️',name:'自由な風',sub:'Free Spirit',
+    desc:'恋愛においても自分らしさを最優先。束縛されることが苦手で、適度な距離感を保ちながら関係を続けるのが理想。重い空気を嫌い、恋愛もライトに楽しみたい派。',
+    tags:['自由奔放','マイペース','束縛嫌い','クール'],
+    strength:'依存し合わない対等な関係を築ける。相手の個性を尊重する寛大さがある。',
+    caution:'感情表現が少なく、冷たく見られることも。想いは言葉にしないと伝わらない。',
+    compat:'知的で対等な関係を好むタイプ（TYPE-F）と長く続く関係になりやすい。'},
+  D:{key:'TYPE-D',icon:'🌊',name:'穏やかな海',sub:'Calm Ocean',
+    desc:'安定した関係を何より大切にするタイプ。派手さはないが、日常の小さな幸せを積み重ねることが得意。感情を爆発させることは少なく、穏やかに深く愛する。',
+    tags:['安定志向','包容力','縁の下の力持ち','優しさ'],
+    strength:'長期的な関係を育てる力が抜群。日々の生活の中で愛情を積み上げていける。',
+    caution:'争いごとを避けすぎて自分の気持ちを溜め込む傾向あり。不満は早めに伝えて。',
+    compat:'情熱的なタイプ（TYPE-B）や感情表現豊かなタイプ（TYPE-E）を温かく包み込める。'},
+  E:{key:'TYPE-E',icon:'💫',name:'ロマンチスト',sub:'The Romanticist',
+    desc:'恋愛に夢とドラマを求めるタイプ。映画やドラマのような展開を心のどこかで望んでいる。感受性が豊かで、些細なことでも深く感動できるが、現実と理想のギャップに悩むことも。',
+    tags:['夢見がち','感受性豊か','センチメンタル','ドラマチック'],
+    strength:'恋愛をロマンチックに演出する才能。デートや記念日が特別な思い出になる。',
+    caution:'理想が高すぎて現実のパートナーに幻滅することも。完璧を求めすぎず等身大の相手を見て。',
+    compat:'安定感があり現実的なタイプ（TYPE-A・D）が理想とのバランスをとってくれる。'},
+  F:{key:'TYPE-F',icon:'✨',name:'知的な共鳴者',sub:'Intellectual Resonator',
+    desc:'精神的なつながりを何より重視するタイプ。外見より内面、スキンシップより会話。深い対話と相互理解が愛情の証。気が合う相手を見つけるまでに時間がかかるが、一度つながると非常に深い絆を築く。',
+    tags:['知性重視','精神的絆','深い対話','長期思考'],
+    strength:'関係の深みと相互理解力が圧倒的。恋人というより最高のパートナーになれる。',
+    caution:'頭で考えすぎて感情表現が後回しになりがち。たまには素直に「好き」と伝えて。',
+    compat:'知的好奇心旺盛で自立しているタイプ（TYPE-C）と高め合えるベストカップルに。'}
+};
+
+const LOVE_Q = [
+  {text:'好きな人ができたとき、最初にすることは？',options:[
+    {text:'すぐに気持ちを行動で示そうとする',value:'B'},
+    {text:'相手のことをひたすら観察・分析する',value:'F'},
+    {text:'友達に相談しながらじっくり考える',value:'D'},
+    {text:'夢の中でシミュレーションを繰り返す',value:'E'}]},
+  {text:'デートで一番大切にしたいのは？',options:[
+    {text:'二人だけの特別な空間と雰囲気',value:'E'},
+    {text:'会話が弾んで心が繋がる感覚',value:'F'},
+    {text:'相手が楽しんでいるかどうか',value:'D'},
+    {text:'互いに自由でいられること',value:'C'}]},
+  {text:'パートナーが自分に黙って友達と遊んでいた。あなたは？',options:[
+    {text:'めちゃくちゃ心配して何度も連絡してしまう',value:'A'},
+    {text:'なんで言ってくれなかったの？とストレートに伝える',value:'B'},
+    {text:'別に気にしない、自由でいいと思う',value:'C'},
+    {text:'少し寂しいけど何も言わないでおく',value:'D'}]},
+  {text:'恋愛で一番欲しいものは？',options:[
+    {text:'絶対的な安心感と信頼',value:'A'},
+    {text:'ときめきと刺激',value:'B'},
+    {text:'縛られない自由',value:'C'},
+    {text:'静かで穏やかな日常',value:'D'}]},
+  {text:'好きな人への告白スタイルは？',options:[
+    {text:'思い立ったらすぐ、ストレートに',value:'B'},
+    {text:'サプライズを仕掛けて特別な演出で',value:'E'},
+    {text:'じっくり関係を深めてから自然な流れで',value:'F'},
+    {text:'相手の気持ちを確認してから慎重に',value:'D'}]},
+  {text:'連絡頻度について一番近いのは？',options:[
+    {text:'毎日連絡したいし、既読スルーは耐えられない',value:'A'},
+    {text:'気持ちが高まったらすぐ連絡！衝動的',value:'B'},
+    {text:'連絡は少なくてもいい、会った時に全力で',value:'C'},
+    {text:'毎日じゃなくていいけど、ちゃんと返事は欲しい',value:'D'}]},
+  {text:'別れた後のあなたは？',options:[
+    {text:'長い間引きずる。思い出をなかなか消せない',value:'A'},
+    {text:'傷つくが、新しい恋に向かうエネルギーは早い',value:'B'},
+    {text:'さっぱり切り替えられる方だと思う',value:'C'},
+    {text:'しばらく一人でいたくなる',value:'D'}]},
+  {text:'理想のプロポーズは？',options:[
+    {text:'人目を気にしないド派手なサプライズ',value:'B'},
+    {text:'二人だけの特別な場所で、静かに',value:'E'},
+    {text:'プロポーズより自然に「一緒にいよう」という流れ',value:'F'},
+    {text:'婚約指輪と花束、王道がやっぱり好き',value:'E'}]},
+  {text:'嫉妬について一番近いのは？',options:[
+    {text:'嫉妬深い方だと思う、でも隠そうとする',value:'A'},
+    {text:'嫉妬したら正直に言う、むしろ見せる',value:'B'},
+    {text:'嫉妬をほとんどしない',value:'C'},
+    {text:'嫉妬するけど自分の中で消化する',value:'D'}]},
+  {text:'相手に求める一番重要な条件は？',options:[
+    {text:'自分だけを見てくれる一途さ',value:'A'},
+    {text:'一緒にいてドキドキする魅力',value:'B'},
+    {text:'お互いの自由を尊重できる価値観',value:'C'},
+    {text:'一緒にいて落ち着ける穏やかさ',value:'D'}]}
+];
+
+function loveCalc(answers){
+  const count={A:0,B:0,C:0,D:0,E:0,F:0};
+  answers.forEach(a=>count[a]=(count[a]||0)+1);
+  return Object.entries(count).sort((x,y)=>y[1]-x[1])[0][0];
+}
+
+// ═══ QUIZ 2: 本当の自分 ═══
+const TRUE_TYPES = {
+  A:{key:'TYPE-A',icon:'🌑',name:'静かなる革命家',sub:'The Silent Revolutionary',
+    desc:'表向きは穏やかだが、内側には強烈な信念と変革への意志を秘めている。大声で主張するより、行動と結果で世界を変えようとするタイプ。孤独を恐れず、むしろ静寂の中で力を蓄える。',
+    tags:['信念','変革','孤高','内なる炎'],
+    strength:'ぶれない軸と深い洞察力。表面上は穏やかでも、動き出したときの影響力は絶大。',
+    caution:'孤立しすぎると孤独に押しつぶされることも。信頼できる人だけでも心を開いて。',
+    compat:'明るくエネルギーを分けてくれるタイプBと、互いの不足を補い合える。'},
+  B:{key:'TYPE-B',icon:'🌟',name:'光の開拓者',sub:'The Radiant Pioneer',
+    desc:'可能性を信じ、前へ前へと進み続けるタイプ。周囲に光と活力を与えながら、自分自身も常に成長を求める。失敗を恐れず、むしろ失敗から学ぶことを楽しむ。',
+    tags:['挑戦','成長','輝き','楽観主義'],
+    strength:'無限の可能性を信じる力と行動力。周囲を巻き込むカリスマ性がある。',
+    caution:'突っ走りすぎて周りを置いていくことも。立ち止まって仲間のペースを確認して。'},
+  C:{key:'TYPE-C',icon:'🛡️',name:'影の守護者',sub:'The Shadow Protector',
+    desc:'目立つことを好まないが、いざとなれば誰よりも強く大切な人を守れるタイプ。縁の下の力持ちで、チームの安全と安定を陰から支える。信頼される存在だが、自分自身は守られにくい。',
+    tags:['保護','忠誠','縁の下','静かな強さ'],
+    strength:'危機の時に真価を発揮する底力。大切な人への献身は本物。',
+    caution:'自分を犠牲にしすぎる傾向がある。自分自身も大切にする「セルフ守護」が必要。'},
+  D:{key:'TYPE-D',icon:'🌈',name:'自由の旅人',sub:'The Free Wanderer',
+    desc:'心の赴くまま、常に新しい景色を求めて動き続けるタイプ。どんな場所でも自分らしくいられる適応力と、好奇心に従って生きる自由さが本質。',
+    tags:['自由','好奇心','適応力','多様性'],
+    strength:'環境の変化に強く、どこでも自分を活かせる柔軟性。新鮮な視点で場を活性化する。',
+    caution:'一か所に留まれず、深い根を張ることが苦手なことも。じっくり育てる関係の価値も大切に。'},
+  E:{key:'TYPE-E',icon:'🎨',name:'魂の創造者',sub:'The Soul Creator',
+    desc:'感性と創造力が突出したタイプ。見えない世界を表現する衝動を常に内側に持ち、それが外に溢れ出るとき、見る人の心を強く動かす。',
+    tags:['創造性','感性','芸術','深み'],
+    strength:'唯一無二の感性と表現力。世界に「存在しなかったもの」を作り出す力がある。',
+    caution:'感受性が強いぶん、傷つきやすい。自分の感情に溺れないための「逃げ道」を持つこと。'},
+  F:{key:'TYPE-F',icon:'🤝',name:'絆の架け橋',sub:'The Bridge Builder',
+    desc:'人と人を繋ぎ、分断を癒す力を持つタイプ。誰の気持ちも理解しようとする共感力と、対立を和らげる調和の才能を持つ。縁の下で人間関係を支えている。',
+    tags:['共感','調和','橋渡し','縁結び'],
+    strength:'誰とでもフラットに繋がれる共感力。コミュニティの潤滑剤として欠かせない存在。',
+    caution:'全員の味方になろうとして中立に徹しすぎると、自分自身の立場や意見を見失う。'}
+};
+
+const TRUE_Q = [
+  {text:'一人でいる時間があると、あなたは何をしている？',options:[
+    {text:'将来のことや深いテーマをひたすら考える',value:'A'},
+    {text:'新しいことを学んだり挑戦の計画を立てる',value:'B'},
+    {text:'大切な人の近況を気にかけたり連絡する',value:'F'},
+    {text:'創作したり、感じたことを表現する',value:'E'}]},
+  {text:'自分が一番輝いている場面は？',options:[
+    {text:'誰も気づかない問題を静かに解決したとき',value:'A'},
+    {text:'新しいことに挑戦して結果を出したとき',value:'B'},
+    {text:'誰かが困っているときにさっと助けたとき',value:'C'},
+    {text:'自分にしか作れないものを完成させたとき',value:'E'}]},
+  {text:'友達から「あなたって〇〇だよね」と言われるのは？',options:[
+    {text:'不思議、何考えてるかわからない',value:'A'},
+    {text:'エネルギッシュ、いつも動いてる',value:'B'},
+    {text:'頼りになる、いつもそこにいる',value:'C'},
+    {text:'どこにいっても馴染んでる',value:'D'}]},
+  {text:'何かに迷ったとき、最終的に頼るのは？',options:[
+    {text:'自分の直感と信念',value:'A'},
+    {text:'データや経験から導いた論理',value:'B'},
+    {text:'信頼できる人の意見',value:'F'},
+    {text:'自分の感情と感性',value:'E'}]},
+  {text:'あなたの弱点に最も近いのは？',options:[
+    {text:'孤立しやすく、人の力を借りるのが下手',value:'A'},
+    {text:'考えるより先に動いてしまう衝動性',value:'B'},
+    {text:'自分を後回しにしすぎる',value:'C'},
+    {text:'根を下ろすことが苦手',value:'D'}]},
+  {text:'理想の「影響を与えた」場面は？',options:[
+    {text:'行動や結果で静かに時代を変えた',value:'A'},
+    {text:'前線に立って新しい道を切り開いた',value:'B'},
+    {text:'陰で支え、誰かの成功を支えた',value:'C'},
+    {text:'作品や表現で多くの人の心を動かした',value:'E'}]},
+  {text:'あなたにとって「本当の強さ」とは？',options:[
+    {text:'信念をぶらさない意志の力',value:'A'},
+    {text:'挫折してもまた立ち上がる回復力',value:'B'},
+    {text:'自分を犠牲にできる献身',value:'C'},
+    {text:'感情を正直に表現できること',value:'E'}]},
+  {text:'ストレスが溜まったとき、あなたは？',options:[
+    {text:'一人になって静かに内側と向き合う',value:'A'},
+    {text:'何か新しいことに没頭して発散する',value:'B'},
+    {text:'誰かと話してスッキリさせる',value:'F'},
+    {text:'創作や趣味の世界に逃げ込む',value:'E'}]},
+  {text:'あなたが一番恐れていることは？',options:[
+    {text:'信念を曲げること、自分を見失うこと',value:'A'},
+    {text:'成長が止まること、可能性が閉ざされること',value:'B'},
+    {text:'大切な人が傷つくこと',value:'C'},
+    {text:'自分の感性や個性が否定されること',value:'E'}]},
+  {text:'死ぬ前に言いたいことは何？',options:[
+    {text:'「信じた道を歩みきった」',value:'A'},
+    {text:'「やりたいことを全てやった」',value:'B'},
+    {text:'「大切な人を守れた」',value:'C'},
+    {text:'「世界に何かを残せた」',value:'E'}]}
+];
+
+function trueCalc(answers){
+  const count={A:0,B:0,C:0,D:0,E:0,F:0};
+  answers.forEach(a=>count[a]=(count[a]||0)+1);
+  return Object.entries(count).sort((x,y)=>y[1]-x[1])[0][0];
+}
+
+// ═══ QUIZ 3: 関係性タイプ ═══
+const REL_TYPES = {
+  A:{key:'TYPE-A',icon:'👑',name:'カリスマリーダー',sub:'The Charismatic Leader',
+    desc:'自然と人が集まり、方向性を示すことが得意なタイプ。存在感があり、リーダーポジションを求めなくてもなってしまう。影響力があるゆえに責任感も強い。',
+    tags:['リーダーシップ','決断力','影響力','カリスマ'],
+    strength:'場の空気を変える存在感。自分の言葉と行動で周囲を動かす力がある。',
+    caution:'独断的になりやすく、周りが意見を言いづらくなることも。意図的に「聞く場」を作ること。'},
+  B:{key:'TYPE-B',icon:'🤲',name:'縁の下のサポーター',sub:'The Silent Supporter',
+    desc:'表に立つより、誰かを支えることに喜びを感じるタイプ。細やかな気配りと行動力で、チームの土台を作る。感謝されにくい役割だが、いなくなると途端に機能しなくなる。',
+    tags:['サポート','細やかさ','気配り','縁の下'],
+    strength:'周囲の変化を敏感に察知し、先手を打つ行動力。「気づく」力が群を抜いて高い。',
+    caution:'縁の下に徹しすぎて評価されないことも。自分の貢献をもっとアピールしていい。'},
+  C:{key:'TYPE-C',icon:'🌊',name:'自由人',sub:'The Free Soul',
+    desc:'組織や固定された人間関係よりも、流動的なつながりを好むタイプ。特定の集団にべったりとせず、多様なコミュニティを軽やかに渡り歩く。',
+    tags:['自由','マイペース','広い人脈','非依存'],
+    strength:'多様なコミュニティを繋ぐ橋になれる。偏見なく誰とでもフラットに関われる。',
+    caution:'深い関係を築きにくく、孤立することも。選んだ人とは意識的に深く関わる時間を。'},
+  D:{key:'TYPE-D',icon:'🦅',name:'鋭い観察者',sub:'The Sharp Observer',
+    desc:'表面上は静かだが、場の空気と人の本質を鋭く読み取っているタイプ。口数は少ないが、一言一言に重みがある。',
+    tags:['洞察力','観察眼','冷静','深読み'],
+    strength:'場の本質を見抜く観察眼と、的確な一言。周囲が見落とすものに気づける。',
+    caution:'観察しすぎて行動しない・意見を言わないことも。見えているものを言語化してシェアして。'},
+  E:{key:'TYPE-E',icon:'⚖️',name:'調和の調整者',sub:'The Harmony Keeper',
+    desc:'グループの中の摩擦や緊張を和らげ、全員が心地よくいられるようにする調整役。意見をまとめる力と、全体を俯瞰する視点が強み。',
+    tags:['調和','バランス','仲裁','公平'],
+    strength:'誰の立場も理解しようとするフラットな姿勢。対立を建設的な議論に変えられる。',
+    caution:'全員を満足させようとして自分の意見を押し殺しすぎることがある。自分の意見も大切に。'},
+  F:{key:'TYPE-F',icon:'🐺',name:'孤高の一匹狼',sub:'The Lone Wolf',
+    desc:'群れることよりも、一人で深く考え、行動するタイプ。集団に縛られず、自分の判断軸で動く。人間関係の広さより深さを求め、本当に信頼できる少数との絆を大切にする。',
+    tags:['孤高','独立','深い絆','自己完結'],
+    strength:'外部の評価に流されない独自の判断軸。少数への深い忠誠心と信頼関係。',
+    caution:'孤立を招きやすく、助けを求めることが苦手。自分から手を伸ばす勇気も時には必要。'}
+};
+
+const REL_Q = [
+  {text:'グループの中でのあなたのポジションは？',options:[
+    {text:'自然とまとめ役になっていることが多い',value:'A'},
+    {text:'サポートや準備を率先してやる',value:'B'},
+    {text:'特定のポジションにこだわらない',value:'C'},
+    {text:'静かに場全体を見渡している',value:'D'}]},
+  {text:'初対面の人が多い場所でのあなたは？',options:[
+    {text:'積極的に話しかけ、場の中心になる',value:'A'},
+    {text:'まず周りを観察してから動く',value:'D'},
+    {text:'困っている人を見つけてサポートする',value:'B'},
+    {text:'マイペースに自分のペースで動く',value:'C'}]},
+  {text:'仲のいいグループで意見が割れた。あなたは？',options:[
+    {text:'自分の意見を明確に提示してリードする',value:'A'},
+    {text:'全員が納得できる落としどころを探す',value:'E'},
+    {text:'意見を言うより場の空気を読んで合わせる',value:'B'},
+    {text:'静かに観察して本質的な問題を指摘する',value:'D'}]},
+  {text:'友達の数と関係性、どちらを重視する？',options:[
+    {text:'幅広い人脈、多くの人と浅く広く',value:'C'},
+    {text:'少数精鋭、深い絆の友達だけでいい',value:'F'},
+    {text:'人数よりも「必要とされること」が大切',value:'B'},
+    {text:'自然と集まってくる関係が理想',value:'A'}]},
+  {text:'誰かが自分に頼ってきたとき、あなたは？',options:[
+    {text:'全力で応える、頼られることが嬉しい',value:'B'},
+    {text:'できる範囲で、でもしっかりサポートする',value:'E'},
+    {text:'相手が本当に必要なことを見極めてから動く',value:'D'},
+    {text:'自分のペースを崩さない範囲で協力する',value:'C'}]},
+  {text:'チームで成果を出したとき、あなたが感じることは？',options:[
+    {text:'自分がリードした結果だという達成感',value:'A'},
+    {text:'全員が頑張れる環境を作れた満足感',value:'E'},
+    {text:'自分のサポートが役に立った喜び',value:'B'},
+    {text:'チームより個人の成果の方が気になる',value:'F'}]},
+  {text:'人間関係でストレスを感じるのは？',options:[
+    {text:'指示通り動かない人、空気を読めない人',value:'A'},
+    {text:'自分の気遣いに気づかない人',value:'B'},
+    {text:'特定のグループに閉じ込めようとする人',value:'C'},
+    {text:'表面だけで中身がない浅い関係',value:'F'}]},
+  {text:'あなたが人から信頼される理由は？',options:[
+    {text:'言ったことは必ずやり遂げる一貫性',value:'A'},
+    {text:'いつでも気にかけてくれる細やかさ',value:'B'},
+    {text:'偏らないフラットな判断',value:'E'},
+    {text:'鋭いが的確なアドバイス',value:'D'}]},
+  {text:'長期的な人間関係で一番大切なのは？',options:[
+    {text:'互いの成長と切磋琢磨',value:'A'},
+    {text:'何があっても支え合える安心感',value:'B'},
+    {text:'干渉しすぎず自由を尊重し合うこと',value:'C'},
+    {text:'嘘のない正直さと深い理解',value:'F'}]},
+  {text:'あなたにとっての「理想のチーム」は？',options:[
+    {text:'自分が方向性を示し、みんながついてくる',value:'A'},
+    {text:'お互いが得意を活かしフォローし合える',value:'E'},
+    {text:'緩やかなつながりで縛られすぎない',value:'C'},
+    {text:'少数でも深く信頼し合える精鋭チーム',value:'F'}]}
+];
+
+function relCalc(answers){
+  const count={A:0,B:0,C:0,D:0,E:0,F:0};
+  answers.forEach(a=>count[a]=(count[a]||0)+1);
+  return Object.entries(count).sort((x,y)=>y[1]-x[1])[0][0];
+}
+
+// ═══ QUIZ 4: 思考タイプ (2-axis) ═══
+const THINK_TYPES = {
+  NA:{key:'直感×行動',icon:'🚀',name:'革新の旗手',sub:'The Innovation Vanguard',
+    desc:'直感で方向性を掴み、考えるより先に動き出すタイプ。常識の壁を飛び越え、誰も思いつかなかった解決策を実行してしまう。世界を変えるのは、いつもこのタイプ。',
+    tags:['イノベーター','直感行動','先駆者','創造×実行'],
+    strength:'直感×行動の組み合わせは最強の突破力。前例がない道を切り開く。',
+    caution:'計画性が不足しがち。直感の確度を上げるために「少し立ち止まる」練習を。'},
+  NR:{key:'直感×内省',icon:'🌙',name:'神秘の夢想家',sub:'The Mystic Dreamer',
+    desc:'深い直感と内省から、他者には見えない世界を感じ取るタイプ。表に出さないが、内側では壮大なビジョンが広がっている。その洞察は、時代の一歩先を行く。',
+    tags:['ビジョナリー','内省','先見性','神秘'],
+    strength:'誰も気づかないパターンを察知する第六感。深い思索から生まれる独自の世界観。',
+    caution:'内側にこもりすぎてビジョンが外に出ない。表現する手段を持つことで力が開花する。'},
+  LA:{key:'分析×行動',icon:'⚔️',name:'戦略の建築家',sub:'The Strategic Architect',
+    desc:'データと論理で戦略を組み立て、最短ルートで目標を達成するタイプ。感情に流されず、冷静に状況を分析して最適解を実行する。組織の中で最も結果を出すタイプ。',
+    tags:['戦略家','論理×実行','効率','問題解決'],
+    strength:'感情に左右されない冷静な判断力と実行力。複雑な問題をシンプルに解く。',
+    caution:'効率を求めすぎて人間関係の感情面を見落とすことも。数値化できない価値にも目を向けて。'},
+  LR:{key:'分析×内省',icon:'🔭',name:'深淵の哲学者',sub:'The Deep Philosopher',
+    desc:'世界の根本を理解しようと、深く深く考え続けるタイプ。表面的な答えでは満足せず、本質を追い求める。その思考の深さは、時に他者の理解を超える。',
+    tags:['哲学者','深思','本質追求','知の探求者'],
+    strength:'誰よりも深く考え、本質を見抜く思考力。複雑な問題の根本原因を見つけ出す。',
+    caution:'考えすぎて行動が遅れることも。「完璧な答え」を待たずに動き出すことも時には必要。'}
+};
+
+const THINK_Q = [
+  {text:'新しいアイデアはどこから生まれることが多い？',options:[
+    {text:'突然の閃き、理由は後からついてくる',value:'N'},
+    {text:'データや事例を分析して導き出す',value:'L'}]},
+  {text:'問題に直面したとき、まず何をする？',options:[
+    {text:'とりあえず動いてみて、修正していく',value:'A'},
+    {text:'全体像を把握してから動き出す',value:'R'}]},
+  {text:'会議で一番貢献できるのは？',options:[
+    {text:'誰も思いつかないアイデアを出すこと',value:'N'},
+    {text:'論理的に問題を整理して解決策を示すこと',value:'L'}]},
+  {text:'締め切り直前のあなたは？',options:[
+    {text:'ギリギリまで動けないが、最後に一気にやる',value:'R'},
+    {text:'計画通りコツコツ進めているので焦らない',value:'A'}]},
+  {text:'未来について考えるとき、あなたは？',options:[
+    {text:'可能性とビジョンが広がってワクワクする',value:'N'},
+    {text:'リスクと計画を具体的にシミュレーションする',value:'L'}]},
+  {text:'重要な決断をするとき、決め手になるのは？',options:[
+    {text:'「これだ」という直感',value:'N'},
+    {text:'メリット・デメリットを比較した結論',value:'L'}]},
+  {text:'一人でいるとき、頭の中は？',options:[
+    {text:'常にいろんなことを考え、内省している',value:'R'},
+    {text:'次に何をするかを計画・整理している',value:'A'}]},
+  {text:'チャレンジに対するあなたのスタイルは？',options:[
+    {text:'まず飛び込んで、後は何とかなる',value:'A'},
+    {text:'十分に準備してから、万全の状態で臨む',value:'R'}]},
+  {text:'「なぜ？」という問いに対して、あなたは？',options:[
+    {text:'根本的な問いを追い求め、深く考え続ける',value:'R'},
+    {text:'実用的な答えを素早く見つけて次に進む',value:'A'}]},
+  {text:'物事を学ぶとき、一番しっくりくる方法は？',options:[
+    {text:'概念や全体像を直感的に掴んでから深める',value:'N'},
+    {text:'基礎から順序立てて体系的に学ぶ',value:'L'}]},
+  {text:'あなたが一番得意なことは？',options:[
+    {text:'パターンや本質を見抜くこと',value:'N'},
+    {text:'複雑な情報を整理して構造化すること',value:'L'}]},
+  {text:'理想の働き方は？',options:[
+    {text:'自由に動き、試しながら作っていく',value:'A'},
+    {text:'じっくり深く考えて、完成度高く仕上げる',value:'R'}]}
+];
+
+function thinkCalc(answers){
+  let N=0,L=0,A=0,R=0;
+  answers.forEach(a=>{
+    if(a==='N')N++;
+    else if(a==='L')L++;
+    else if(a==='A')A++;
+    else R++;
+  });
+  const axis1 = N>=L ? 'N' : 'L';
+  const axis2 = A>=R ? 'A' : 'R';
+  return axis1+axis2;
+}
+
+// ═══ QUIZ CONFIG ═══
+const QUIZZES = {
+  love:{
+    questions: LOVE_Q,
+    types: LOVE_TYPES,
+    badge: 'badge-rose',
+    calcType: loveCalc
+  },
+  trueself:{
+    questions: TRUE_Q,
+    types: TRUE_TYPES,
+    badge: 'badge-violet',
+    calcType: trueCalc
+  },
+  relation:{
+    questions: REL_Q,
+    types: REL_TYPES,
+    badge: 'badge-blue',
+    calcType: relCalc
+  },
+  thinking:{
+    questions: THINK_Q,
+    types: THINK_TYPES,
+    badge: 'badge-emerald',
+    calcType: thinkCalc
+  }
+};
+</script>
+</body>
+</html>
