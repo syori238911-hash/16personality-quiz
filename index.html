@@ -22,6 +22,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 #name-screen.active { display: flex; }
 #shiju-screen.active { display: flex; }
 #animal-screen.active { display: flex; }
+#teso-screen.active  { display: flex; }
 
 /* ============================================
    HOME SCREEN
@@ -223,6 +224,11 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-card-a:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(249,115,22,0.28); }
 .quiz-card-a .quiz-card-btn { background: linear-gradient(135deg, #f97316, #c2410c); }
 .quiz-card-a .quiz-card-features li::before { color: #f97316; }
+.quiz-card-h::before { background: linear-gradient(90deg, #ec4899, #9d174d); }
+.quiz-card-h { box-shadow: 0 4px 30px rgba(236,72,153,0.12); }
+.quiz-card-h:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(236,72,153,0.28); }
+.quiz-card-h .quiz-card-btn { background: linear-gradient(135deg, #ec4899, #9d174d); }
+.quiz-card-h .quiz-card-features li::before { color: #ec4899; }
 
 /* ============================================
    四柱推命 QUIZ
@@ -840,6 +846,66 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
 .quiz-s .compat-good { background: #d1fae5; color: #065f46; }
 .quiz-s .compat-bad { background: #fee2e2; color: #991b1b; }
 .quiz-s .compat-neutral { background: #f3f4f6; color: #374151; }
+
+/* ============================================
+   HAND READING (手相占い)
+   ============================================ */
+#teso-screen {
+  background: linear-gradient(135deg, #1a0a14 0%, #2d1321 50%, #1a0a14 100%);
+  align-items: flex-start; justify-content: center;
+  padding: 72px 20px 40px;
+}
+.quiz-h .container { background: white; border-radius: 24px; padding: 40px; max-width: 640px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+.quiz-h .screen { display: none; }
+.quiz-h .screen.active { display: block; }
+.quiz-h .badge { display: inline-block; background: #fce7f3; color: #9d174d; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 16px; }
+.quiz-h h1 { font-size: 2rem; color: #1a0a14; margin-bottom: 8px; }
+.quiz-h h1 span { color: #ec4899; }
+.quiz-h .subtitle { color: #6b7280; margin-bottom: 28px; font-size: 0.95rem; }
+.h-back-btn { background: rgba(255,255,255,0.12); border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 0.9rem; position: fixed; top: 20px; left: 20px; padding: 8px 18px; border-radius: 20px; transition: background 0.2s; }
+.h-back-btn:hover { background: rgba(255,255,255,0.2); }
+.h-intro-svg-wrap { display: flex; justify-content: center; margin: 20px 0 24px; }
+.h-hand-note { font-size: 0.78rem; color: #9ca3af; text-align: center; margin-bottom: 18px; line-height: 1.6; }
+.h-hand-select { display: flex; gap: 12px; justify-content: center; margin-bottom: 14px; }
+.h-hand-btn { padding: 12px 28px; border-radius: 50px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+.h-hand-btn-primary { background: linear-gradient(135deg, #ec4899, #9d174d); color: white; border: none; }
+.h-hand-btn-secondary { background: white; color: #9d174d; border: 2px solid #ec4899; }
+.h-hand-btn:hover { opacity: 0.85; transform: scale(1.03); }
+.h-step-progress { display: flex; gap: 8px; margin-bottom: 16px; }
+.h-step-dot { height: 6px; border-radius: 3px; flex: 1; background: #f3f4f6; transition: background 0.3s; }
+.h-step-dot.done { background: #ec4899; }
+.h-step-dot.active { background: #f9a8d4; }
+.h-step-lineinfo { display: inline-flex; align-items: center; gap: 6px; background: #fce7f3; color: #9d174d; padding: 4px 12px; border-radius: 14px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
+.h-step-q { font-size: 1.05rem; font-weight: 700; color: #1a0a14; margin-bottom: 6px; }
+.h-step-qdesc { font-size: 0.82rem; color: #9ca3af; margin-bottom: 20px; }
+.h-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.h-opt-card { background: #fafafa; border: 2px solid #e5e7eb; border-radius: 16px; padding: 14px 10px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.h-opt-card:hover { border-color: #f9a8d4; background: #fdf2f8; transform: scale(1.02); }
+.h-opt-card:active { transform: scale(0.98); }
+.h-opt-label { font-size: 0.78rem; color: #374151; line-height: 1.4; font-weight: 600; }
+.h-opt-note { font-size: 0.7rem; color: #9ca3af; }
+.h-loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 20px; }
+.h-loading-palm { animation: hFloat 2s ease-in-out infinite; }
+@keyframes hFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.h-loading-text { color: #6b7280; font-size: 0.95rem; letter-spacing: 0.1em; }
+.h-result-type-card { background: linear-gradient(135deg, #be185d, #9d174d); color: white; border-radius: 20px; padding: 28px 24px; text-align: center; margin-bottom: 20px; }
+.h-result-icon { font-size: 3.5rem; margin-bottom: 8px; }
+.h-result-type-label { font-size: 0.75rem; letter-spacing: 0.15em; opacity: 0.8; margin-bottom: 4px; }
+.h-result-type-name { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; }
+.h-result-type-desc { font-size: 0.9rem; opacity: 0.85; }
+.h-line-results { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.h-line-result-card { background: #fafafa; border-radius: 14px; padding: 16px; border-left: 4px solid #ec4899; }
+.h-line-result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.h-line-result-name { font-size: 0.8rem; font-weight: 700; color: #9d174d; letter-spacing: 0.05em; }
+.h-line-result-choice { font-size: 0.72rem; color: #9ca3af; margin-left: auto; }
+.h-line-result-text { font-size: 0.88rem; color: #374151; line-height: 1.65; }
+.h-result-section { background: #fdf2f8; border-radius: 14px; padding: 16px; margin-bottom: 12px; border: 1px solid #fbcfe8; }
+.h-result-section h3 { font-size: 0.8rem; font-weight: 700; color: #9d174d; margin-bottom: 8px; letter-spacing: 0.1em; }
+.h-result-section p { font-size: 0.9rem; color: #374151; line-height: 1.7; }
+.h-retry-btn { display: block; width: 100%; padding: 14px; border-radius: 50px; font-size: 1rem; font-weight: bold; color: white; background: linear-gradient(135deg, #ec4899, #9d174d); border: none; cursor: pointer; text-align: center; margin-top: 16px; transition: opacity 0.2s; }
+.h-retry-btn:hover { opacity: 0.85; }
+.h-home-btn { display: block; width: 100%; padding: 12px; border-radius: 50px; font-size: 0.9rem; color: #6b7280; background: #f3f4f6; border: none; cursor: pointer; text-align: center; margin-top: 10px; transition: background 0.2s; }
+.h-home-btn:hover { background: #e5e7eb; }
 </style>
 </head>
 <body>
@@ -959,6 +1025,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
         <li>相性診断つき</li>
       </ul>
       <button class="quiz-card-btn">診断スタート →</button>
+    </div>
+
+    <!-- 手相占い -->
+    <div class="quiz-card quiz-card-h" onclick="openQuiz('teso')">
+      <div class="quiz-card-icon">🖐️</div>
+      <h2>手相占い</h2>
+      <p class="card-desc">手のひらの線が語るあなたの運命</p>
+      <ul class="quiz-card-features">
+        <li>感情線・知能線・生命線・運命線</li>
+        <li>線の形を選ぶだけで診断完了</li>
+        <li>4タイプの総合鑑定結果</li>
+      </ul>
+      <button class="quiz-card-btn">手相を診断する →</button>
     </div>
 
     <!-- 算命学 -->
@@ -1466,6 +1545,76 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; }
           <button class="btn-primary" style="background:linear-gradient(135deg,#f97316,#c2410c);width:100%;padding:14px" onclick="anShowScreen('input')">もう一度診断する</button>
           <button class="btn-outline" onclick="goHome()">ホームへ戻る</button>
         </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     HAND READING (手相占い)
+     =================================================== -->
+<div id="teso-screen" class="app-screen">
+  <button class="h-back-btn" onclick="goHome()">← ホーム</button>
+  <div class="quiz-h">
+    <div class="container">
+
+      <!-- INTRO -->
+      <div class="screen active" id="h-screen-intro">
+        <div class="badge">🖐️ 手相占い</div>
+        <h1>手相<span>診断</span></h1>
+        <p class="subtitle">4つの主要線からあなたの運命と個性を読み解く</p>
+        <div class="h-intro-svg-wrap">
+          <svg viewBox="0 0 100 130" width="120" height="156" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 20 125 C 6 122 4 106 6 86 C 8 66 10 50 12 38 C 12 26 17 20 23 20 C 29 20 31 26 31 36 C 31 24 36 18 42 18 C 48 18 50 24 50 34 C 50 22 55 16 61 16 C 67 16 69 22 69 30 C 71 20 77 18 82 23 C 87 28 84 40 79 46 C 85 50 88 64 86 80 C 84 100 76 122 46 126 Z" fill="#f5dfc0" stroke="#c9906a" stroke-width="1.5"/>
+            <path d="M 76,52 C 58,50 40,50 26,50 C 22,50 18,50 14,54" stroke="#e11d48" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M 14,62 C 28,62 50,64 66,68 C 70,69 74,72 76,76" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M 32,36 C 46,52 48,72 40,92 C 34,108 22,118 16,122" stroke="#059669" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M 48,122 C 48,104 46,82 44,62 C 43,50 42,40 42,32" stroke="#b45309" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <p class="h-hand-note">手のひらを見ながら、各線の形に近いものを選んでください</p>
+        <p style="text-align:center;font-weight:bold;color:#1a0a14;margin-bottom:14px">どちらの手を診断しますか？</p>
+        <div class="h-hand-select">
+          <button class="h-hand-btn h-hand-btn-primary" onclick="hStart('right')">右手（利き手）</button>
+          <button class="h-hand-btn h-hand-btn-secondary" onclick="hStart('left')">左手</button>
+        </div>
+        <p class="h-hand-note">利き手＝現在と未来の運命　／　逆の手＝生まれ持った素質</p>
+      </div>
+
+      <!-- STEP -->
+      <div class="screen" id="h-screen-step">
+        <div class="h-step-header">
+          <div class="h-step-progress" id="h-progress"></div>
+          <div class="h-step-lineinfo" id="h-step-lineinfo"></div>
+          <div class="h-step-q" id="h-step-q"></div>
+          <div class="h-step-qdesc" id="h-step-qdesc"></div>
+        </div>
+        <div class="h-options-grid" id="h-options-grid"></div>
+      </div>
+
+      <!-- LOADING -->
+      <div class="screen" id="h-screen-loading">
+        <div class="h-loading-wrap">
+          <div class="h-loading-palm">
+            <svg viewBox="0 0 100 130" width="80" height="104" fill="none">
+              <path d="M 20 125 C 6 122 4 106 6 86 C 8 66 10 50 12 38 C 12 26 17 20 23 20 C 29 20 31 26 31 36 C 31 24 36 18 42 18 C 48 18 50 24 50 34 C 50 22 55 16 61 16 C 67 16 69 22 69 30 C 71 20 77 18 82 23 C 87 28 84 40 79 46 C 85 50 88 64 86 80 C 84 100 76 122 46 126 Z" fill="#f5dfc0" stroke="#c9906a" stroke-width="1.5"/>
+              <path d="M 76,52 C 58,50 40,50 26,50 C 22,50 18,50 14,54" stroke="#e11d48" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+              <path d="M 14,62 C 28,62 50,64 66,68" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+              <path d="M 32,36 C 46,52 48,72 40,92 C 34,108 22,118 16,122" stroke="#059669" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+              <path d="M 48,122 C 48,104 46,82 44,62 C 43,50 42,40 42,32" stroke="#b45309" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="h-loading-text">手相を解読中…</div>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="screen" id="h-screen-result">
+        <div id="h-result-content"></div>
+        <button class="h-retry-btn" onclick="hStart(hCurrentHand)">もう一度診断する</button>
+        <button class="h-home-btn" onclick="goHome()">ホームに戻る</button>
       </div>
 
     </div>
@@ -3298,6 +3447,226 @@ function anCalcAndShow(year, month, day) {
 }
 
 document.addEventListener('DOMContentLoaded', () => { anInitDropdowns(); });
+
+// ============================================
+// HAND READING (手相占い)
+// ============================================
+
+let hCurrentHand = 'right';
+let hAnswers     = [];
+let hStepIdx     = 0;
+
+const H_HAND_PATH = "M 20 125 C 6 122 4 106 6 86 C 8 66 10 50 12 38 C 12 26 17 20 23 20 C 29 20 31 26 31 36 C 31 24 36 18 42 18 C 48 18 50 24 50 34 C 50 22 55 16 61 16 C 67 16 69 22 69 30 C 71 20 77 18 82 23 C 87 28 84 40 79 46 C 85 50 88 64 86 80 C 84 100 76 122 46 126 Z";
+
+function hSVG(path, color, dashed) {
+  const stroke = dashed ? `stroke-dasharray="5 4"` : '';
+  return `<svg viewBox="0 0 100 130" width="72" height="94" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="${H_HAND_PATH}" fill="#f5dfc0" stroke="#d4a574" stroke-width="1.5"/>
+    ${path ? `<path d="${path}" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" ${stroke}/>` : ''}
+  </svg>`;
+}
+
+const H_LINES = [
+  { name:'感情線', icon:'❤️', color:'#e11d48',
+    desc:'小指側から始まり、横に走る線（上から1本目）',
+    options:[
+      { label:'長く、人差し指の方まで伸びる', note:'一途で情熱的',
+        path:'M 76,52 C 58,48 38,46 26,46 C 22,45 18,44 14,42' },
+      { label:'真っ直ぐ横に走る', note:'現実的でクール',
+        path:'M 76,52 L 14,52' },
+      { label:'短い（中指あたりで終わる）', note:'直感的・行動派',
+        path:'M 76,52 C 65,50 56,50 48,50 C 44,50 40,52 38,54' },
+      { label:'先端が2本に分かれている', note:'柔軟・二面性',
+        path:'M 76,52 C 58,50 40,50 28,48 C 24,46 20,42 16,38 M 28,48 C 26,50 22,54 18,56' }
+    ]
+  },
+  { name:'知能線', icon:'🧠', color:'#7c3aed',
+    desc:'親指側から始まり、横に走る線（感情線の下）',
+    options:[
+      { label:'長く、下方向に大きく曲がる', note:'創造的・直感型',
+        path:'M 14,62 C 30,62 52,65 65,72 C 70,75 74,80 76,86' },
+      { label:'真っ直ぐ長く伸びている', note:'論理的・分析派',
+        path:'M 14,62 L 76,60' },
+      { label:'短い（手の中央あたりで終わる）', note:'即断・行動型',
+        path:'M 14,62 C 28,62 40,62 50,64' },
+      { label:'生命線と同じ起点から始まる', note:'慎重・デリケート',
+        path:'M 14,62 C 14,60 18,56 24,52 M 24,52 C 34,60 52,62 70,62' }
+    ]
+  },
+  { name:'生命線', icon:'💚', color:'#059669',
+    desc:'親指のまわりを囲むように弧を描く線',
+    options:[
+      { label:'大きく弧を描き、手の中央まで広がる', note:'体力旺盛・行動力◎',
+        path:'M 32,36 C 48,52 50,72 42,92 C 36,110 24,120 18,124' },
+      { label:'狭く、親指に沿って走っている', note:'繊細・内向タイプ',
+        path:'M 32,36 C 28,52 24,72 20,92 C 18,110 16,120 14,124' },
+      { label:'途中に切れ目がある', note:'大きな転機あり',
+        path:'M 32,36 C 46,52 48,66 40,78 M 38,86 C 34,100 24,114 18,124' },
+      { label:'2本並んでいる（二重生命線）', note:'強い守護・回復力',
+        path:'M 32,36 C 48,52 50,72 42,92 C 36,110 24,120 18,124 M 27,38 C 42,54 44,74 36,94 C 30,110 20,120 16,124' }
+    ]
+  },
+  { name:'運命線', icon:'⭐', color:'#b45309',
+    desc:'手首から中指へ向かって縦に走る線',
+    options:[
+      { label:'手首から中指へ、くっきり長く続く', note:'強い使命感',
+        path:'M 48,122 C 48,104 46,84 44,64 C 43,52 42,42 42,32' },
+      { label:'手のひらの途中から始まっている', note:'後半運上昇',
+        path:'M 48,84 C 47,72 46,62 44,52 C 43,44 42,40 42,32' },
+      { label:'ほとんど見えない（薄い・ない）', note:'自由な魂',
+        path:'M 48,122 C 48,104 46,84 44,64 C 43,52 42,42 42,32', dashed:true },
+      { label:'複数本ある、または枝分かれ', note:'多才・マルチ',
+        path:'M 48,122 C 48,104 46,84 44,64 C 43,52 42,42 42,32 M 44,72 C 52,62 58,56 62,52 M 44,80 C 38,70 34,64 30,60' }
+    ]
+  }
+];
+
+// Scoring: [emo, log, act, sen]
+const H_SCORES = [
+  [[3,0,1,1],[0,3,1,1],[1,1,3,0],[2,1,0,2]],
+  [[2,0,0,3],[0,3,2,0],[0,0,3,1],[1,1,0,3]],
+  [[1,0,3,0],[1,0,0,3],[2,0,2,1],[0,1,2,2]],
+  [[0,2,2,0],[2,0,1,1],[1,0,3,1],[1,1,1,2]]
+];
+
+const H_TYPES = [
+  { icon:'❤️', name:'情熱の持ち主', sub:'Passionate Soul',
+    desc:'感情が豊かで愛情深く情熱的なタイプ。人を強く引きつける魅力があり、深い絆を大切にします。感情で動くことが多く、それが最大の強みです。',
+    strength:'深い共感力と愛情表現の豊かさ。人の心を動かす情熱がある。',
+    advice:'感情に流されすぎることも。客観的な視点を忘れずに。',
+    lucky:'赤・ピンク・暖色系。情熱的な色があなたの運気を高める。' },
+  { icon:'🧠', name:'知性の使者', sub:'The Intellectual',
+    desc:'論理的で分析力に優れたタイプ。感情よりも理性で判断し、計画的に物事を進めます。冷静な判断力と洞察力が武器です。',
+    strength:'冷静な判断力と緻密な分析力。感情に流されない一貫性。',
+    advice:'頭で考えすぎて行動が遅くなることも。直感を信じる練習も大切。',
+    lucky:'青・紫・白。知性を象徴する色が運気を後押しする。' },
+  { icon:'⚡', name:'行動力の人', sub:'The Action Taker',
+    desc:'考えるより先に動くエネルギーに満ちたタイプ。チャンスを逃さず失敗を恐れずに前進します。行動力と実行力がこのタイプの本質です。',
+    strength:'スピードと実行力。チャンスを即座につかむ反射神経。',
+    advice:'計画なしに動くことも多い。立ち止まって考える習慣を持って。',
+    lucky:'オレンジ・黄色・金。活動的な色があなたの運を引き寄せる。' },
+  { icon:'🌸', name:'感受性の化身', sub:'The Sensitive Soul',
+    desc:'繊細で深い感受性を持つタイプ。人の感情や空気の変化を敏感に感じ取ります。芸術的センスや共感力が高く、独特の世界観を持ちます。',
+    strength:'他者への深い共感と繊細な感受性。独特の芸術的センス。',
+    advice:'傷つきやすいので、自分を守る適切な距離感を持つことも大切。',
+    lucky:'淡いラベンダー・ライトブルー・白。繊細な色があなたに合っている。' }
+];
+
+const H_LINE_READINGS = [
+  ['長く指の方まで延びる感情線は、深く純粋な愛情を示します。一度心を開いた相手には誠実で一途。感情表現が豊かで、人との絆を大切にするロマンチストです。',
+   '直線的な感情線は、感情をコントロールするクールさの証。現実的で冷静、恋愛でも友情でも依存せず対等な関係を好みます。',
+   '短い感情線は、感情をシンプルに表現するタイプを示します。複雑に考えずストレートに行動するので、裏表がなく付き合いやすい人です。',
+   '二股の感情線は、感情と理性のバランスが取れているサインです。状況に応じて柔軟に対応できる適応力と二面性を持っています。'],
+  ['下方向に曲がる知能線は、豊かな想像力と直感的な思考の証。芸術や創造的な分野で力を発揮し、論理より感性で判断するタイプです。',
+   '真っ直ぐな知能線は、論理的・分析的な思考の象徴。データや事実に基づいて考え、計画的に行動するタイプです。',
+   '短い知能線は、素早い判断力の証。深く考えるより直感で判断し、迷いなく行動できる決断力があります。',
+   '生命線と同じ起点を持つ知能線は、慎重で繊細な思考を示します。丁寧に考え、細部まで気を配れる几帳面なタイプです。'],
+  ['大きく弧を描く生命線は、旺盛な生命力と行動力の証。体力・精神力ともに強く、積極的に外の世界へ飛び出すタイプです。',
+   '親指に沿う狭い生命線は、繊細で内向的なエネルギーを示します。量より質を大切にし、深く静かな充実を好むタイプです。',
+   '切れ目のある生命線は、人生に大きな転機があることを示唆します。変化に適応し、むしろ転機を力に変える強さがあります。',
+   '二重生命線は、強力な守護と回復力の証です。体力・精神力ともにダブルの力があり、困難からの回復が早い強さがあります。'],
+  ['くっきりした運命線は、使命感の強さと目標の明確さを示します。自分の道を信じて進む意志の力と、周囲を引っ張るリーダーシップが宿っています。',
+   '途中から始まる運命線は、自分の力で運命を切り開くタイプ。若い頃の苦労が後に大きな実を結び、努力と経験で運勢が開花します。',
+   '薄い運命線は、特定の「定められた道」より自由な可能性に開かれているサインです。自分でルールを作り、自由に道を選べる魂の持ち主です。',
+   '複数の運命線は多才と多方面の才能を示します。一つのことに縛られず、複数の才能を活かせる器を持っています。']
+];
+
+function hShowScreen(id) {
+  document.querySelectorAll('#teso-screen .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('h-screen-' + id).classList.add('active');
+}
+
+function hStart(hand) {
+  hCurrentHand = hand;
+  hAnswers = [];
+  hStepIdx = 0;
+  hShowScreen('step');
+  hRenderStep();
+}
+
+function hRenderStep() {
+  const line  = H_LINES[hStepIdx];
+  let dots = '';
+  for (let i = 0; i < H_LINES.length; i++) {
+    const cls = i < hStepIdx ? 'done' : (i === hStepIdx ? 'active' : '');
+    dots += `<div class="h-step-dot ${cls}"></div>`;
+  }
+  document.getElementById('h-progress').innerHTML = dots;
+  document.getElementById('h-step-lineinfo').textContent = `${line.icon} ${line.name} (${hStepIdx + 1}/4)`;
+  document.getElementById('h-step-q').textContent = `あなたの${line.name}に最も近いのはどれ？`;
+  document.getElementById('h-step-qdesc').textContent = line.desc;
+
+  const grid = document.getElementById('h-options-grid');
+  grid.innerHTML = '';
+  line.options.forEach((opt, i) => {
+    const svg = hSVG(opt.path, line.color, !!opt.dashed);
+    const card = document.createElement('div');
+    card.className = 'h-opt-card';
+    card.innerHTML = `<div>${svg}</div><div class="h-opt-label">${opt.label}</div><div class="h-opt-note">${opt.note}</div>`;
+    card.onclick = () => hAnswer(i);
+    grid.appendChild(card);
+  });
+}
+
+function hAnswer(idx) {
+  hAnswers.push(idx);
+  hStepIdx++;
+  if (hStepIdx >= H_LINES.length) {
+    hShowScreen('loading');
+    setTimeout(hShowResult, 2200);
+  } else {
+    hRenderStep();
+  }
+}
+
+function hShowResult() {
+  const scores = [0, 0, 0, 0];
+  hAnswers.forEach((ans, li) => { H_SCORES[li][ans].forEach((v, j) => { scores[j] += v; }); });
+  const typeIdx = scores.indexOf(Math.max(...scores));
+  const type    = H_TYPES[typeIdx];
+
+  let linesHtml = '';
+  hAnswers.forEach((ans, li) => {
+    const line = H_LINES[li];
+    const opt  = line.options[ans];
+    linesHtml += `
+      <div class="h-line-result-card">
+        <div class="h-line-result-header">
+          <span>${line.icon}</span>
+          <span class="h-line-result-name">${line.name}</span>
+          <span class="h-line-result-choice">${opt.note}</span>
+        </div>
+        <div class="h-line-result-text">${H_LINE_READINGS[li][ans]}</div>
+      </div>`;
+  });
+
+  document.getElementById('h-result-content').innerHTML = `
+    <div class="h-result-type-card">
+      <div class="h-result-icon">${type.icon}</div>
+      <div class="h-result-type-label">あなたの手相タイプ</div>
+      <div class="h-result-type-name">${type.name}</div>
+      <div class="h-result-type-desc">${type.sub}</div>
+    </div>
+    <div class="h-line-results">${linesHtml}</div>
+    <div class="h-result-section">
+      <h3>✨ 総合メッセージ</h3>
+      <p>${type.desc}</p>
+    </div>
+    <div class="h-result-section" style="background:#f0fdf4;border-color:#bbf7d0">
+      <h3 style="color:#065f46">💪 あなたの強み</h3>
+      <p>${type.strength}</p>
+    </div>
+    <div class="h-result-section" style="background:#fffbeb;border-color:#fde68a">
+      <h3 style="color:#92400e">🌟 ラッキーカラー</h3>
+      <p>${type.lucky}</p>
+    </div>
+    <div class="h-result-section" style="background:#fff1f2;border-color:#fecdd3">
+      <h3 style="color:#991b1b">📝 アドバイス</h3>
+      <p>${type.advice}</p>
+    </div>
+  `;
+  hShowScreen('result');
+}
 
 // ============================================
 // NAME FORTUNE (姓名判断)
