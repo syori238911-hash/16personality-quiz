@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRROR — このひとのすべてを知る</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0916;
+  --surface:#110d1c;
+  --surface2:#170f24;
+  --border:#251843;
+  --accent:#a78bfa;
+  --accent2:#7c3aed;
+  --gold:#f59e0b;
+  --text:#ede8f9;
+  --muted:#6b5f8a;
+  --soft:#2d1f4e;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Hiragino Sans','Yu Gothic',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.2rem}
+.screen.active{display:flex}
+
+/* ═══ INTRO ═══ */
+#intro{
+  background:radial-gradient(ellipse at 50% 30%, #1e0d3a 0%, #0c0916 65%);
+  gap:0;
+}
+.intro-eyebrow{
+  font-size:.68rem;letter-spacing:.35em;color:var(--accent);
+  text-transform:uppercase;margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.intro-eyebrow::before,.intro-eyebrow::after{
+  content:'';flex:1;max-width:40px;height:1px;background:var(--accent2);opacity:.5;
+}
+.intro-title{
+  font-size:5.5rem;font-weight:900;letter-spacing:.08em;
+  text-align:center;line-height:.95;margin-bottom:.6rem;
+  background:linear-gradient(135deg,#c4b5fd,#7c3aed,#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.intro-tagline{
+  font-size:.88rem;color:var(--muted);letter-spacing:.12em;
+  text-align:center;margin-bottom:3rem;
+}
+.intro-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:1.6rem 1.8rem;max-width:360px;
+  margin-bottom:2.5rem;line-height:2;font-size:.92rem;color:#b0a0d0;
+  text-align:center;
+}
+.intro-card b{color:var(--accent)}
+.intro-start{
+  background:linear-gradient(135deg,#7c3aed,#4c1d95);
+  color:#fff;border:none;
+  padding:1rem 3.5rem;border-radius:50px;
+  font-size:1rem;font-weight:800;letter-spacing:.08em;
+  cursor:pointer;transition:.25s;
+}
+.intro-start:hover{filter:brightness(1.15);transform:scale(1.04)}
+.intro-note{margin-top:1.4rem;font-size:.72rem;color:#2e2040;letter-spacing:.05em;text-align:center}
+
+/* ═══ QUIZ ═══ */
+#quiz{justify-content:flex-start;padding-top:3.5rem}
+.q-shell{width:100%;max-width:520px}
+.q-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.6rem;
+}
+.q-label{font-size:.68rem;letter-spacing:.2em;color:var(--muted)}
+.q-counter{font-size:.75rem;color:var(--accent)}
+.q-bar-bg{height:2px;background:var(--soft);border-radius:999px;margin-bottom:2.2rem;overflow:hidden}
+.q-bar-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .4s ease;box-shadow:0 0 10px rgba(167,139,250,.4)}
+.q-section-tag{
+  display:inline-block;font-size:.65rem;letter-spacing:.15em;
+  color:var(--accent);background:rgba(124,58,237,.12);
+  border:1px solid rgba(124,58,237,.25);
+  padding:.25rem .8rem;border-radius:999px;margin-bottom:.9rem;
+}
+.q-text{font-size:1.15rem;font-weight:800;line-height:1.7;color:#fff;margin-bottom:1.8rem}
+.q-opts{display:flex;flex-direction:column;gap:.75rem}
+.q-opt{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1rem 1.3rem;
+  cursor:pointer;font-size:.93rem;color:#9d8cc0;
+  text-align:left;transition:.2s;line-height:1.55;
+}
+.q-opt:hover{border-color:var(--accent);color:#fff;background:var(--surface2)}
+.q-opt:active{transform:scale(.99)}
+
+/* ═══ LOADING ═══ */
+#loading{background:var(--bg);gap:1.8rem}
+.load-label{font-size:.7rem;letter-spacing:.25em;color:var(--muted)}
+.load-orb{
+  width:56px;height:56px;border-radius:50%;
+  border:2px solid var(--soft);
+  border-top-color:var(--accent);
+  animation:spin 1.2s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-items{font-size:.78rem;color:#2e2040;letter-spacing:.08em;text-align:center;line-height:2.2;font-family:monospace}
+.load-item-on{color:var(--accent)!important}
+
+/* ═══ RESULT ═══ */
+#result{justify-content:flex-start;padding-top:3rem;padding-bottom:5rem}
+.r-shell{width:100%;max-width:520px}
+.r-header-note{
+  font-size:.65rem;letter-spacing:.15em;color:var(--muted);
+  text-align:center;margin-bottom:1.5rem;
+}
+
+/* TYPE CARD */
+.r-type-card{
+  background:linear-gradient(135deg,#1e0d3a,#2d1060);
+  border:1px solid rgba(167,139,250,.25);
+  border-radius:20px;padding:2rem 1.8rem;
+  margin-bottom:1.2rem;text-align:center;position:relative;overflow:hidden;
+}
+.r-type-card::after{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.2),transparent 70%);
+  pointer-events:none;
+}
+.r-type-glyph{font-size:3.2rem;margin-bottom:.6rem}
+.r-type-tag{font-size:.65rem;letter-spacing:.2em;color:var(--accent);margin-bottom:.4rem}
+.r-type-name{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:.4rem;line-height:1.2}
+.r-type-sub{font-size:.8rem;color:#7c6aa6;margin-bottom:1.1rem;letter-spacing:.05em}
+.r-type-desc{font-size:.9rem;color:#c4b5e8;line-height:1.85;text-align:left}
+
+/* SECTION */
+.r-sec{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:.9rem;
+}
+.r-sec-title{
+  font-size:.68rem;letter-spacing:.2em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.r-sec-title::before{content:'';width:12px;height:1px;background:var(--accent);flex-shrink:0}
+
+/* 5 DIMENSIONS */
+.dim-rows{display:flex;flex-direction:column;gap:.75rem}
+.dim-row{display:flex;align-items:center;gap:.9rem}
+.dim-label{font-size:.78rem;color:#8b7ab8;width:5.5rem;flex-shrink:0;text-align:right}
+.dim-bar-bg{flex:1;height:7px;background:#1e1630;border-radius:999px;overflow:hidden}
+.dim-bar-fill{height:100%;border-radius:999px;transition:width 1.2s ease}
+.dim-pct{font-size:.72rem;color:var(--muted);width:2.5rem;text-align:right;flex-shrink:0}
+
+/* LISTS */
+.r-list{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.r-list-item{
+  font-size:.88rem;color:#c4b5e8;line-height:1.6;
+  padding:.5rem .9rem;background:var(--surface2);
+  border-radius:8px;border-left:2px solid var(--accent2);
+}
+.r-list-item.r-warn{border-left-color:#ef4444;color:#fca5a5;background:#1a0505}
+.r-list-item::before{margin-right:.5rem}
+.r-list-item.r-plus::before{content:'＋';color:var(--accent)}
+.r-list-item.r-warn::before{content:'✕';color:#ef4444}
+.r-list-item.r-dot::before{content:'◆';color:var(--accent);font-size:.55rem;vertical-align:middle}
+
+/* TRUTH BLOCK */
+.r-truth{font-size:.92rem;color:#e2d9f3;line-height:1.9}
+.r-truth b{color:var(--accent)}
+
+/* MESSAGE */
+.r-message{
+  background:linear-gradient(135deg,#0f0820,#1a0d30);
+  border:1px solid rgba(167,139,250,.2);
+  border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:.9rem;
+  font-size:.9rem;color:#c4b5e8;line-height:1.9;font-style:italic;
+  position:relative;
+}
+.r-message::before{
+  content:'"\2018\2018';position:absolute;
+  top:.5rem;left:.8rem;font-size:2.5rem;color:rgba(167,139,250,.12);
+  font-style:normal;line-height:1;
+}
+
+/* ONE-WORD */
+.r-oneword-wrap{text-align:center;padding:.8rem}
+.r-oneword{
+  font-size:2.5rem;font-weight:900;letter-spacing:.05em;
+  background:linear-gradient(135deg,#c4b5fd,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.r-oneword-note{font-size:.75rem;color:var(--muted);margin-top:.5rem}
+
+/* ACTIONS */
+.r-btns{display:flex;flex-direction:column;gap:.8rem;margin-top:2rem}
+.r-btn-main{
+  background:linear-gradient(135deg,#7c3aed,#4c1d95);
+  color:#fff;border:none;padding:1rem;border-radius:12px;
+  font-size:1rem;font-weight:800;cursor:pointer;transition:.2s;letter-spacing:.05em;
+}
+.r-btn-main:hover{filter:brightness(1.1)}
+.r-btn-sub{
+  background:transparent;color:var(--muted);
+  border:1px solid var(--border);
+  padding:.85rem;border-radius:12px;
+  font-size:.88rem;cursor:pointer;transition:.2s;
+}
+.r-btn-sub:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro" class="screen active">
+  <div class="intro-eyebrow">Personal Deep Analysis</div>
+  <div class="intro-title">MIRROR</div>
+  <div class="intro-tagline">このひとのすべてを、知る</div>
+  <div class="intro-card">
+    20の問いに正直に答えるだけで、<br>
+    <b>内面・恋愛・弱点・本音・隠れた欲求</b><br>
+    すべてが可視化される。<br><br>
+    これはあなたを写す鏡だ。
+  </div>
+  <button class="intro-start" onclick="qStart()">診断をはじめる</button>
+  <div class="intro-note">正直に答えるほど、精度は上がる</div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quiz" class="screen">
+  <div class="q-shell">
+    <div class="q-top">
+      <div class="q-label" id="q-section-label">SECTION 1</div>
+      <div class="q-counter" id="q-counter">1 / 20</div>
+    </div>
+    <div class="q-bar-bg"><div class="q-bar-fill" id="q-bar" style="width:0%"></div></div>
+    <div class="q-section-tag" id="q-tag">内面・感情</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-opts" id="q-opts"></div>
+  </div>
+</div>
+
+<!-- ═══ LOADING ═══ -->
+<div id="loading" class="screen">
+  <div class="load-label" id="load-label">深層解析中</div>
+  <div class="load-orb"></div>
+  <div class="load-items" id="load-items">
+    <div>感情パターンを照合中…</div>
+    <div>恋愛傾向を分析中…</div>
+    <div>深層心理を解読中…</div>
+    <div>本音レイヤーを抽出中…</div>
+    <div>地雷ポイントを特定中…</div>
+    <div>プロファイルを生成中…</div>
+  </div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div id="result" class="screen">
+  <div class="r-shell">
+    <div class="r-header-note">MIRROR — PERSONAL PROFILE ANALYSIS</div>
+    <div id="r-content"></div>
+    <div class="r-btns">
+      <button class="r-btn-main" onclick="qStart()">もう一度診断する</button>
+      <button class="r-btn-sub" onclick="goIntro()">最初に戻る</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── QUESTIONS ───
+const SECTIONS = ['内面・感情','恋愛・絆','価値観・行動','本音・深層'];
+const QS = [
+  // SEC0 内面・感情
+  {sec:0, text:'一人の時間は自分にとって？',opts:[
+    {t:'欠かせない充電タイム',v:'B'},
+    {t:'好きだけど寂しくもなる',v:'A'},
+    {t:'できるだけ短くしたい',v:'C'},
+    {t:'一人でも大勢でもどちらでもいい',v:'D'}]},
+  {sec:0, text:'傷ついたとき、どうする？',opts:[
+    {t:'誰かに話して気持ちを整理する',v:'A'},
+    {t:'一人でしばらく考え込む',v:'B'},
+    {t:'忘れようと行動しまくる',v:'C'},
+    {t:'時間をかけてゆっくり回復する',v:'D'}]},
+  {sec:0, text:'怒ったとき、あなたは？',opts:[
+    {t:'顔に出るが言葉にしにくい',v:'A'},
+    {t:'黙って態度で示す',v:'B'},
+    {t:'はっきり言う',v:'C'},
+    {t:'飲み込んでじっと耐える',v:'D'}]},
+  {sec:0, text:'悩みがあるとき、相手にどうしてほしい？',opts:[
+    {t:'話を聞いてほしい（解決より共感）',v:'A'},
+    {t:'一緒に考えてほしい',v:'B'},
+    {t:'一人にしておいてほしい',v:'C'},
+    {t:'そっと気にかけてほしい（聞かないで）',v:'D'}]},
+  {sec:0, text:'自分の一番の弱点は？',opts:[
+    {t:'感情に流されやすい',v:'A'},
+    {t:'考えすぎて動けなくなる',v:'B'},
+    {t:'深く考えず突っ走ってしまう',v:'C'},
+    {t:'人を優先しすぎて自分を後回しにする',v:'D'}]},
+
+  // SEC1 恋愛・絆
+  {sec:1, text:'好きな人にする愛情表現は？',opts:[
+    {t:'「好き」「ありがとう」と言葉で伝える',v:'A'},
+    {t:'そばにいる・スキンシップで伝える',v:'B'},
+    {t:'行動やプレゼントで示す',v:'C'},
+    {t:'相手のことを優先して気を遣う',v:'D'}]},
+  {sec:1, text:'嫉妬については？',opts:[
+    {t:'する、でも言えない（一人で消化）',v:'A'},
+    {t:'ほとんどしない',v:'B'},
+    {t:'する、そして言う（直接型）',v:'C'},
+    {t:'する、でも内側にしまって距離を置く',v:'D'}]},
+  {sec:1, text:'恋愛で一番大切にしたいのは？',opts:[
+    {t:'一緒にいてドキドキする感覚',v:'A'},
+    {t:'深い信頼と精神的なつながり',v:'B'},
+    {t:'お互いの自由と対等な関係',v:'C'},
+    {t:'安心できる穏やかで安定した関係',v:'D'}]},
+  {sec:1, text:'好きな人への「好き」を伝えるのは？',opts:[
+    {t:'言葉でちゃんと伝えたい',v:'A'},
+    {t:'行動や態度で伝わればいい',v:'B'},
+    {t:'相手から先に言ってくれる方が好き',v:'C'},
+    {t:'二人だけにわかる空気で伝えたい',v:'D'}]},
+  {sec:1, text:'信頼するまでに時間はかかる？',opts:[
+    {t:'わりとすぐ信じる（オープン）',v:'A'},
+    {t:'ある程度時間がかかる',v:'B'},
+    {t:'かなり時間がかかる（慎重）',v:'C'},
+    {t:'基本的に最初は壁を作る',v:'D'}]},
+
+  // SEC2 価値観・行動
+  {sec:2, text:'友達はどんなタイプが多い？',opts:[
+    {t:'賑やかで明るい人たち',v:'A'},
+    {t:'話が深くできる少数精鋭',v:'B'},
+    {t:'いろんなタイプがバラバラ',v:'C'},
+    {t:'長年の付き合いがある数人',v:'D'}]},
+  {sec:2, text:'将来のことを考えると？',opts:[
+    {t:'ワクワクする。可能性を感じる',v:'A'},
+    {t:'不安もあるがちゃんと考えてる',v:'B'},
+    {t:'あまり考えない。今を生きてる',v:'C'},
+    {t:'考えすぎて不安になることがある',v:'D'}]},
+  {sec:2, text:'「この人と合うな」と感じる瞬間は？',opts:[
+    {t:'話が盛り上がって時間を忘れたとき',v:'A'},
+    {t:'沈黙が気にならないとき',v:'B'},
+    {t:'価値観や考え方が似てると気づいたとき',v:'C'},
+    {t:'自然体でいられると感じたとき',v:'D'}]},
+  {sec:2, text:'新しい人と仲良くなるとき？',opts:[
+    {t:'割と自分から話しかける',v:'A'},
+    {t:'相手が話しかけてくれるのを待つ',v:'B'},
+    {t:'状況と気分によって変わる',v:'C'},
+    {t:'共通の友達を介してじっくり仲良くなる',v:'D'}]},
+  {sec:2, text:'理想の休日は？',opts:[
+    {t:'友達や好きな人とわいわいする',v:'A'},
+    {t:'家でゆっくり、好きなことをする',v:'B'},
+    {t:'どこかに出かけて新しい発見をする',v:'C'},
+    {t:'大切な人と静かな時間を過ごす',v:'D'}]},
+
+  // SEC3 本音・深層
+  {sec:3, text:'SNSとの付き合い方は？',opts:[
+    {t:'積極的に使う。発信もする',v:'A'},
+    {t:'見る専門、発信はほぼしない',v:'B'},
+    {t:'使うけどリアルの繋がり優先',v:'C'},
+    {t:'できるだけ距離を置いている',v:'D'}]},
+  {sec:3, text:'誰かに「ありがとう」と言われたとき？',opts:[
+    {t:'素直にとても嬉しい',v:'A'},
+    {t:'照れくさい、どう反応すればいいか迷う',v:'B'},
+    {t:'当たり前のことをしただけと思う',v:'C'},
+    {t:'その人のことがもっと好きになる',v:'D'}]},
+  {sec:3, text:'自分のことが一番わかってる、と思う？',opts:[
+    {t:'まあわかってる方だと思う',v:'A'},
+    {t:'わかってるようでわかってない',v:'B'},
+    {t:'わりとわかってない、意外な自分がある',v:'C'},
+    {t:'深く考えるとわからなくなる',v:'D'}]},
+  {sec:3, text:'一番「自分らしい」と思う瞬間は？',opts:[
+    {t:'好きな人や友達と笑っているとき',v:'A'},
+    {t:'一人で考えたり創ったりしているとき',v:'B'},
+    {t:'新しいことに挑戦しているとき',v:'C'},
+    {t:'大切な人を支えられたとき',v:'D'}]},
+  {sec:3, text:'あなたが一番怖いのは？',opts:[
+    {t:'誰かに嫌われること',v:'A'},
+    {t:'自分自身を見失うこと',v:'B'},
+    {t:'後悔して終わること',v:'C'},
+    {t:'大切な人を失うこと',v:'D'}]},
+  {sec:3, text:'最後に。今、自分を一言で表すなら？',opts:[
+    {t:'感情的',v:'A'},
+    {t:'内省的',v:'B'},
+    {t:'行動的',v:'C'},
+    {t:'献身的',v:'D'}]},
+];
+
+// ─── TYPES ───
+const TYPES = {
+  A:{
+    glyph:'🌊',
+    name:'温かい核を持つ感情家',
+    sub:'The Emotional Core',
+    desc:'感情の解像度が人より数段高い。他人の些細な変化にすぐ気づき、喜びも悲しみも深く感じる。その感受性は最大の武器であり、同時に最大の弱点でもある。傷つきやすいが、それはそれだけ本気で生きているということだ。人を惹きつける温かさの正体は、この深い感情にある。',
+    dims:[
+      {label:'共感力',pct:94,c:'#a78bfa'},
+      {label:'感情表現',pct:81,c:'#f59e0b'},
+      {label:'論理性',pct:42,c:'#60a5fa'},
+      {label:'行動力',pct:63,c:'#34d399'},
+      {label:'絆の深さ',pct:88,c:'#f472b6'},
+    ],
+    love:['相手の感情の変化に敏感で、機嫌が悪いとすぐ気づく','言葉で「好き」「ありがとう」を言ってくれると一番嬉しい','放置されることが一番つらい。連絡は定期的に','この人が本気になったら、全力で愛する'],
+    warn:['気持ちを確認せず「察してくれ」でいると傷つく','感情を揺さぶる言い方をすると長く引きずる','「気にしすぎ」は禁句。本当に気にしているので'],
+    truth:'表向きは感情豊かに見えるが、<b>本当に傷ついたときほど黙る</b>。静かになったときのほうが、実は深刻だ。そして普段言えないことを、誰も見ていないところで考えている。',
+    strength:'人の気持ちに寄り添う力が圧倒的。この人のそばにいると「わかってもらえてる」と感じる。',
+    oneword:'深情け',
+    message:'感情的すぎると思われることを恐れているかもしれないけど、その感受性はこの人の一番の財産。ちゃんと伝えれば、必ず届く人がいる。',
+  },
+  B:{
+    glyph:'🌑',
+    name:'深い水を持つ観察者',
+    sub:'The Silent Depth',
+    desc:'表に出ている量の何倍もの思考が内側で動いている。口数は少ないが、見落としがない。場の空気、相手の言葉の裏、関係性の変化——全部見えている。ただ言わないだけだ。信頼するまでに時間がかかるが、一度信じた相手への忠誠心は誰より深い。',
+    dims:[
+      {label:'共感力',pct:68,c:'#a78bfa'},
+      {label:'感情表現',pct:35,c:'#f59e0b'},
+      {label:'論理性',pct:89,c:'#60a5fa'},
+      {label:'行動力',pct:51,c:'#34d399'},
+      {label:'絆の深さ',pct:92,c:'#f472b6'},
+    ],
+    love:['最初は壁があるが、それが溶けたときの深さは別格','言葉より行動で気持ちを伝える。サプライズやそばにいることが愛情表現','「わかってもらえない」と思うと静かに離れていく','この人の本音を聞けるのは、本当に限られた人だけ'],
+    warn:['「なんで話してくれないの？」の圧は逆効果','感情的に詰め寄ると壁が高くなるだけ','浅い関係に時間を割かせると消耗させる'],
+    truth:'内省しすぎて<b>自分の本音が自分でもわからなくなる</b>ことがある。「どうしたい？」と聞かれると一番困る。なぜなら本当に、まだ整理できていないから。',
+    strength:'人が言語化できないことを言語化する力。「それだ」と思わせる一言を、時機をみて放てる。',
+    oneword:'深海',
+    message:'全部一人で抱え込まなくていい。この人の中にあるものは、きちんと言葉にしたら絶対に伝わる。勇気を持って、ほんの少しだけ開いてみて。',
+  },
+  C:{
+    glyph:'⚡',
+    name:'今を生きる直感の人',
+    sub:'The Present Flame',
+    desc:'考えるより先に感じ、感じたら動く。計画より感覚、安定より刺激、深さより広さ。エネルギーが高く、その場の熱量でその場が変わる。傷の回復も早く、切り替えが速い。自由であることが存在の根幹で、縛られることを何より嫌う。',
+    dims:[
+      {label:'共感力',pct:62,c:'#a78bfa'},
+      {label:'感情表現',pct:77,c:'#f59e0b'},
+      {label:'論理性',pct:55,c:'#60a5fa'},
+      {label:'行動力',pct:95,c:'#34d399'},
+      {label:'絆の深さ',pct:58,c:'#f472b6'},
+    ],
+    love:['重すぎる関係は苦手。対等で自由な関係が理想','感情の波が激しい。テンションの高低差は大きい','好きになると全力。でも冷めるのも比較的早い','束縛や管理をすると一気に離れる'],
+    warn:['「なんで連絡しないの」の詰めは禁物','マイペースを乱すと機嫌が崩れる','「もっと真剣に考えて」は伝わりにくい言い方'],
+    truth:'自由に見えるが、<b>本当は誰かにわかってほしいという気持ちが強い</b>。ただその欲求を認めることが怖くて、行動でごまかしている部分がある。',
+    strength:'どんな状況でも前に進むエネルギー。この人がいると場が動く。可能性を信じて動き続ける力が本物。',
+    oneword:'衝動',
+    message:'「深く考えない」と思われることがあるかもしれないけど、この人の直感は本物の精度を持っている。もう少しだけ、その直感を信じていい。',
+  },
+  D:{
+    glyph:'🌿',
+    name:'選んだ人への深い忠誠者',
+    sub:'The Deep Loyalty',
+    desc:'誰にでも全力で向き合うわけじゃない。「この人」と決めたら、静かに、でも誰よりも深く大切にする。自分より相手を優先しがちで、それが時に自分を傷つける。関係の深さに命をかけるタイプで、浅いつながりには消耗を感じる。',
+    dims:[
+      {label:'共感力',pct:85,c:'#a78bfa'},
+      {label:'感情表現',pct:44,c:'#f59e0b'},
+      {label:'論理性',pct:66,c:'#60a5fa'},
+      {label:'行動力',pct:56,c:'#34d399'},
+      {label:'絆の深さ',pct:98,c:'#f472b6'},
+    ],
+    love:['愛情は行動で示す。相手のために動くことが愛の証','感情表現は少ないが、愛情の総量は誰より多い','「当たり前」にされると静かに傷ついている','長期的な関係を育てるのが得意。最初より後半に輝く'],
+    warn:['感謝の言葉を忘れると、黙って消耗し続ける','この人の優しさを利用しようとする人には鋭く気づく','「あなたはどうしたい？」を聞かないと自分を犠牲にし続ける'],
+    truth:'人を優先しすぎて、<b>自分の本音を二番目にし続けている</b>。「自分はいい」が口癖になっているが、本当は「自分も大切にしてほしい」と思っている。それを言えないのが、この人の一番の課題だ。',
+    strength:'一度決めたら揺るがない忠誠心と献身。この人に「大切にされている」と感じると、その人の人生が変わる。',
+    oneword:'深根',
+    message:'自分を後回しにしすぎている。この人の優しさは本物だけど、まず自分自身を大切にしないと、いつか空になる。あなたのことを大切にしていい。',
+  }
+};
+
+// ─── STATE ───
+let qIdx = 0, answers = [];
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goIntro(){ showScreen('intro'); }
+
+function qStart(){
+  qIdx=0; answers=[];
+  showScreen('quiz');
+  renderQ();
+}
+
+function renderQ(){
+  const q = QS[qIdx];
+  const pct = (qIdx/QS.length)*100;
+  document.getElementById('q-bar').style.width = pct+'%';
+  document.getElementById('q-counter').textContent = (qIdx+1)+' / '+QS.length;
+  document.getElementById('q-section-label').textContent = 'SECTION '+(q.sec+1);
+  document.getElementById('q-tag').textContent = SECTIONS[q.sec];
+  document.getElementById('q-text').textContent = q.text;
+
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  q.opts.forEach(o=>{
+    const b = document.createElement('button');
+    b.className='q-opt';
+    b.textContent = o.t;
+    b.onclick = ()=>pick(o.v);
+    opts.appendChild(b);
+  });
+}
+
+function pick(v){
+  answers.push(v);
+  qIdx++;
+  if(qIdx >= QS.length){
+    showScreen('loading');
+    runLoading();
+  } else {
+    renderQ();
+  }
+}
+
+function runLoading(){
+  const items = document.querySelectorAll('#load-items div');
+  const phases = ['感情パターンを照合中','恋愛傾向を解析中','深層心理を抽出中','プロファイル生成中'];
+  let i=0;
+  items.forEach(el=>el.style.color='');
+  const iv = setInterval(()=>{
+    if(i<items.length) items[i].style.color='#a78bfa';
+    document.getElementById('load-label').textContent = phases[Math.min(i, phases.length-1)];
+    i++;
+    if(i > items.length+1){
+      clearInterval(iv);
+      buildResult();
+      showScreen('result');
+    }
+  }, 350);
+}
+
+function calcType(){
+  const cnt={A:0,B:0,C:0,D:0};
+  answers.forEach(v=>{ cnt[v]=(cnt[v]||0)+1; });
+  return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+function buildResult(){
+  const key = calcType();
+  const t = TYPES[key];
+
+  // dims
+  const dimHtml = t.dims.map(d=>`
+    <div class="dim-row">
+      <div class="dim-label">${d.label}</div>
+      <div class="dim-bar-bg"><div class="dim-bar-fill" style="width:${d.pct}%;background:${d.c}"></div></div>
+      <div class="dim-pct">${d.pct}%</div>
+    </div>`).join('');
+
+  // love
+  const loveHtml = t.love.map(l=>`<li class="r-list-item r-plus">${l}</li>`).join('');
+
+  // warn
+  const warnHtml = t.warn.map(w=>`<li class="r-list-item r-warn">${w}</li>`).join('');
+
+  document.getElementById('r-content').innerHTML = `
+    <div class="r-type-card">
+      <div class="r-type-tag">TYPE ${key} — CORE PROFILE</div>
+      <div class="r-type-glyph">${t.glyph}</div>
+      <div class="r-type-name">${t.name}</div>
+      <div class="r-type-sub">${t.sub}</div>
+      <div class="r-type-desc">${t.desc}</div>
+    </div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">5つの特性スコア</div>
+      <div class="dim-rows">${dimHtml}</div>
+    </div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">恋愛のトリセツ</div>
+      <ul class="r-list">${loveHtml}</ul>
+    </div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">やってはいけないこと</div>
+      <ul class="r-list">${warnHtml}</ul>
+    </div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">外から見えない本音</div>
+      <div class="r-truth">${t.truth}</div>
+    </div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">この人の一番の強み</div>
+      <div class="r-truth">${t.strength}</div>
+    </div>
+
+    <div class="r-message">${t.message}</div>
+
+    <div class="r-sec">
+      <div class="r-sec-title">この人を一言で言うと</div>
+      <div class="r-oneword-wrap">
+        <div class="r-oneword">「${t.oneword}」</div>
+        <div class="r-oneword-note">— ${t.name} —</div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
