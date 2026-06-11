@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GUILTY — お前の闇を暴く</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080808;
+  --surface:#111;
+  --border:#1e1e1e;
+  --red:#dc2626;
+  --red-dark:#7f1d1d;
+  --red-glow:rgba(220,38,38,0.15);
+  --text:#e5e5e5;
+  --muted:#555;
+  --green:#22c55e;
+  --amber:#f59e0b;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Hiragino Sans','Yu Gothic',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── SCREEN SYSTEM ── */
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.2rem}
+.screen.active{display:flex}
+
+/* ── SCANLINE EFFECT ── */
+body::before{
+  content:'';
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ══════════════ INTRO ══════════════ */
+#intro{
+  background:radial-gradient(ellipse at center, #1a0000 0%, #080808 70%);
+  gap:0;
+}
+.intro-tag{
+  font-size:.7rem;
+  letter-spacing:.3em;
+  color:var(--red);
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+  border:1px solid var(--red-dark);
+  padding:.3rem 1rem;
+  border-radius:2px;
+  animation:blink 1.8s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.intro-title{
+  font-size:5rem;
+  font-weight:900;
+  letter-spacing:.05em;
+  color:#fff;
+  text-align:center;
+  line-height:1;
+  margin-bottom:.4rem;
+  text-shadow:0 0 40px rgba(220,38,38,0.5);
+}
+.intro-title span{color:var(--red)}
+.intro-sub{
+  font-size:.85rem;
+  color:var(--muted);
+  letter-spacing:.15em;
+  text-align:center;
+  margin-bottom:3rem;
+}
+.intro-desc{
+  max-width:360px;
+  text-align:center;
+  font-size:.95rem;
+  color:#999;
+  line-height:1.9;
+  margin-bottom:2.5rem;
+  border:1px solid #1e1e1e;
+  padding:1.2rem 1.4rem;
+  border-radius:8px;
+  background:#0d0d0d;
+}
+.intro-desc b{color:var(--red)}
+.start-btn{
+  background:var(--red);
+  color:#fff;
+  border:none;
+  padding:1rem 3rem;
+  font-size:1.1rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  border-radius:4px;
+  cursor:pointer;
+  transition:.2s;
+  text-transform:uppercase;
+}
+.start-btn:hover{background:#b91c1c;transform:scale(1.04)}
+.start-btn:active{transform:scale(.97)}
+.intro-warning{
+  margin-top:1.5rem;
+  font-size:.7rem;
+  color:#333;
+  letter-spacing:.05em;
+}
+
+/* ══════════════ QUIZ ══════════════ */
+#quiz{
+  justify-content:flex-start;
+  padding-top:3rem;
+}
+.q-wrap{width:100%;max-width:500px}
+.q-progress-bar-bg{
+  height:3px;
+  background:#1a1a1a;
+  border-radius:999px;
+  margin-bottom:2rem;
+  overflow:hidden;
+}
+.q-progress-bar-fill{
+  height:100%;
+  background:var(--red);
+  border-radius:999px;
+  transition:width .5s ease;
+  box-shadow:0 0 8px rgba(220,38,38,0.6);
+}
+.q-count{
+  font-size:.7rem;
+  color:var(--red);
+  letter-spacing:.2em;
+  margin-bottom:.8rem;
+  text-transform:uppercase;
+}
+.q-text{
+  font-size:1.2rem;
+  font-weight:800;
+  line-height:1.7;
+  color:#fff;
+  margin-bottom:2rem;
+}
+.q-opts{display:flex;flex-direction:column;gap:.8rem}
+.q-opt{
+  background:#0d0d0d;
+  border:1px solid #1e1e1e;
+  border-radius:6px;
+  padding:1rem 1.2rem;
+  cursor:pointer;
+  font-size:.95rem;
+  color:#aaa;
+  text-align:left;
+  transition:.2s;
+  line-height:1.5;
+}
+.q-opt:hover{border-color:var(--red);color:#fff;background:#130000}
+.q-opt:active{transform:scale(.99)}
+
+/* ══════════════ LOADING ══════════════ */
+#loading{
+  background:var(--bg);
+  gap:1.5rem;
+}
+.load-title{
+  font-size:.8rem;
+  letter-spacing:.25em;
+  color:var(--red);
+  text-transform:uppercase;
+}
+.load-ring{
+  width:60px;height:60px;
+  border:2px solid #1e1e1e;
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-lines{
+  font-size:.78rem;
+  color:#333;
+  letter-spacing:.1em;
+  text-align:center;
+  line-height:2;
+  font-family:monospace;
+}
+.load-line-active{color:var(--red) !important}
+
+/* ══════════════ RESULT ══════════════ */
+#result{
+  justify-content:flex-start;
+  padding-top:3rem;
+  padding-bottom:4rem;
+}
+.r-wrap{width:100%;max-width:500px}
+
+.r-file-header{
+  font-size:.65rem;
+  color:#333;
+  letter-spacing:.15em;
+  text-align:right;
+  margin-bottom:1rem;
+  font-family:monospace;
+}
+.r-type-block{
+  border:1px solid var(--red-dark);
+  border-radius:8px;
+  background:#0d0000;
+  padding:1.8rem 1.6rem;
+  margin-bottom:1.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.r-type-block::before{
+  content:'GUILTY';
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-20deg);
+  font-size:4.5rem;
+  font-weight:900;
+  color:rgba(220,38,38,0.08);
+  letter-spacing:.1em;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.r-type-tag{
+  font-size:.65rem;
+  letter-spacing:.2em;
+  color:var(--red);
+  text-transform:uppercase;
+  margin-bottom:.5rem;
+}
+.r-type-icon{font-size:2.8rem;margin-bottom:.6rem}
+.r-type-name{font-size:1.6rem;font-weight:900;color:#fff;margin-bottom:.3rem;line-height:1.2}
+.r-type-sub{font-size:.82rem;color:#666;letter-spacing:.05em;margin-bottom:1rem}
+.r-type-desc{font-size:.9rem;color:#bbb;line-height:1.8}
+
+.r-section{
+  background:#0d0d0d;
+  border:1px solid #1e1e1e;
+  border-radius:8px;
+  padding:1.3rem 1.4rem;
+  margin-bottom:1rem;
+}
+.r-section-label{
+  font-size:.65rem;
+  letter-spacing:.2em;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:.8rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.r-section-label::before{
+  content:'';
+  display:inline-block;
+  width:8px;height:1px;
+  background:var(--red);
+}
+.r-charges{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.r-charge{
+  font-size:.88rem;
+  color:#ccc;
+  padding:.4rem .8rem;
+  background:#111;
+  border-left:2px solid var(--red-dark);
+  border-radius:0 4px 4px 0;
+  line-height:1.5;
+}
+.r-charge::before{content:'▸ '}
+
+.r-verdict{
+  font-size:.9rem;
+  color:#e5e5e5;
+  line-height:1.85;
+  font-style:italic;
+}
+.r-verdict b{color:var(--red);font-style:normal}
+
+.r-meter{margin-top:.8rem}
+.r-meter-row{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  margin-bottom:.6rem;
+}
+.r-meter-label{font-size:.75rem;color:#777;width:5.5rem;flex-shrink:0;text-align:right}
+.r-meter-bg{flex:1;height:6px;background:#1a1a1a;border-radius:999px;overflow:hidden}
+.r-meter-fill{height:100%;border-radius:999px}
+.r-meter-pct{font-size:.72rem;color:#555;width:2.5rem;text-align:right}
+
+.r-rehab{
+  text-align:center;
+  padding:1.2rem;
+  border:1px dashed #2a0a0a;
+  border-radius:8px;
+  margin-top:.5rem;
+}
+.r-rehab-num{
+  font-size:3rem;
+  font-weight:900;
+  color:var(--red);
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.r-rehab-label{font-size:.75rem;color:#555;letter-spacing:.1em}
+
+.r-actions{
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  margin-top:1.8rem;
+}
+.r-retry-btn{
+  background:var(--red);
+  color:#fff;
+  border:none;
+  padding:1rem;
+  border-radius:6px;
+  font-size:1rem;
+  font-weight:800;
+  cursor:pointer;
+  letter-spacing:.05em;
+  transition:.2s;
+}
+.r-retry-btn:hover{background:#b91c1c}
+.r-share-note{
+  font-size:.75rem;
+  color:#333;
+  text-align:center;
+  letter-spacing:.05em;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro" class="screen active">
+  <div class="intro-tag">🔴 CLASSIFIED — NEGATIVE ANALYSIS</div>
+  <div class="intro-title">GUIL<span>TY</span></div>
+  <div class="intro-sub">お前の闇を暴く調査サイト</div>
+  <div class="intro-desc">
+    12の尋問に答えよ。<br>
+    <b>逃げ場はない。</b><br><br>
+    建前は要らない。<br>
+    正直に答えた者だけが、<br>
+    本当の自分を知ることができる。
+  </div>
+  <button class="start-btn" onclick="startQuiz()">尋問を開始する</button>
+  <div class="intro-warning">※ 診断結果は笑って受け取ること。傷ついても責任は取れない。</div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quiz" class="screen">
+  <div class="q-wrap">
+    <div class="q-progress-bar-bg">
+      <div class="q-progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="q-count" id="q-count">Q1 / 12</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-opts" id="q-opts"></div>
+  </div>
+</div>
+
+<!-- ═══ LOADING ═══ -->
+<div id="loading" class="screen">
+  <div class="load-title" id="load-phase">データ収集中</div>
+  <div class="load-ring"></div>
+  <div class="load-lines" id="load-lines">
+    <div>過去の言動を分析中...</div>
+    <div>言い訳パターンを照合中...</div>
+    <div>黒歴史データベースと照合中...</div>
+    <div>心の闇を定量化中...</div>
+    <div>逃げ癖の測定中...</div>
+    <div>更生の可能性を計算中...</div>
+  </div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div id="result" class="screen">
+  <div class="r-wrap">
+    <div class="r-file-header">CASE FILE — GUILTY VERDICT / ANALYSIS COMPLETE</div>
+    <div id="r-content"></div>
+    <div class="r-actions">
+      <button class="r-retry-btn" onclick="startQuiz()">もう一度尋問を受ける</button>
+      <div class="r-share-note">このサイトはお前だけのために存在する</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { text:'朝、目覚ましが鳴ったとき。', opts:[
+    {t:'即起きる（本当か？）', v:'A'},
+    {t:'5分だけ…を3回繰り返す', v:'B'},
+    {t:'気づいたら2時間後', v:'C'},
+    {t:'そもそも目覚ましをかけない哲学派', v:'D'}]},
+  { text:'やらなきゃいけないことがあるとき。', opts:[
+    {t:'すぐやる（なら診断不要では）', v:'A'},
+    {t:'「あとで」と言い続けて締め切り前日に本気を出す', v:'B'},
+    {t:'締め切りが来てもやらずに相手を待たせる', v:'C'},
+    {t:'「なんとかなる」と信じてガチで何もしない', v:'D'}]},
+  { text:'友達に誘われたけど行きたくないとき。', opts:[
+    {t:'正直に「行けない」と断る', v:'A'},
+    {t:'「体調が悪くて…」と嘘をつく', v:'B'},
+    {t:'既読スルーして数日後に謝る', v:'C'},
+    {t:'OKしておいて当日にドタキャン', v:'D'}]},
+  { text:'自分のことをどう思ってる？', opts:[
+    {t:'まあまあ好き', v:'A'},
+    {t:'嫌いな部分もあるけど受け入れてる', v:'B'},
+    {t:'割と自己嫌悪気味', v:'C'},
+    {t:'誰より自分が好き（それはそれで問題）', v:'D'}]},
+  { text:'他人がSNSで充実した投稿をしてるのを見たとき。', opts:[
+    {t:'素直に「いいな」と思えていいねする', v:'A'},
+    {t:'少しモヤっとするがいいねはする', v:'B'},
+    {t:'見ないようにミュートする', v:'C'},
+    {t:'プロフから全部遡ってチェックする', v:'D'}]},
+  { text:'LINEのメッセージが来たとき。', opts:[
+    {t:'すぐ返す', v:'A'},
+    {t:'後で返そうと思って忘れて3日後に気づく', v:'B'},
+    {t:'読んだけど返すタイミングを失って放置', v:'C'},
+    {t:'通知は切ってある。全部既読スルー', v:'D'}]},
+  { text:'お金の管理は？', opts:[
+    {t:'家計簿つけてる', v:'A'},
+    {t:'衝動買いが多いがなんとかなってる', v:'B'},
+    {t:'気づいたら消えてるが原因不明', v:'C'},
+    {t:'残高を確認するのが怖くて見ない', v:'D'}]},
+  { text:'誰かに怒ったとき、どうする？', opts:[
+    {t:'その場でちゃんと言う', v:'A'},
+    {t:'言えなくて黙って態度で示す', v:'B'},
+    {t:'全部飲み込んで後で爆発する', v:'C'},
+    {t:'引きずって数日間ぶすっとする', v:'D'}]},
+  { text:'将来のことを考えると？', opts:[
+    {t:'楽しみでわくわくしてる', v:'A'},
+    {t:'不安はあるがちゃんと考えてる', v:'B'},
+    {t:'考えないようにしている', v:'C'},
+    {t:'考えると眠れなくなるから封印してる', v:'D'}]},
+  { text:'自分の悪口を言ってた人がいると知ったら？', opts:[
+    {t:'まあそういう人もいる、で終わり', v:'A'},
+    {t:'じわじわ落ち込む', v:'B'},
+    {t:'誰が言ったか突き止めようとする', v:'C'},
+    {t:'倍返しのシミュレーションを30分する', v:'D'}]},
+  { text:'正直に言うと、自分の一番の問題は？', opts:[
+    {t:'面倒くさがり', v:'A'},
+    {t:'気にしすぎ・考えすぎ', v:'B'},
+    {t:'行動できない・動き出せない', v:'C'},
+    {t:'他人を信用できない', v:'D'}]},
+  { text:'最後に。今この瞬間、何を考えてる？', opts:[
+    {t:'この診断の結果（素直）', v:'A'},
+    {t:'全然別のこと（集中力ゼロ）', v:'B'},
+    {t:'特になにも考えてない（廃人）', v:'C'},
+    {t:'なんか怖い（深層心理に何かある）', v:'D'}]},
+];
+
+const TYPES = {
+  A: {
+    icon:'🪞',
+    name:'自己完結型ナルシスト',
+    sub:'The Unconscious Narcissist',
+    desc:'悪気はまったくない。それが最大の罪。「正直に答えた」と思っているお前の回答は、すでに無意識のフィルターを通している。自分が一番正しいと思っているわけではないが、他人が間違っていると思っている。微妙に違うが、結果は同じだ。',
+    charges:[
+      '自分のことを「普通の人間」だと思っている（誤認識）',
+      '他人への期待値が高く、勝手に裏切られている',
+      '「別に気にしてないけど」と言いながら一番気にしている',
+      '正論を言うのが好きすぎる',
+    ],
+    verdict:'お前が悪いとは言わない。しかし<b>お前はいつもお前が正しいと思っている</b>。それが人間関係のすべての摩擦の根源だ。悪気がないぶん、タチが悪い。',
+    meters:[
+      {label:'自己認識',pct:22,color:'#dc2626'},
+      {label:'他者配慮',pct:41,color:'#f59e0b'},
+      {label:'成長意欲',pct:68,color:'#22c55e'},
+      {label:'謙虚さ',pct:19,color:'#dc2626'},
+    ],
+    rehab:12
+  },
+  B: {
+    icon:'🛋️',
+    name:'万年先延ばし保菌者',
+    sub:'The Chronic Procrastinator',
+    desc:'やる気はある。本当にある。ただ「今」ではない。お前の中には「理想の自分」が住んでいる。計画を立て、目標を持ち、颯爽と行動する存在だ。しかしそいつは永遠に出てこない。「明日からやる」の明日は、数学的に証明されているが、永遠に来ない。',
+    charges:[
+      '「本気出せばできる」という根拠のない自信を30年維持している',
+      '締め切りを「最大の集中力を引き出す装置」として使用している',
+      '計画を立てることで満足してしまう病',
+      'やりたいことメモだけが増え続けている',
+    ],
+    verdict:'お前が怠け者なのではない。<b>ただ脳が「未来の自分に任せる」方向に最適化されている</b>だけだ。未来の自分は今のお前と同じ人間なので、何も変わらない。',
+    meters:[
+      {label:'実行力',pct:11,color:'#dc2626'},
+      {label:'計画力',pct:78,color:'#22c55e'},
+      {label:'言い訳力',pct:95,color:'#dc2626'},
+      {label:'将来性',pct:44,color:'#f59e0b'},
+    ],
+    rehab:8
+  },
+  C: {
+    icon:'👻',
+    name:'無自覚スルー型逃亡者',
+    sub:'The Ghost Protocol',
+    desc:'お前は逃げている。しかしお前は逃げていると思っていない。それを「様子を見ている」「タイミングを待っている」「相手の気持ちを考えている」と呼んでいる。周囲から見ると、完全に逃げている。本人だけが気づいていない。',
+    charges:[
+      '「なんとかなる」という思想を宗教のように信じている',
+      '「まあいいか」を口癖にして重要な問題を流してきた',
+      '相手から連絡が来るまで放置する戦術を多用している',
+      '現実から目を逸らすことを「心の余裕」と呼んでいる',
+    ],
+    verdict:'問題を無視すると問題は消えない。<b>ただお前の視界から消えるだけ</b>で、問題は水面下で育ち続ける。そしてある日、手がつけられない大きさになって帰ってくる。お前はそれを「急に起きた」と言う。',
+    meters:[
+      {label:'回避力',pct:91,color:'#dc2626'},
+      {label:'解決力',pct:18,color:'#dc2626'},
+      {label:'鈍感力',pct:76,color:'#f59e0b'},
+      {label:'適応力',pct:52,color:'#22c55e'},
+    ],
+    rehab:15
+  },
+  D: {
+    icon:'💣',
+    name:'内圧蓄積型人間爆弾',
+    sub:'The Ticking Time Bomb',
+    desc:'お前は火山だ。普段は穏やかに見えるが、マグマは着実に溜まっている。「気にしてないよ」「別に大丈夫」「まあいいか」。全部嘘だ。お前は全部覚えている。1年前のあの一言も、3年前のあの態度も。そしてある日、些細なことで噴火する。周囲は「急に？」と思う。',
+    charges:[
+      '感情を溜め込んで適切に処理しない慢性症状',
+      '「普通にしてる」と言いながら完全に態度に出ている',
+      '過去の出来事を記憶に焼き付けて定期的に反芻している',
+      '倍返しのシミュレーションを就寝前に行っている',
+    ],
+    verdict:'怒りを飲み込むことは美徳ではない。<b>ただの時限爆弾の製造だ</b>。爆発した後に「ずっと溜まってた」と言っても、周囲には急に見える。お前が変わる必要があるのか、周囲が変わる必要があるのか。答えはお前の中にある。',
+    meters:[
+      {label:'忍耐力',pct:82,color:'#22c55e'},
+      {label:'感情制御',pct:24,color:'#dc2626'},
+      {label:'爆発リスク',pct:88,color:'#dc2626'},
+      {label:'回復力',pct:61,color:'#f59e0b'},
+    ],
+    rehab:19
+  }
+};
+
+// state
+let idx = 0;
+let answers = [];
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz(){
+  idx = 0;
+  answers = [];
+  showScreen('quiz');
+  renderQ();
+}
+
+function renderQ(){
+  const q = QUESTIONS[idx];
+  const pct = (idx / QUESTIONS.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-count').textContent = `QUESTION ${idx+1} / ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  q.opts.forEach(o=>{
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = o.t;
+    btn.onclick = () => pick(o.v);
+    opts.appendChild(btn);
+  });
+}
+
+function pick(v){
+  answers.push(v);
+  idx++;
+  if(idx >= QUESTIONS.length){
+    showScreen('loading');
+    runLoading();
+  } else {
+    renderQ();
+  }
+}
+
+function runLoading(){
+  const lines = document.querySelectorAll('#load-lines div');
+  const phases = ['データ収集中','パターン照合中','闇の定量化中','判決確定中'];
+  let li = 0;
+  lines.forEach(l=>l.style.color='#333');
+  const iv = setInterval(()=>{
+    if(li < lines.length) lines[li].style.color='#dc2626';
+    if(li < phases.length) document.getElementById('load-phase').textContent = phases[Math.floor(li/1.5)] || phases[phases.length-1];
+    li++;
+    if(li > lines.length + 2){
+      clearInterval(iv);
+      buildResult();
+      showScreen('result');
+    }
+  }, 320);
+}
+
+function calcType(){
+  const cnt = {A:0,B:0,C:0,D:0};
+  answers.forEach(v=>cnt[v]++);
+  return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+function buildResult(){
+  const key = calcType();
+  const t = TYPES[key];
+
+  const meterHtml = t.meters.map(m=>`
+    <div class="r-meter-row">
+      <div class="r-meter-label">${m.label}</div>
+      <div class="r-meter-bg"><div class="r-meter-fill" style="width:${m.pct}%;background:${m.color}"></div></div>
+      <div class="r-meter-pct">${m.pct}%</div>
+    </div>`).join('');
+
+  const chargesHtml = t.charges.map(c=>`<li class="r-charge">${c}</li>`).join('');
+
+  document.getElementById('r-content').innerHTML = `
+    <div class="r-type-block">
+      <div class="r-type-tag">VERDICT — TYPE ${key}</div>
+      <div class="r-type-icon">${t.icon}</div>
+      <div class="r-type-name">${t.name}</div>
+      <div class="r-type-sub">${t.sub}</div>
+      <div class="r-type-desc">${t.desc}</div>
+    </div>
+
+    <div class="r-section">
+      <div class="r-section-label">容疑事項</div>
+      <ul class="r-charges">${chargesHtml}</ul>
+    </div>
+
+    <div class="r-section">
+      <div class="r-section-label">検察の最終弁論</div>
+      <div class="r-verdict">${t.verdict}</div>
+    </div>
+
+    <div class="r-section">
+      <div class="r-section-label">心理プロファイル</div>
+      <div class="r-meter">${meterHtml}</div>
+    </div>
+
+    <div class="r-section">
+      <div class="r-section-label">更生の可能性</div>
+      <div class="r-rehab">
+        <div class="r-rehab-num">${t.rehab}%</div>
+        <div class="r-rehab-label">REHABILITATION PROBABILITY</div>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
